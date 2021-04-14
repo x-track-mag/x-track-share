@@ -32,6 +32,12 @@ export const global = {
 	},
 	body: {
 		minWidth: "480px",
-		overflowX: "hidden"
+		overflowX: "hidden",
+		"p, h1, h2, h3": {
+			"&::selection": {
+				color: "brand.blue",
+				backgroundColor: "brand.yellow"
+			}
+		}
 	}
 };

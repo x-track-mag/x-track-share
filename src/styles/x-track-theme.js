@@ -1,5 +1,7 @@
+import "@fontsource/archivo/800.css";
+
 export const fonts = {
-	headings: `'Conduit ITC W02 Bold', sans`,
+	heading: `Archivo, sans`, // Conduit ITC W02 Bold
 	body: `Raleway`
 };
 

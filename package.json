@@ -1,5 +1,5 @@
 {
-  "name": "with-chakra-ui",
+  "name": "x-track-share",
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "@chakra-ui/react": "^1.5.0",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
+    "@fontsource/archivo": "^4.2.3",
     "framer-motion": "^4",
     "next": "latest",
     "react": "^17.0.1",

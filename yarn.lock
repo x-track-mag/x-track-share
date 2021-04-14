@@ -709,6 +709,11 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
+"@fontsource/archivo@^4.2.3":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/@fontsource/archivo/-/archivo-4.2.3.tgz#a591b1eb31c99550c1b2c486124bb22be5c30d25"
+  integrity sha512-OUjpEGxf58y8Nyj7fgk2UWFzZSRWijpLGyCVdx4OlCqrxjcR5Wpo0UwJ6YjqQaolwwdI25Ng7oKVGbaRmBPXxQ==
+
 "@hapi/accept@5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-5.0.1.tgz#068553e867f0f63225a506ed74e899441af53e10"

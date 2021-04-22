@@ -11,6 +11,7 @@
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@fontsource/archivo": "^4.2.3",
+    "clsx": "^1.1.1",
     "framer-motion": "^4",
     "next": "latest",
     "react": "^17.0.1",

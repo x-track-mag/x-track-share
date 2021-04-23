@@ -1,0 +1,14 @@
+{
+	"projects": [
+		{
+			"id": "78gghT4DzR8675gRHFghGGTHfr",
+			"title": "Soundtracks",
+			"description": "Une banque d'ambiances sonores parfaites pour des soundtracks, classée par ambiances.",
+			"folders": [
+				{
+					"path": "/share/soundtracks/horror"
+				}
+			]
+		}
+	]
+}

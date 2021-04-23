@@ -27,19 +27,31 @@ cloudinary.config({
 
 /**
  * Return the list of subfolders and content inside a root folder
+ * @see cloudinary-search-results.json to see what the results look like
  * @param {String} root
  */
 export const getContent = async (root) => {
 	try {
-		const results = await cloudinary.search
+		const rLength = root.length + 1;
+		let { resources } = await cloudinary.search
 			.expression(`folder=${root}/*`)
+			.sort_by("public_id", "desc")
 			.max_results(500)
 			.execute();
 		console.log(
 			`CloudinaryClient.getContent("${root}")`,
-			JSON.stringify(results, null, "\t")
+			JSON.stringify(resources, null, "\t")
 		);
-		return results;
+		// Keep only the minimal fields information
+		resources = resources.map(({ asset_id, folder, format, secure_url }) => ({
+			asset_id,
+			folder: folder.substr(rLength), // remove the 'root/' from the folder path
+			format,
+			url: secure_url
+		}));
+		// Partition that to know the different folders
+
+		return resources;
 	} catch (err) {
 		console.error(err);
 	}

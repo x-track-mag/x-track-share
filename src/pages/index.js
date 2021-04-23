@@ -1,15 +1,9 @@
-import { Hero } from "../components/Hero";
-import { Container } from "../components/Container";
-import { Main } from "../components/Main";
-import { Footer } from "../components/Footer";
+import { Main, HeroSection } from "../components/base";
 
 const Index = () => (
-	<Container height="100vh" bg="blue">
-		<Hero />
-		<Main></Main>
-
-		<Footer />
-	</Container>
+	<Main>
+		<HeroSection title="X-TRACK-SHARE" />
+	</Main>
 );
 
 export default Index;

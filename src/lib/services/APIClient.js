@@ -1,4 +1,4 @@
-import "isomorphic-fetch";
+import fetch from "cross-fetch";
 import ApiError from "../ApiError.js";
 
 const APIClient = {};

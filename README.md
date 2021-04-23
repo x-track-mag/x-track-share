@@ -18,7 +18,7 @@ nano .env
 2. Replace the sample values by yours
 (Copy and paste your cloudinary settings inside the .env file and save the file.)
 ```properties
-CLOUDINARY_CLOUDNAME=my_cloud_name
+CLOUDINARY_CLOUD_NAME=my_cloud_name
 CLOUDINARY_API_KEY=12345678901234
 CLOUDINARY_API_SECRET=00000000000000000
 ```

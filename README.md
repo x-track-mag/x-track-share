@@ -29,6 +29,13 @@ CLOUDINARY_API_SECRET=00000000000000000
 
 This repository was bootstraped using [chakra-ui](https://github.com/chakra-ui/chakra-ui) as the component library within a Next.js app.
 
+### Adaptive Streaming
+
+A list of MUST-READ articles to explain how the adaptive bitrates formats work (HSL and MPEG-DASH)
+* [DASH & HLS : The two main video stream protocols](https://blog.eleven-labs.com/en/video-live-dash-hls/)
+* [Implementing adaptive bitrate transformations in Cloudinary](https://cloudinary.com/documentation/adaptive_bitrate_streaming)
+* [A review of popular video players streaming performances](https://www.heartinternet.uk/blog/streaming-video-on-the-web-a-performance-review-of-popular-javascript-players/)
+
 ### Deploy your own
 
 Deploy your own version using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):

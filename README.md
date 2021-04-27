@@ -29,6 +29,11 @@ CLOUDINARY_API_SECRET=00000000000000000
 
 This repository was bootstraped using [chakra-ui](https://github.com/chakra-ui/chakra-ui) as the component library within a Next.js app.
 
+### Cloudinary
+
+Cloudinary has some extraordinay capacities, like :
+* [Generate zip files from a selection of medias](https://cloudinary.com/blog/dynamically_generating_zip_files_with_one_line_of_code)
+
 ### Adaptive Streaming
 
 A list of MUST-READ articles to explain how the adaptive bitrates formats work (HSL and MPEG-DASH)

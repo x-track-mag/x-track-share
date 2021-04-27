@@ -8,8 +8,8 @@ const { expect } = code;
 const CloudinaryClientTestSuite = suite("Cloudinary Client Test Suite");
 
 CloudinaryClientTestSuite("Get a folder's content", async () => {
-	const results = await getContent("share");
-	expect(results).to.be.an.array();
+	const share = await getContent("share");
+	expect(results).to.be.an.object();
 });
 
 export default CloudinaryClientTestSuite;

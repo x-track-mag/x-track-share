@@ -2,6 +2,7 @@
 // import APIClient from "./APIClient";
 import { v2 as cloudinary } from "cloudinary";
 import { loadEnv } from "../utils/Env.js";
+import CloudinaryFolder from "../cloudinary/CloudinaryFolder.js";
 
 if (!process.env.CLOUDINARY_CLOUD_NAME) {
 	loadEnv();
@@ -49,9 +50,16 @@ export const getContent = async (root) => {
 			format,
 			url: secure_url
 		}));
-		// Partition that to know the different folders
 
-		return resources;
+		const rootFolder = new CloudinaryFolder(root);
+
+		resources.forEach((rsc) => {
+			const folder = rootFolder.getFolder(rsc.folder, true);
+			folder.addMedia(rsc);
+		});
+
+		console.log(`Populated root folder`, JSON.stringify(rootFolder, null, "\t"));
+		return rootFolder;
 	} catch (err) {
 		console.error(err);
 	}

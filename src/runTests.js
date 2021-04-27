@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 
 const runSingleTest = async (sourceFile) => {
 	try {
-		const testSuite = await import(path.join("..", sourceFile));
+		const testSuite = await import(path.join(__dirname, sourceFile));
 		const run = new Promise((resolve, reject) => {
 			testSuite.default.after(resolve);
 			testSuite.default.run();
@@ -39,7 +39,7 @@ const runSingleTest = async (sourceFile) => {
 			await walk
 				.on("file", (testFile) => {
 					testJobs.push(runSingleTest(testFile));
-					tk.terminal.green(`Loaded Test '${testFile}'` + "\n");
+					tk.terminal.green(`Added test file '${testFile}'` + "\n");
 				})
 				.on("end", async () => {
 					tk.terminal.yellow(`We have ${testJobs.length} test jobs pending..`);

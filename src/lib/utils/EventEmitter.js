@@ -31,6 +31,7 @@ EP.addEventListener = function (name, fn) {
 		handlerList.push(fn);
 	}
 	console.log(`We have ${handlerList.length} listeners for ${name}`);
+	return this;
 };
 EP.on = EP.addEventListener;
 
@@ -51,6 +52,7 @@ EP.removeEventListener = function (name, fn) {
 			handlerList.splice(index, 1);
 		}
 	}
+	return this;
 };
 EP.off = EP.removeEventListener;
 
@@ -78,8 +80,9 @@ EP.emit = function (name, var_args) {
 			}
 		}
 	} else {
-		console.warn(`No event handler for ${name} !`);
+		console.warn(`No event handler for event '${name}'`);
 	}
+	return this;
 };
 EP.send = EP.emit;
 

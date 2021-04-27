@@ -1,9 +1,9 @@
-import suite from "baretest.js";
-import code from "@hapi/code.js";
-import path, { dirname } from "path.js";
-import { fileURLToPath } from "url.js";
+import suite from "baretest";
+import code from "@hapi/code";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 import FileWalker from "./FileWalker.js";
-import { EventEmitter } from "events.js";
+import EventEmitter from "./EventEmitter.js";
 
 const { expect } = code;
 const FileWalkerTestSuite = suite("FileWalker");

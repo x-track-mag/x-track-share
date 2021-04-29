@@ -1,5 +1,3 @@
-// import { Cloudinary } from "@cloudinary/base";
-// import APIClient from "./APIClient";
 import { v2 as cloudinary } from "cloudinary";
 import { loadEnv } from "../utils/Env.js";
 import CloudinaryFolder from "../cloudinary/CloudinaryFolder.js";
@@ -7,18 +5,6 @@ import CloudinaryFolder from "../cloudinary/CloudinaryFolder.js";
 if (!process.env.CLOUDINARY_CLOUD_NAME) {
 	loadEnv();
 }
-
-// let clientInstance;
-
-// export const getInstance = () => {
-// 	if (!clientInstance) {
-// 		clientInstance = new Cloudinary({
-// 			cloud: { cloudName: process.env.CLOUDINARY_CLOUD_NAME }
-// 		});
-// 	}
-
-// 	return clientInstance;
-// };
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -39,10 +25,7 @@ export const getContent = async (root) => {
 			.sort_by("public_id", "desc")
 			.max_results(500)
 			.execute();
-		console.log(
-			`CloudinaryClient.getContent("${root}")`,
-			JSON.stringify(resources, null, "\t")
-		);
+
 		// Keep only the minimal fields information
 		resources = resources.map(({ asset_id, folder, format, secure_url }) => ({
 			asset_id,

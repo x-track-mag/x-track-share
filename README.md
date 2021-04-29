@@ -41,6 +41,9 @@ A list of MUST-READ articles to explain how the adaptive bitrates formats work (
 * [Implementing adaptive bitrate transformations in Cloudinary](https://cloudinary.com/documentation/adaptive_bitrate_streaming)
 * [A review of popular video players streaming performances](https://www.heartinternet.uk/blog/streaming-video-on-the-web-a-performance-review-of-popular-javascript-players/)
 
+And finally, the way to put all of this together is demonstrated with this video tutorial from Google and Cloudinary :
+* [ReactNYC Modern Media Experiences with Cloudinary and Shaka Player](https://cloudinary.com/blog/reactnyc_building_modern_media_experiences_in_react_apps)
+
 ### Deploy your own
 
 Deploy your own version using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):

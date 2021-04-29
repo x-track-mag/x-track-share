@@ -1,28 +1,20 @@
-import CloudinaryClient from "../../lib/services/CloudinaryClient";
+import CloudinaryClient from "../../lib/services/CloudinaryClient.js";
+import CloudinaryFolder from "../../components/CloudinaryFolder.js";
 
 /**
- * Render a single static pages (simplified version of a post)
- * @param {JSX.Element} props
+ * Render a single share folder
+ * @param {Object} props
  */
-const SharePage = ({ audios, videos }) => {};
+const SharePage = (props) => <CloudinaryFolder {...props} />;
 
 /**
+ * Retrieve the folder conte/share/${uid}
  */
-export const getStaticProps = async ({ params, preview }) => {
+export const getServerSideProps = async ({ params }) => {
 	const uid = params.uid;
-	const { ...pageProps } = await CloudinaryClient.getFolders();
+	const props = await CloudinaryClient.getContent(`share/${uid}`);
 	return {
-		props: { ...pageProps }
-	};
-};
-
-/**
- */
-export const getStaticPaths = () => {
-	const paths = [];
-	return {
-		paths,
-		fallback: false
+		props
 	};
 };
 

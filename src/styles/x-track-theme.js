@@ -1,8 +1,8 @@
 import "@fontsource/archivo/800.css";
 
 export const fonts = {
-	heading: `Archivo, sans`, // Conduit ITC W02 Bold
-	body: `Raleway`
+	heading: `'Conduit ITC W04 Black', Archivo, sans`, // Conduit ITC W02 Bold
+	body: `'Conduit ITC W04 Regular', Raleway`
 };
 
 export const breakpoints = {
@@ -25,14 +25,16 @@ export const global = {
 	html: {
 		fontSize: {
 			sm: "18px",
-			md: "18px",
-			lg: "20px",
-			xl: "22px"
+			md: "20px",
+			lg: "22px",
+			xl: "24px"
 		}
 	},
 	body: {
 		minWidth: "480px",
 		overflowX: "hidden",
+		color: "brand.yellow",
+		backgroundColor: "brand.blue",
 		"p, h1, h2, h3": {
 			"&::selection": {
 				color: "brand.blue",

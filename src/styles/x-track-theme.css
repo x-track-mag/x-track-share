@@ -1,0 +1,12 @@
+/* Conduit ITC W04 */
+@font-face {
+	font-family: Conduit ITC W04 Black;
+	font-weight: 500;
+	src: url("/fonts/Conduit-ITC-W04-Black.woff2") format("woff2"),
+		url("/fonts/Conduit-ITC-W04-Black.woff") format("woff");
+}
+@font-face {
+	font-family: Conduit ITC W04 Regular;
+	src: url("/fonts/Conduit-ITC-W04-Regular.woff2") format("woff2"),
+		url("/fonts/Conduit-ITC-W04-Regular.woff") format("woff");
+}

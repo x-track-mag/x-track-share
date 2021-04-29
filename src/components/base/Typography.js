@@ -1,29 +1,29 @@
-import { chakra, Text } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 
 export const Title = ({ children, ...moreStyles }) => (
-	<chakra.h2
-		fontFamily="Arachne"
-		fontSize="3.2rem"
-		lineHeight="3.9rem"
-		textAlign="center"
-		mb="0.5rem"
-		{...moreStyles}
-	>
-		{children}
-	</chakra.h2>
-);
-
-export const Subtitle = ({ children, ...moreStyles }) => (
-	<chakra.h3
-		fontFamily="PressGothicPro"
+	<Heading
+		as="h2"
 		fontSize="3.2rem"
 		lineHeight="3.9rem"
 		textAlign="center"
 		textTransform="uppercase"
+		mb="0.5rem"
 		{...moreStyles}
 	>
 		{children}
-	</chakra.h3>
+	</Heading>
+);
+
+export const Subtitle = ({ children, ...moreStyles }) => (
+	<Heading
+		as="h3"
+		fontSize="3.2rem"
+		lineHeight="3.9rem"
+		textAlign="center"
+		{...moreStyles}
+	>
+		{children}
+	</Heading>
 );
 
 export const Message = ({ children }) => (

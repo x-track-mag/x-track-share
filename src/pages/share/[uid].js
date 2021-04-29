@@ -1,4 +1,4 @@
-import CloudinaryClient from "../../lib/services/CloudinaryClient.js";
+import APIClient from "../../lib/services/APIClient.js";
 import CloudinaryFolder from "../../components/CloudinaryFolder.js";
 
 /**
@@ -8,14 +8,12 @@ import CloudinaryFolder from "../../components/CloudinaryFolder.js";
 const SharePage = (props) => <CloudinaryFolder {...props} />;
 
 /**
- * Retrieve the folder conte/share/${uid}
+ * Retrieve the folder content /share/${uid}
  */
 export const getServerSideProps = async ({ params }) => {
 	const uid = params.uid;
-	const props = await CloudinaryClient.getContent(`share/${uid}`);
-	return {
-		props
-	};
+	const props = await APIClient.get(`/api/share/${uid}`);
+	return { props };
 };
 
 export default SharePage;

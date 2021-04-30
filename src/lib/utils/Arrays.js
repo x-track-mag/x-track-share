@@ -2,6 +2,9 @@
 // it can be damn useful too to chain array manipulations
 
 const ArrayExtensions = {
+	last: function () {
+		return this[this.length - 1];
+	},
 	/**
 	 * Just scramble elements in place and return the array
 	 * @return {Array}
@@ -43,8 +46,9 @@ const ArrayExtensions = {
 };
 
 export const extendsPrototype = (proto) => {
-	if (!proto.move) proto.move = ArrayExtensions.move;
-	if (!proto.shuffle) proto.shuffle = ArrayExtensions.shuffle;
+	Object.keys(ArrayExtensions).forEach((methodName) => {
+		if (!proto[methodName]) proto[methodName] = ArrayExtensions[methodName];
+	});
 	return proto;
 };
 

@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { loadEnv } from "../utils/Env.js";
 import CloudinaryFolder from "../cloudinary/CloudinaryFolder.js";
+import ApiError from "../ApiError.js";
 
 if (!process.env.CLOUDINARY_CLOUD_NAME) {
 	loadEnv();
@@ -19,9 +20,8 @@ cloudinary.config({
  */
 export const getContent = async (root) => {
 	try {
-		const rLength = root.length + 1;
 		let { resources } = await cloudinary.search
-			.expression(`folder=${root}/*`)
+			.expression(`folder=share/${root}/*`)
 			.sort_by("public_id", "desc")
 			.max_results(500)
 			.execute();
@@ -29,22 +29,33 @@ export const getContent = async (root) => {
 		// Keep only the minimal fields information
 		resources = resources.map(({ asset_id, folder, format, secure_url }) => ({
 			asset_id,
-			folder: folder.substr(rLength), // remove the 'root/' from the folder path
+			folder: folder.substr(6), // remove the 'share/' from the folder path
 			format,
 			url: secure_url
 		}));
 
-		const rootFolder = new CloudinaryFolder(root);
+		// Keep track of all the folders and sub-folders
+		const folders = {};
+		folders[root] = new CloudinaryFolder(root); // the root
 
 		resources.forEach((rsc) => {
-			const folder = rootFolder.getFolder(rsc.folder, true);
+			let folder = folders[rsc.folder];
+			if (!folder) {
+				// Not yet known to us
+				folder = folders[rsc.folder] = new CloudinaryFolder(rsc.folder);
+				const parent = folder.getParentFolder();
+				console.log(`Adding ${rsc.folder} to ${parent}`);
+				folders[parent]?.subfolders.push(rsc.folder);
+			}
+
 			folder.addMedia(rsc);
 		});
 
-		console.log(`Populated root folder`, JSON.stringify(rootFolder, null, "\t"));
-		return rootFolder;
+		console.log(`Loaded shared folders`, folders);
+		return folders;
 	} catch (err) {
 		console.error(err);
+		throw new ApiError(500, err.message);
 	}
 };
 

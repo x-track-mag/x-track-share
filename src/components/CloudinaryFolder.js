@@ -2,15 +2,21 @@ import { Heading, Stack, Box, Grid } from "@chakra-ui/layout";
 import Folder from "./base/Folder";
 import PlaylistEntry from "./PlaylistEntry";
 
-const CloudinaryFolder = ({ label, folders, audios, videos }) => (
+const CloudinaryFolder = ({ label, subfolders, audios, videos }) => (
 	<Stack className="folder-content" bg="black">
 		<Heading>{label}</Heading>
 
-		<Grid className="sub-folders" templateColumns="repeat(5, 1fr)" gap={4}>
-			{Object.keys(folders).map((name) => (
-				<Folder title={name} path={folders[name]} />
-			))}
-		</Grid>
+		{subfolders.length && (
+			<Grid
+				className="sub-folders"
+				templateColumns={{ sm: "repeat(1, 1fr)", lg: "repeat(5, 1fr)" }}
+				gap={4}
+			>
+				{subfolders.map((path) => (
+					<Folder key={path} path={path} />
+				))}
+			</Grid>
+		)}
 
 		{audios.length && (
 			<Box as="ol" className="playlist-audio">

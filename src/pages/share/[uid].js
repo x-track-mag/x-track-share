@@ -1,5 +1,6 @@
 import APIClient from "../../lib/services/APIClient.js";
 import CloudinaryFolder from "../../components/CloudinaryFolder.js";
+import { withEventBus } from "../../components/EventBusProvider.js";
 
 /**
  * Render a single share folder
@@ -16,4 +17,4 @@ export const getServerSideProps = async ({ params }) => {
 	return { props };
 };
 
-export default SharePage;
+export default withEventBus(SharePage);

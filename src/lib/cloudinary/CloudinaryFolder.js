@@ -1,3 +1,5 @@
+import ArrayExtensions from "../utils/Arrays.js";
+
 const audio_formats = ["wav", "mp3", "aac", "ogg"];
 const video_formats = ["mp4", "mpg", "mpeg", "avi", "mov", "mkv", "qt", "wmv", "asf"];
 
@@ -8,9 +10,10 @@ function isAudio(media) {
 	return audio_formats.includes(media.format);
 }
 
-function CloudinaryFolder(label) {
-	this.label = label;
-	this.folders = {};
+function CloudinaryFolder(path) {
+	this.path = path;
+	this.label = path.split("/").last();
+	this.subfolders = [];
 	this.audios = [];
 	this.videos = [];
 }
@@ -33,24 +36,12 @@ CloudinaryFolder.prototype = {
 		return this;
 	},
 	/**
-	 *
-	 * @param {String} name (or path)
-	 * @param {Boolean} [create=true] Create the sub folder if it doesn't exist
-	 * @returns {CloudinaryFolder}
+	 * @returns {String} the path to the parent folder
 	 */
-	getFolder: function (name, create = true) {
-		if (name.indexOf("/") !== -1) {
-			// It's a path : take the first part of it
-			const path = name.split("/");
-			const firstStep = path.shift();
-			const subFolder = this.getFolder(firstStep, true);
-			return subFolder.getFolder(path.join("/"), true);
-		} else if (this.folders[name] === undefined && create) {
-			// If it doesn't exist : create it
-			this.folders[name] = new CloudinaryFolder(name);
-		}
-
-		return this.folders[name];
+	getParentFolder: function () {
+		const path = this.path.split("/");
+		path.pop();
+		return path.join("/");
 	}
 };
 

@@ -1,19 +1,22 @@
 import { Link as NextLink } from "next/link";
 import { Link, AspectRatio, Box, Heading } from "@chakra-ui/layout";
 
-const Folder = ({ title, path }) => (
-	<Link as={NextLink} ref={path}>
-		<AspectRatio w="100%" bg="brand.blue" m="1rem" _hover="brand.yellow">
-			<Heading
-				as="h3"
+const Folder = ({ path }) => {
+	const title = path.split("/").pop();
+	return (
+		<Link as={NextLink} to={path}>
+			<AspectRatio
+				w="100%"
+				bg="brand.blue"
 				color="brand.yellow"
-				textTransform="uppercase"
-				fontWeight={500}
+				m="1rem"
+				_hover={{ bg: "brand.yellow", color: "brand.blue" }}
 			>
-				{title}
-			</Heading>
-		</AspectRatio>
-	</Link>
-);
-
+				<Heading as="h3" textTransform="uppercase" fontWeight={500}>
+					{title}
+				</Heading>
+			</AspectRatio>
+		</Link>
+	);
+};
 export default Folder;

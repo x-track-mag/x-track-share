@@ -1,8 +1,17 @@
 import { AspectRatio } from "@chakra-ui/layout";
 import { useEffect } from "react";
+import { useEventBus } from "../EventBusProvider";
+import { usePlayerState } from "./PlayerStateProvider";
+import { Cloudinary } from "cloudinary-core";
+import "cloudinary-video-player/dist/cld-video-player.light.min";
+import "cloudinary-video-player/dist/cld-video-player.light.min.css";
 
-const createPlayer = (id, src) => {
-	const player = cld.videoPlayer(id, {
+const createPlayer = (id, playlist) => {
+	const cloudinary = new Cloudinary({
+		cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+		secure: true
+	});
+	const player = cloudinary.videoPlayer(id, {
 		fluid: true,
 		controls: true,
 		showJumpControls: true,
@@ -22,20 +31,23 @@ const createPlayer = (id, src) => {
 		}
 	});
 
-	player.source(src, {
-		sourceTypes: ["hls"]
-	});
+	if (playlist && playlist.length) {
+		player.source(playlist([0].url), {
+			sourceTypes: ["hls"]
+		});
+	}
 
 	return player;
 };
 
-const VideoPlayer = ({ id, src }) => {
+const VideoPlayer = ({ id }) => {
 	let player; // the CloudinaryPlayer instance
+	const { playlist, selected } = usePlayerState();
 	let eb = useEventBus();
 
 	// Load the source
 	useEffect(() => {
-		player = createPlayer(id, src);
+		player = createPlayer(id, playlist);
 
 		return () => {
 			player = null;

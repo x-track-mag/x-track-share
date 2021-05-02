@@ -9,8 +9,9 @@ const CloudinaryFolder = ({ label, subfolders, audios, videos }) => (
 		{subfolders.length && (
 			<Grid
 				className="sub-folders"
-				templateColumns={{ sm: "repeat(1, 1fr)", lg: "repeat(5, 1fr)" }}
-				gap={4}
+				templateColumns={{ sm: "repeat(2, 1fr)", lg: "repeat(6, 1fr)" }}
+				gap={5}
+				p={5}
 			>
 				{subfolders.map((path) => (
 					<Folder key={path} path={path} />

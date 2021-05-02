@@ -11,9 +11,9 @@ import PlaylistEntry from "./PlaylistEntry.js";
 
 const PlayerContext = createContext();
 
-const PlayerStateProvider = ({ id, playlist, children }) => {
+const PlayerStateProvider = ({ playerId, playlist, children }) => {
 	const [playerState, setPlayerState] = useState({
-		playlist: videos,
+		playlist,
 		selected: 0,
 		playing: false // play/pause
 	});
@@ -28,13 +28,26 @@ const PlayerStateProvider = ({ id, playlist, children }) => {
 export default PlayerStateProvider;
 
 /**
+ * Make en PlayerState accessible inside this component
+ * with the usePlayerState() hook
+ * @param {JSX.Element} Component
+ */
+export const withPlayerState = (Component) => (props) => {
+	return (
+		<PlayerStateProvider>
+			<Component {...props} />
+		</PlayerStateProvider>
+	);
+};
+
+/**
  * usePlayerState() Hook
  * @return {PlayerState}
  */
 export const usePlayerState = () => {
 	const ps = useContext(PlayerContext);
 	if (!ps) {
-		throw new Exception(`usePlayerState() called without a PlayerStateProvider`);
+		throw new ReferenceError(`usePlayerState() called without a PlayerStateProvider`);
 	}
 	return ps;
 };

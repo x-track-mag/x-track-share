@@ -26,13 +26,18 @@ export const getContent = async (root) => {
 			.max_results(500)
 			.execute();
 
+		console.log(resources);
+
 		// Keep only the minimal fields information
-		resources = resources.map(({ asset_id, folder, format, secure_url }) => ({
-			asset_id,
-			folder: folder.substr(6), // remove the 'share/' from the folder path
-			format,
-			url: secure_url
-		}));
+		resources = resources.map(
+			({ asset_id, filename, folder, format, secure_url }) => ({
+				asset_id,
+				filename,
+				folder: folder.substr(6), // remove the 'share/' from the folder path
+				format,
+				url: secure_url
+			})
+		);
 
 		// Keep track of all the folders and sub-folders
 		const folders = {};

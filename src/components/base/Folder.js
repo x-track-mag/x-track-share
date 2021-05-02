@@ -1,22 +1,30 @@
-import { Link as NextLink } from "next/link";
-import { Link, AspectRatio, Box, Heading } from "@chakra-ui/layout";
+import { useRouter } from "next/router";
+import { AspectRatio, Heading } from "@chakra-ui/layout";
+import { useShareContext } from "../CloudinaryExplorer.js";
+import { Subtitle } from "./Typography.js";
 
 const Folder = ({ path }) => {
 	const title = path.split("/").pop();
+	const { setCurrent } = useShareContext();
+	const router = useRouter();
+
+	const navigate = (path) => (evt) => {
+		evt.preventDefault();
+		setCurrent(path);
+		router.push(`/share/${path}`, undefined, { shallow: true });
+	};
+
 	return (
-		<Link as={NextLink} to={path}>
+		<a href={path} onClick={navigate(path)}>
 			<AspectRatio
 				w="100%"
 				bg="brand.blue"
 				color="brand.yellow"
-				m="1rem"
 				_hover={{ bg: "brand.yellow", color: "brand.blue" }}
 			>
-				<Heading as="h3" textTransform="uppercase" fontWeight={500}>
-					{title}
-				</Heading>
+				<Subtitle>{title}</Subtitle>
 			</AspectRatio>
-		</Link>
+		</a>
 	);
 };
 export default Folder;

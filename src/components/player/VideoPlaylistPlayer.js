@@ -1,7 +1,9 @@
+import dynamic from "next/dynamic";
 import { Box } from "@chakra-ui/layout";
 import PlayerStateProvider from "./PlayerStateProvider.js";
 import PlaylistEntry from "./PlaylistEntry.js";
-import VideoPlayer from "./VideoPlayer.js";
+
+const VideoPlayer = dynamic(() => import("./VideoPlayer.js"), { ssr: false });
 
 /**
  * @typedef VideoPlaylistPlayerProps
@@ -14,13 +16,18 @@ import VideoPlayer from "./VideoPlayer.js";
  * @param {VideoPlaylistPlayerProps} props
  */
 const VideoPlaylistPlayer = ({ playerId, playlist = [] }) => {
-	console.log(`We've got some videos to diaply`, playlist);
+	console.log(`We've got some videos to disply`, playlist);
 	return (
-		<PlayerStateProvider playerId={playerId} playlist={playlist}>
-			<VideoPlayer id={playerId} />
+		<PlayerStateProvider>
+			<VideoPlayer id={playerId} playlist={playlist} />
 			<Box as="ol" className="playlist-video">
 				{playlist.map((video, i) => (
-					<PlaylistEntry index={i} {...video} />
+					<PlaylistEntry
+						playerId={playerId}
+						key={`entry-${i}`}
+						index={i}
+						{...video}
+					/>
 				))}
 			</Box>
 		</PlayerStateProvider>

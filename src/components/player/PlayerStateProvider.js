@@ -11,15 +11,20 @@ import PlaylistEntry from "./PlaylistEntry.js";
 
 const PlayerContext = createContext();
 
-const PlayerStateProvider = ({ playerId, playlist, children }) => {
+const PlayerStateProvider = ({ children }) => {
 	const [playerState, setPlayerState] = useState({
-		playlist,
 		selected: 0,
 		playing: false // play/pause
 	});
 
+	const merge = (newValues) =>
+		setPlayerState({
+			...playerState,
+			...newValues
+		});
+
 	return (
-		<PlayerContext.Provider value={{ setPlayerState, ...playerState }}>
+		<PlayerContext.Provider value={{ merge, ...playerState }}>
 			{children}
 		</PlayerContext.Provider>
 	);

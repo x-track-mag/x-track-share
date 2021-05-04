@@ -10,3 +10,7 @@
 	src: url("/fonts/Conduit-ITC-W04-Regular.woff2") format("woff2"),
 		url("/fonts/Conduit-ITC-W04-Regular.woff") format("woff");
 }
+.video-player-dimensions {
+	width: 100% !important;
+	height: 100% !important;
+}

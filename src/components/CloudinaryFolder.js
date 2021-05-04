@@ -4,7 +4,7 @@ import PlaylistEntry from "./player/PlaylistEntry";
 import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer";
 
 const CloudinaryFolder = ({ label, subfolders, audios, videos }) => (
-	<Stack className="folder-content" bg="black">
+	<Stack className="folder-content" bg="black" minH="100vh">
 		<Heading>{label}</Heading>
 
 		{subfolders.length && (

@@ -1,0 +1,11 @@
+.playlist {
+	color: white;
+	text-transform: uppercase;
+	:global(.playlist_entry) {
+		cursor: pointer;
+		&:global(.selected),
+		&:hover {
+			color: yellow;
+		}
+	}
+}

@@ -4,7 +4,7 @@ import PlaylistEntry from "./PlaylistEntry.js";
 /**
  * @typedef PlayerState
  * @property {Array} playlist
- * @property {Number} selected
+ * @property {Number} selectedIndex
  * @property {Boolean} playing
  * @property {Function} setPlayerState
  */
@@ -13,7 +13,7 @@ const PlayerContext = createContext();
 
 const PlayerStateProvider = ({ children }) => {
 	const [playerState, setPlayerState] = useState({
-		selected: 0,
+		selectedIndex: 0,
 		playing: false // play/pause
 	});
 
@@ -58,14 +58,14 @@ export const usePlayerState = () => {
 };
 
 export const Playlist = ({ playerId, playlist }) => {
-	const { selected } = usePlayerState();
+	const { selectedIndex } = usePlayerState();
 	return (
 		<Box as="ol" className="playlist-container">
 			{playlist.map((entry, i) => (
 				<PlaylistEntry
 					index={i}
 					playerId={playerId}
-					selected={i === selected}
+					selected={i === selectedIndex}
 					{...entry}
 				/>
 			))}

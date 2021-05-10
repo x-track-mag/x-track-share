@@ -100,7 +100,7 @@ const unregisterPlayerEvents = (playerId, player, eb) => {
  */
 const VideoPlayer = ({ id, playlist }) => {
 	let player; // the CloudinaryPlayer instance
-	const { selectedIndex, merge } = usePlayerState();
+	const { merge } = usePlayerState();
 	let eb = useEventBus();
 
 	// Instanciate the player

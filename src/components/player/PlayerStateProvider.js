@@ -1,5 +1,4 @@
 import { useState, createContext, useContext } from "react";
-import PlaylistEntry from "./PlaylistEntry.js";
 
 /**
  * @typedef PlayerState
@@ -55,20 +54,4 @@ export const usePlayerState = () => {
 		throw new ReferenceError(`usePlayerState() called without a PlayerStateProvider`);
 	}
 	return ps;
-};
-
-export const Playlist = ({ playerId, playlist }) => {
-	const { selectedIndex } = usePlayerState();
-	return (
-		<Box as="ol" className="playlist-container">
-			{playlist.map((entry, i) => (
-				<PlaylistEntry
-					index={i}
-					playerId={playerId}
-					selected={i === selectedIndex}
-					{...entry}
-				/>
-			))}
-		</Box>
-	);
 };

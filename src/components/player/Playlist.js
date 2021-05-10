@@ -1,8 +1,9 @@
 import { Box } from "@chakra-ui/layout";
 import { useEventBus } from "../EventBusProvider.js";
-import clsx from "clsx";
 import { usePlayerState } from "./PlayerStateProvider.js";
 import PlayPauseIcon from "./PlayPauseIcon.js";
+import styles from "./Playlist.module.scss";
+import clsx from "clsx";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
@@ -54,4 +55,13 @@ const PlaylistEntry = ({
 		</Box>
 	);
 };
-export default PlaylistEntry;
+
+const Playlist = ({ playerId, playlist = [] }) => (
+	<Box as="ol" className={styles.playlist}>
+		{playlist.map((video, i) => (
+			<PlaylistEntry playerId={playerId} key={`entry-${i}`} index={i} {...video} />
+		))}
+	</Box>
+);
+
+export default Playlist;

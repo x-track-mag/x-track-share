@@ -47,7 +47,7 @@ const createPlayer = (id, playlist) => {
 
 		if (playlist && playlist.length) {
 			player.playlist(
-				playlist.map((p) => p.url),
+				playlist.map((p) => p.url.replace(".wav", ".mp3")),
 				{
 					sourceTypes: ["hls"]
 				}
@@ -70,19 +70,19 @@ const registerPlayerEvents = (playerId, player, eb, merge) => {
 	// Now the player events inform us of the real state changes
 	player.on("play", () => {
 		merge({
-			selected: player.playlist().currentIndex(),
+			selectedIndex: player.playlist().currentIndex(),
 			playing: true
 		});
 	});
 	player.on("pause", () => {
 		merge({
-			selected: player.playlist().currentIndex(),
+			selectedIndex: player.playlist().currentIndex(),
 			playing: false
 		});
 	});
 	player.on("sourcechanged", () => {
 		merge({
-			selected: player.playlist().currentIndex()
+			selectedIndex: player.playlist().currentIndex()
 		});
 	});
 };
@@ -100,7 +100,7 @@ const unregisterPlayerEvents = (playerId, player, eb) => {
  */
 const VideoPlayer = ({ id, playlist }) => {
 	let player; // the CloudinaryPlayer instance
-	const { selected, merge } = usePlayerState();
+	const { selectedIndex, merge } = usePlayerState();
 	let eb = useEventBus();
 
 	// Instanciate the player

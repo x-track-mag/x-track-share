@@ -1,8 +1,11 @@
+// @see https://stackoverflow.com/questions/65985543/selector-global-class-is-not-pure-pure-selectors-must-contain-at-least-one
 .playlist {
 	color: white;
 	text-transform: uppercase;
 	:global(.playlist_entry) {
 		cursor: pointer;
+		margin: 0;
+		padding: 0.1rem 2rem;
 		&:global(.selected),
 		&:hover {
 			color: yellow;

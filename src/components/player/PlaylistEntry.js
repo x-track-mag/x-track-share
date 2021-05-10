@@ -4,7 +4,8 @@ import clsx from "clsx";
 import { usePlayerState } from "./PlayerStateProvider.js";
 import PlayPauseIcon from "./PlayPauseIcon.js";
 
-const formatDuration = (ms) => `${Math.floor(ms / 60)}:${Math.round(ms % 60)}`;
+const formatDuration = (ms) =>
+	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
 
 /**
  * An entry inside the playlist, representing an audio or video asset to play
@@ -38,14 +39,8 @@ const PlaylistEntry = ({
 
 	return (
 		<Box
-			role="group"
-			bg="black"
-			m="0"
-			p="0.1rem 2rem"
 			as="li"
 			key={asset_id}
-			// _hover={{ cursor: "pointer", color: "yellow" }}
-			// color={selected ? "yellow" : "white"}
 			onClick={() => changeTrack(index)}
 			className={clsx("playlist_entry", { selected })}
 		>

@@ -13,12 +13,12 @@ const SharePage = (props) => <CloudinaryExplorer {...props} />;
  */
 export const getServerSideProps = async ({ params }) => {
 	const uid = params.uid;
-	const folders = await APIClient.get(`/api/share/${uid}`);
+	const folders = await APIClient.get(`/api/share/${uid[0]}`);
 
 	return {
 		props: {
 			folders,
-			path: uid
+			path: uid.join("/")
 		}
 	};
 };

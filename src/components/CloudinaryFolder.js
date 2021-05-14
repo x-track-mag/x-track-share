@@ -1,11 +1,12 @@
 import { Heading, Stack, Box, Grid } from "@chakra-ui/layout";
 import Folder from "./base/Folder";
-import PlaylistEntry from "./player/PlaylistEntry";
-import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer";
+import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer.js";
+import AudioPlaylistPlayer from "./player/AudioPlaylistPlayer.js";
+import Railway from "./Railway";
 
-const CloudinaryFolder = ({ label, subfolders, audios, videos }) => (
-	<Stack className="folder-content" bg="black">
-		<Heading>{label}</Heading>
+const CloudinaryFolder = ({ path, label, subfolders, audios, videos }) => (
+	<Stack className="folder-content" bg="black" minH="100vh">
+		<Railway path={path} />
 
 		{subfolders.length && (
 			<Grid
@@ -21,15 +22,11 @@ const CloudinaryFolder = ({ label, subfolders, audios, videos }) => (
 		)}
 
 		{audios.length && (
-			<Box as="ol" className="playlist-audio">
-				{audios.map((audio) => (
-					<PlaylistEntry {...audio} />
-				))}
-			</Box>
+			<AudioPlaylistPlayer type="audio" playerId="audio-player" playlist={audios} />
 		)}
 
 		{videos.length && (
-			<VideoPlaylistPlayer playerId="video-player" playlist={videos} />
+			<VideoPlaylistPlayer type="video" playerId="video-player" playlist={videos} />
 		)}
 	</Stack>
 );

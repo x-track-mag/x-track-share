@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import PlayerStateProvider from "./PlayerStateProvider.js";
 import Playlist from "./Playlist.js";
 
-const VideoPlayer = dynamic(() => import("./VideoPlayer.js"), { ssr: false });
+const AudioPlayer = dynamic(() => import("./AudioPlayer.js"), { ssr: false });
 
 /**
  * @typedef VideoPlaylistPlayerProps
@@ -12,16 +12,16 @@ const VideoPlayer = dynamic(() => import("./VideoPlayer.js"), { ssr: false });
 
 /**
  *
- * @param {VideoPlaylistPlayerProps} props
+ * @param {AudioPlaylistPlayerProps} props
  */
-const VideoPlaylistPlayer = ({ type = "video", playerId, playlist = [] }) => {
-	console.log(`We've got some ${type}s to display`, playlist);
+const AudioPlaylistPlayer = ({ playerId, playlist = [] }) => {
+	console.log(`We've got some audios to display`, playlist);
 	return (
 		<PlayerStateProvider>
-			<VideoPlayer id={playerId} playlist={playlist} />
+			<AudioPlayer id={playerId} playlist={playlist} />
 			<Playlist playerId={playerId} playlist={playlist} />
 		</PlayerStateProvider>
 	);
 };
 
-export default VideoPlaylistPlayer;
+export default AudioPlaylistPlayer;

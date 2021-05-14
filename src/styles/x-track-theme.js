@@ -40,6 +40,9 @@ export const global = {
 				color: "brand.blue",
 				backgroundColor: "brand.yellow"
 			}
+		},
+		"h1, h2, h3": {
+			textTransform: "uppercase"
 		}
 	}
 };

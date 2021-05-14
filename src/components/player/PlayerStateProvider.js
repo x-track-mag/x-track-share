@@ -1,25 +1,29 @@
 import { useState, createContext, useContext } from "react";
-import PlaylistEntry from "./PlaylistEntry.js";
 
 /**
  * @typedef PlayerState
  * @property {Array} playlist
- * @property {Number} selected
+ * @property {Number} selectedIndex
  * @property {Boolean} playing
  * @property {Function} setPlayerState
  */
 
 const PlayerContext = createContext();
 
-const PlayerStateProvider = ({ playerId, playlist, children }) => {
+const PlayerStateProvider = ({ children }) => {
 	const [playerState, setPlayerState] = useState({
-		playlist,
-		selected: 0,
+		selectedIndex: 0,
 		playing: false // play/pause
 	});
 
+	const merge = (newValues) =>
+		setPlayerState({
+			...playerState,
+			...newValues
+		});
+
 	return (
-		<PlayerContext.Provider value={{ setPlayerState, ...playerState }}>
+		<PlayerContext.Provider value={{ merge, ...playerState }}>
 			{children}
 		</PlayerContext.Provider>
 	);
@@ -50,20 +54,4 @@ export const usePlayerState = () => {
 		throw new ReferenceError(`usePlayerState() called without a PlayerStateProvider`);
 	}
 	return ps;
-};
-
-export const Playlist = ({ playerId, playlist }) => {
-	const { selected } = usePlayerState();
-	return (
-		<Box as="ol" className="playlist-container">
-			{playlist.map((entry, i) => (
-				<PlaylistEntry
-					index={i}
-					playerId={playerId}
-					selected={i === selected}
-					{...entry}
-				/>
-			))}
-		</Box>
-	);
 };

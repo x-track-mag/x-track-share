@@ -3,12 +3,12 @@ import { loadEnv } from "../utils/Env.js";
 import CloudinaryFolder from "../cloudinary/CloudinaryFolder.js";
 import ApiError from "../ApiError.js";
 
-if (!process.env.CLOUDINARY_CLOUD_NAME) {
+if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
 	loadEnv();
 }
 
 cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
@@ -30,11 +30,12 @@ export const getContent = async (root) => {
 
 		// Keep only the minimal fields information
 		resources = resources.map(
-			({ asset_id, filename, folder, format, secure_url }) => ({
+			({ asset_id, filename, folder, format, duration, secure_url }) => ({
 				asset_id,
 				filename,
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
+				duration,
 				url: secure_url
 			})
 		);

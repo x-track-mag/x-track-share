@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 /**
@@ -22,11 +22,26 @@ export const withShareContext = (Component) => ({ folders, path, props }) => {
 	const [current, setCurrent] = useState(path);
 	const router = useRouter();
 
+	const handlePathChange = (path) => {
+		const sharedPath = path.replace("/share/", "");
+		console.log(`router handlePathChange() : ${current} => ${sharedPath} `);
+		if (sharedPath !== current) {
+			setCurrent(sharedPath);
+		}
+	};
+
 	const navigate = (path) => (evt) => {
 		evt.preventDefault();
-		setCurrent(path);
 		router.push(`/share/${path}`, undefined, { shallow: true });
 	};
+
+	useEffect(() => {
+		router.events.on("routeChangeComplete", handlePathChange);
+		return () => {
+			console.log(`Unregistering router event handler`);
+			router.events.off("routeChangeComplete", handlePathChange);
+		};
+	}, [current]);
 
 	return (
 		<ShareContext.Provider value={{ folders, current, setCurrent, navigate }}>

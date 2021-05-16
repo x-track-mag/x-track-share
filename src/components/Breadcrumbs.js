@@ -10,7 +10,7 @@ const Breadcrumbs = ({ path }) => {
 		<Box className="breadcrumbs">
 			{parents.map((path) => (
 				<Heading key={path} display="inline-block">
-					<a href={path} onClick={navigate(path)}>
+					<a href={`/share/${path}`} onClick={navigate(path)}>
 						{path.split("/").pop()}
 					</a>
 					&nbsp;&#x2F;&nbsp;

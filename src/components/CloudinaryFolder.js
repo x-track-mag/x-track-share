@@ -1,4 +1,4 @@
-import { Heading, Stack, Box, Grid } from "@chakra-ui/layout";
+import { Stack, Grid } from "@chakra-ui/layout";
 import Folder from "./base/Folder";
 import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer.js";
 import AudioPlaylistPlayer from "./player/AudioPlaylistPlayer.js";
@@ -6,7 +6,6 @@ import Breadcrumbs from "./Breadcrumbs";
 import { useEffect } from "react";
 
 const CloudinaryFolder = ({ folders = {}, current }) => {
-	const router = useRouter();
 	const folder = folders[current];
 	if (!folder) return null;
 	const { path, label, subfolders, audios, videos } = folder;

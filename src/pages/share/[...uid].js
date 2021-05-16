@@ -1,5 +1,4 @@
 import APIClient from "../../lib/services/APIClient.js";
-import { createContext, useContext, useState } from "react";
 import { withEventBus } from "../../components/EventBusProvider.js";
 import CloudinaryFolder from "../../components/CloudinaryFolder.js";
 import { withShareContext } from "../../components/ShareContextProvider.js";
@@ -21,6 +20,7 @@ const retrieveFromCache = (uid) => {
 const storeInCache = (uid, data) => {
 	if (typeof window === "undefined") return;
 	window.localStorage.setItem(
+		uid,
 		JSON.stringify({
 			...data,
 			timeStamp: Date.now()

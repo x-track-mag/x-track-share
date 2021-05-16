@@ -1,15 +1,18 @@
 import { Box, Heading } from "@chakra-ui/layout";
 import { extractPaths } from "../lib/utils/Folders";
-import { Link } from "./base/Link";
+import { useShareContext } from "./ShareContextProvider";
 
-const Railway = ({ path }) => {
+const Breadcrumbs = ({ path }) => {
+	const { navigate } = useShareContext();
 	const { leaf, parents } = extractPaths(path);
-	// Render the links to the parent forldes
+	// Render the links to the parent folders
 	return (
-		<Box className="railway">
+		<Box className="breadcrumbs">
 			{parents.map((path) => (
 				<Heading key={path} display="inline-block">
-					<Link href={`/share/${path}`}>{path.split("/").pop()}</Link>
+					<a href={path} onClick={navigate(path)}>
+						{path.split("/").pop()}
+					</a>
 					&nbsp;&#x2F;&nbsp;
 				</Heading>
 			))}
@@ -20,4 +23,4 @@ const Railway = ({ path }) => {
 	);
 };
 
-export default Railway;
+export default Breadcrumbs;

@@ -4,7 +4,7 @@ export const EMPTY_RAILWAY = {
 };
 
 /**
- * @typedef Railway
+ * @typedef Breadcrumbs
  * @property {String} leaf
  * @property {Array<String>} parents
  */
@@ -23,7 +23,7 @@ export const EMPTY_RAILWAY = {
  *     ]
  *   }
  * @param {String} path
- * @returns {Railway}
+ * @returns {Breadcrumbs}
  */
 export const extractPaths = (path) => {
 	if (!path) {

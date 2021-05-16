@@ -50,14 +50,13 @@ export const getContent = async (root) => {
 				// Not yet known to us
 				folder = folders[rsc.folder] = new CloudinaryFolder(rsc.folder);
 				const parent = folder.getParentFolder();
-				console.log(`Adding ${rsc.folder} to ${parent}`);
 				folders[parent]?.subfolders.push(rsc.folder);
 			}
 
 			folder.addMedia(rsc);
 		});
 
-		console.log(`Loaded shared folders`, folders);
+		// console.log(`Loaded shared folders`, folders);
 		return folders;
 	} catch (err) {
 		console.error(err);

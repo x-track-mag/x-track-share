@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import CloudinaryFolder from "./CloudinaryFolder";
+import { useRouter } from "next/router";
 
 /**
  * @typedef SharedFolderContext
@@ -18,15 +18,19 @@ export const useShareContext = () => {
 	return useContext(ShareContext);
 };
 
-const CloudinaryExplorer = ({ folders, path = "" }) => {
+export const withShareContext = (Component) => ({ folders, path, props }) => {
 	const [current, setCurrent] = useState(path);
-	const currentFolder = folders[current];
-	console.log(`Exploring ${current}`, currentFolder);
+	const router = useRouter();
+
+	const navigate = (path) => (evt) => {
+		evt.preventDefault();
+		setCurrent(path);
+		router.push(`/share/${path}`, undefined, { shallow: true });
+	};
+
 	return (
-		<ShareContext.Provider value={{ folders, current, setCurrent }}>
-			<CloudinaryFolder {...currentFolder} />
+		<ShareContext.Provider value={{ folders, current, setCurrent, navigate }}>
+			<Component folders={folders} current={current} {...props} />
 		</ShareContext.Provider>
 	);
 };
-
-export default CloudinaryExplorer;

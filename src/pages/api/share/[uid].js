@@ -1,4 +1,4 @@
-import CloudinaryClient from "@lib/services/CloudinaryClient.js";
+import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 
 /**
  * The API entry point (GET) to get the content of a shared folder

@@ -49,7 +49,7 @@ const PlaylistEntry = ({
 			<Box as="span" ml="1rem">
 				{filename}
 			</Box>
-			<Box as="span" ml="1rem">
+			<Box as="span" ml="1rem" float="right">
 				{formatDuration(duration)}
 			</Box>
 		</Box>

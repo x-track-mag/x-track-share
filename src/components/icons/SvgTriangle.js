@@ -1,3 +1,5 @@
+import Icon from "@chakra-ui/icon";
+
 const shapes = {
 	down: "M 41,9 24,39 7,9 Z",
 	right: "M 9,7 39,24 9,41 Z",
@@ -16,10 +18,15 @@ const shapes = {
  * Render an equilateral triangle pointing up, down, right or left
  * @param {SvgTriangleProps} props
  */
-const SvgTriangle = ({ direction = "up", color = "black", size = "1rem", ...props }) => (
-	<svg height={size} width={size} viewport="0 0 48 48" {...props}>
+const SvgTriangle = ({
+	direction = "up",
+	color = "inherit",
+	size = "18px",
+	...props
+}) => (
+	<Icon height={size} width={size} viewBox="0 0 48 48" {...props}>
 		<path fill={color} d={shapes[direction]} />
-	</svg>
+	</Icon>
 );
 
 export default SvgTriangle;

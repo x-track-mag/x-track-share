@@ -1,8 +1,7 @@
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { Box } from "@chakra-ui/layout";
-import { Table, Th, Thead, Tr } from "@chakra-ui/table";
+import { Table, Tbody, Th, Thead, Tr, Td } from "@chakra-ui/table";
 import { useTable, useSortBy, Column } from "react-table";
-import SvgTriangle from "../icons/SvgTriangle";
+import SvgTriangle from "../icons/SvgTriangle.js";
 
 /**
  * @typedef Column
@@ -39,18 +38,19 @@ export const DataTable = ({ columns, data }) => {
 								isNumeric={column.isNumeric}
 							>
 								{column.render("Header")}
-								<Box as="span" pl="4">
-									{column.isSorted ? (
-										<SvgTriangle
-											className="sort-indicator"
-											aria-label=""
-											color="blue"
-											direction={
-												column.isSortedDesc ? "down" : "up"
-											}
-										/>
-									) : null}
-								</Box>
+								{column.isSorted ? (
+									<SvgTriangle
+										className="sort-indicator"
+										aria-label={
+											column.isSortedDesc
+												? "sorted descending"
+												: "sorted ascending"
+										}
+										size="20"
+										ml="1rem"
+										direction={column.isSortedDesc ? "down" : "up"}
+									/>
+								) : null}
 							</Th>
 						))}
 					</Tr>

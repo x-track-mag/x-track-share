@@ -19,8 +19,9 @@ const createPlayer = (id, playlist, selectedIndex, merge) => {
 			normalize: true,
 			hideScrollbar: true,
 			height: 256,
-			barWidth: 3,
-			barGap: 2
+			barWidth: 2,
+			barGap: 1,
+			scrollParent: true
 		}));
 
 		["play", "pause", "load"].map((methodName) => {

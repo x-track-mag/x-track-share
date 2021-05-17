@@ -24,6 +24,10 @@ const VScrollPositionProvider = ({ children }) => {
 	let [vscrollPosition, setVScrollPosition] = useState(INITIAL_POSITION);
 	const previous = useRef();
 
+	/**
+	 * Store the previous vscroll position value
+	 * @see https://blog.logrocket.com/how-to-get-previous-props-state-with-react-hooks/
+	 */
 	useEffect(() => {
 		previous.current = vscrollPosition;
 	});

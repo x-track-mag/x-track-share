@@ -21,7 +21,8 @@ const createPlayer = (id, playlist, selectedIndex, merge) => {
 			height: 256,
 			barWidth: 2,
 			barGap: 1,
-			scrollParent: true
+			scrollParent: true,
+			autoCenterImmediately: true
 		}));
 
 		["play", "pause", "load"].map((methodName) => {
@@ -111,6 +112,7 @@ const unregisterPlayerEvents = (playerId, player, eb) => {
 	eb.off(`${playerId}:previous`, player.playPrevious);
 	eb.off(`${playerId}:changeTrack`, player.changeTrack);
 	player.unAll();
+	player.destroy();
 };
 
 /**

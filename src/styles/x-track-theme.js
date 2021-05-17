@@ -43,6 +43,9 @@ export const global = {
 		},
 		"h1, h2, h3": {
 			textTransform: "uppercase"
+		},
+		a: {
+			textDecoration: "underline"
 		}
 	}
 };

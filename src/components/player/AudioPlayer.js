@@ -22,7 +22,8 @@ const createPlayer = (id, playlist, selectedIndex, merge) => {
 			barWidth: 2,
 			barGap: 1,
 			scrollParent: true,
-			autoCenterImmediately: true
+			autoCenterImmediately: true,
+			autoCenterRate: 10
 		}));
 
 		["play", "pause", "load"].map((methodName) => {
@@ -143,7 +144,7 @@ const AudioPlayer = ({ id, playlist }) => {
 			className="audio-container"
 			width="100%"
 			height="256px"
-			padding="0 2rem"
+			margin="0 2rem"
 			position="relative"
 			sx={{ position: "-webkit-sticky", /* Safari */ position: "sticky", top: "0" }}
 			overflow="hidden"

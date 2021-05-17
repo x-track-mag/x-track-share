@@ -15,7 +15,7 @@ const CloudinaryFolder = ({ folders = {}, current }) => {
 	}, [current]);
 
 	return (
-		<Stack className="folder-content" bg="black" minH="100vh">
+		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<Breadcrumbs path={path} />
 
 			{subfolders.length && (

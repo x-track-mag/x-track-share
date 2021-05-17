@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box, Heading } from "@chakra-ui/layout";
 import { useEventBus } from "../EventBusProvider.js";
 import { usePlayerState } from "./PlayerStateProvider.js";
 import PlayPauseIcon from "./PlayPauseIcon.js";
@@ -7,6 +7,18 @@ import clsx from "clsx";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
+
+const PlaylistHeader = ({ playlist = [] }) => {
+	const displayArtist = playlist[0] && playlist[0].filename.indexOf(" - ") > 0;
+	return (
+		<Box className="playlist_header">
+			<Heading as="h4">Titre</Heading>
+			<Heading as="h4" className="duration">
+				Durée
+			</Heading>
+		</Box>
+	);
+};
 
 /**
  * An entry inside the playlist, representing an audio or video asset to play
@@ -57,10 +69,18 @@ const PlaylistEntry = ({
 };
 
 const Playlist = ({ playerId, playlist = [] }) => (
-	<Box as="ol" className={styles.playlist}>
-		{playlist.map((video, i) => (
-			<PlaylistEntry playerId={playerId} key={`entry-${i}`} index={i} {...video} />
-		))}
+	<Box className={styles.playlist}>
+		<PlaylistHeader playlist={playlist} />
+		<Box as="ol">
+			{playlist.map((video, i) => (
+				<PlaylistEntry
+					playerId={playerId}
+					key={`entry-${i}`}
+					index={i}
+					{...video}
+				/>
+			))}
+		</Box>
 	</Box>
 );
 

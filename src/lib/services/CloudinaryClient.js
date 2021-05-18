@@ -26,8 +26,6 @@ export const getContent = async (root) => {
 			.max_results(500)
 			.execute();
 
-		console.log(resources);
-
 		// Keep only the minimal fields information
 		resources = resources.map(
 			({ asset_id, filename, folder, format, duration, secure_url }) => ({

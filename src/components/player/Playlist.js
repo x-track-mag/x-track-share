@@ -4,6 +4,7 @@ import PlayPauseIcon from "./PlayPauseIcon.js";
 import styles from "./Playlist.module.scss";
 import { Checkbox } from "@chakra-ui/checkbox";
 import { DataTable } from "../base/DataTable.js";
+import { useMemo } from "react";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
@@ -35,7 +36,8 @@ const PlaylistHeaders = {
 		Header: "Ajouter à ma playliste",
 		accessor: (row) => (
 			<Checkbox
-				colorSheme="blue"
+				color="blue"
+				size="lg"
 				onClick={(evt) => evt.stopPropagation()}
 				onChange={(evt) => row.toggleAddToPlaylist(evt.checked)}
 			/>
@@ -87,7 +89,6 @@ function PlaylistEntry(props, player, eb) {
 }
 PlaylistEntry.prototype = {
 	onClick: function (evt) {
-		console.log(evt);
 		// Check if the native event has something to do about it
 		if (
 			["INPUT", "BUTTON"].includes(evt.target.tagName) ||
@@ -135,12 +136,13 @@ const Playlist = ({
 	const player = usePlayerState();
 	player.id = playerId;
 	const data = playlist.map((entry) => new PlaylistEntry(entry, player, eb));
+	const displayColumns = useMemo(() => makeColumns(columns), [columns]);
 
 	return (
 		<DataTable
 			className={styles.playlist}
 			size="sm"
-			columns={makeColumns(columns)}
+			columns={displayColumns}
 			data={data}
 			styles={playlistStyles}
 		/>

@@ -23,7 +23,7 @@ const PlaylistHeaders = {
 	},
 	title: {
 		Header: "Titre",
-		accessor: (row) => row.filename.split(" - ")[0] || row.filename,
+		accessor: (row) => row.filename.split(" - ")[0],
 		minWidth: 50
 	},
 	artist: {
@@ -79,12 +79,11 @@ const makeColumns = (ids) =>
  * @param {PlaylistEntryProps} props
  * @returns
  */
-function PlaylistEntry(props, index, player, eb) {
+function PlaylistEntry(props, player, eb) {
 	Object.assign(this, props);
-	this.index = index;
 	this.player = player;
 	this.eb = eb;
-	this.selected = player.selectedIndex === index;
+	this.selected = player.selectedIndex === this.index;
 }
 PlaylistEntry.prototype = {
 	onClick: function (evt) {
@@ -135,7 +134,7 @@ const Playlist = ({
 	const eb = useEventBus();
 	const player = usePlayerState();
 	player.id = playerId;
-	const data = playlist.map((entry, i) => new PlaylistEntry(entry, i, player, eb));
+	const data = playlist.map((entry) => new PlaylistEntry(entry, player, eb));
 
 	return (
 		<DataTable

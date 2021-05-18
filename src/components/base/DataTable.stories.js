@@ -3,32 +3,23 @@ import theme from "../../theme.js";
 import { addDecorator } from "@storybook/react";
 import { Center, ChakraProvider } from "@chakra-ui/react";
 
-const newTheme = {
-	...theme,
-	config: {
-		initialColorMode: "dark",
-		useSystemColorMode: false
-	}
-};
-
-const Chakra = ({ children }) => (
-	<ChakraProvider theme={newTheme}>
-		<Center bg="pink">{children}</Center>
-	</ChakraProvider>
-);
-
 addDecorator((StoryFn) => (
-	<Chakra>
-		<StoryFn />
-	</Chakra>
+	<ChakraProvider resetCSS theme={theme}>
+		<Center>
+			<StoryFn />
+		</Center>
+	</ChakraProvider>
 ));
-
+const genres = {
+	M: "Male",
+	F: "Female"
+};
 const columns = [
 	{ Header: "First Name", accessor: "firstName" },
 	{ Header: "First Name", accessor: "lastName" },
 	{ Header: "City", accessor: "city" },
-	{ Header: "Genre", accessor: "genre" },
-	{ Header: "Age", accessor: "age", isNumeric: true }
+	{ Header: "Genre", accessor: (row) => genres[row.genre] },
+	{ Header: "Age", accessor: "age", isNumeric: true, width: "4rem" }
 ];
 const data = [
 	{ firstName: "John", lastName: "DOE", city: "LA", genre: "M", age: 38 },
@@ -39,7 +30,8 @@ const data = [
 ];
 
 export default {
-	title: "Sortable Data Table"
+	component: DataTable,
+	title: "Data Table"
 };
 
 export const SortableDataTable = () => <DataTable data={data} columns={columns} />;

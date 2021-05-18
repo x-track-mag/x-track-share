@@ -15,10 +15,10 @@ export const Subtitle = ({ children, ...moreStyles }) => (
 export const ColumnHeader = ({ children, ...moreStyles }) => (
 	<Heading
 		as="h4"
-		fontFamily="sans"
-		fontSize="1.2rem"
+		fontSize="1.3rem"
 		lineHeight="1rem"
 		fontWeight={600}
+		color="white"
 		display="inline-block"
 		{...moreStyles}
 	>

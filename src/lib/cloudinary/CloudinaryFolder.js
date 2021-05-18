@@ -28,10 +28,12 @@ CloudinaryFolder.prototype = {
 		return this;
 	},
 	addAudio: function (media) {
+		media.index = this.audios.length;
 		this.audios.push(media);
 		return this;
 	},
 	addVideo: function (media) {
+		media.index = this.videos.length;
 		this.videos.push(media);
 		return this;
 	},

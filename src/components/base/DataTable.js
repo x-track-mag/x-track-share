@@ -2,6 +2,7 @@ import { Table, Tbody, Th, Thead, Tr, Td } from "@chakra-ui/table";
 import { useTable, useSortBy, Column } from "react-table";
 import { ColumnHeader } from "./Typography.js";
 import SvgTriangle from "../icons/SvgTriangle.js";
+import clsx from "clsx";
 
 /**
  * @typedef Column
@@ -70,10 +71,16 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 			<Tbody {...getTableBodyProps()}>
 				{rows.map((row) => {
 					prepareRow(row);
+					// Extract className from the possible custom styles properties
+					const { className, ...moreStyles } = styles.rows;
 					return (
 						<Tr
 							{...row.getRowProps()}
-							{...styles.rows}
+							className={clsx(className, {
+								// so that we can add the selected class when it is
+								selected: row.original.selected
+							})}
+							{...moreStyles}
 							onClick={(evt) => row.original.onClick(evt)}
 						>
 							{row.cells.map((cell) => (

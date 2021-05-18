@@ -2,10 +2,9 @@ import { useState, createContext, useContext } from "react";
 
 /**
  * @typedef PlayerState
- * @property {Array} playlist
  * @property {Number} selectedIndex
  * @property {Boolean} playing
- * @property {Function} setPlayerState
+ * @property {Function} merge
  */
 
 const PlayerContext = createContext();

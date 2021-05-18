@@ -21,7 +21,7 @@ import SvgTriangle from "../icons/SvgTriangle.js";
  * Build a sortable table rendered with Chakra-UI Table elements and react-table hooks
  * @param {DataTableProps} props
  */
-export const DataTable = ({ columns, data }) => {
+export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 	// Use the hook
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
 		{ columns, data, disableSortRemove: true },
@@ -29,10 +29,10 @@ export const DataTable = ({ columns, data }) => {
 	);
 
 	return (
-		<Table {...getTableProps()} variant="simple">
+		<Table {...getTableProps()} variant="simple" {...props}>
 			<Thead>
 				{headerGroups.map((headerGroup) => (
-					<Tr {...headerGroup.getHeaderGroupProps()}>
+					<Tr {...headerGroup.getHeaderGroupProps()} {...styles.headers}>
 						{headerGroup.headers.map((column) => (
 							<Th
 								{...column.getHeaderProps(column.getSortByToggleProps())}
@@ -40,7 +40,6 @@ export const DataTable = ({ columns, data }) => {
 								minW={column.width || "15rem"}
 								position="relative"
 								lineHeight="1"
-								pr="2rem" // space for the sorting indicator
 							>
 								<ColumnHeader>
 									{column.render("Header")}&nbsp;
@@ -74,13 +73,15 @@ export const DataTable = ({ columns, data }) => {
 					return (
 						<Tr
 							{...row.getRowProps()}
-							_hover={{ backgroundColor: "yellow", cursor: "pointer" }}
+							{...styles.rows}
+							onClick={(evt) => row.original.onClick(evt)}
 						>
 							{row.cells.map((cell) => (
 								<Td
 									{...cell.getCellProps()}
 									lineHeight="1"
 									isNumeric={cell.column.isNumeric}
+									textAlign={cell.column.align}
 								>
 									{cell.render("Cell")}
 								</Td>

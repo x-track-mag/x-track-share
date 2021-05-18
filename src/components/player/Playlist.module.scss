@@ -3,13 +3,8 @@
 	color: white;
 	text-transform: uppercase;
 	:global(.playlist_header) {
-		h4 {
-			display: inline-block;
-			font-size: 1.2rem;
-			margin-left: 3rem;
-			&:global(.duration) {
-				float: right;
-			}
+		svg {
+			fill: blue;
 		}
 	}
 	ol,
@@ -20,6 +15,7 @@
 		cursor: pointer;
 		margin: 0;
 		padding: 0.1rem 0;
+		line-height: "1rem";
 		&:global(.selected),
 		&:hover {
 			color: yellow;

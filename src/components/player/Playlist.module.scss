@@ -13,9 +13,10 @@
 	}
 	:global(.playlist_entry) {
 		cursor: pointer;
-		margin: 0;
-		padding: 0.1rem 0;
-		line-height: "1rem";
+		// td {
+		// 	padding: 0.5rem 1rem;
+		// 	line-height: "1rem";
+		// }
 		&:global(.selected),
 		&:hover {
 			color: yellow;

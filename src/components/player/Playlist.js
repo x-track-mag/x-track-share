@@ -1,87 +1,151 @@
-import { Box, Heading } from "@chakra-ui/layout";
 import { useEventBus } from "../EventBusProvider.js";
 import { usePlayerState } from "./PlayerStateProvider.js";
 import PlayPauseIcon from "./PlayPauseIcon.js";
 import styles from "./Playlist.module.scss";
-import clsx from "clsx";
+import { Checkbox } from "@chakra-ui/checkbox";
+import { DataTable } from "../base/DataTable.js";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
 
-const PlaylistHeader = ({ playlist = [] }) => {
-	const displayArtist = playlist[0] && playlist[0].filename.indexOf(" - ") > 0;
-	return (
-		<Box className="playlist_header">
-			<Heading as="h4">Titre</Heading>
-			<Heading as="h4" className="duration">
-				Durée
-			</Heading>
-		</Box>
-	);
+const PlaylistHeaders = {
+	play: {
+		Header: "",
+		width: 10,
+		accessor: (row) => (
+			<PlayPauseIcon
+				className="allow-select"
+				show={row.selected}
+				playing={row.selected && row.player.playing}
+				size="2rem"
+			/>
+		)
+	},
+	title: {
+		Header: "Titre",
+		accessor: (row) => row.filename.split(" - ")[0] || row.filename,
+		minWidth: 50
+	},
+	artist: {
+		Header: "Artiste",
+		accessor: (row) => row.filename.split(" - ")[1] || "",
+		minWidth: 50
+	},
+	addToPlaylist: {
+		Header: "Ajouter à ma playliste",
+		accessor: (row) => (
+			<Checkbox
+				colorSheme="blue"
+				onClick={(evt) => evt.stopPropagation()}
+				onChange={(evt) => row.toggleAddToPlaylist(evt.checked)}
+			/>
+		),
+		sortable: false,
+		width: 15,
+		align: "center"
+	},
+	duration: {
+		Header: "Durée",
+		accessor: (row) => formatDuration(row.duration),
+		width: 15,
+		isNumeric: true
+	}
 };
+
+/**
+ * Take the relevant columns from the Headers definitions
+ * @param {Array<String>} ids
+ * @returns {Array<Column>} Columns definitions suitable for useTable()
+ */
+const makeColumns = (ids) =>
+	ids.map((id) => {
+		const columnDef = PlaylistHeaders[id] || {};
+		return {
+			id,
+			...columnDef
+		};
+	});
+
+/**
+ * @typedef PlaylistEntryProps
+ * @property {Number} index A unique index in the playlist
+ * @property {String} filename
+ * @property {Number} duration (in secs)
+ * @property {String} url The
+ */
 
 /**
  * An entry inside the playlist, representing an audio or video asset to play
  * @param {PlaylistEntryProps} props
  * @returns
  */
-const PlaylistEntry = ({
-	index,
-	playerId,
-	filename,
-	format,
-	duration,
-	url,
-	asset_id
-}) => {
-	const eb = useEventBus();
-	const { selectedIndex, playing } = usePlayerState();
-	const selected = selectedIndex === index;
-
-	const changeTrack = (i) => {
+function PlaylistEntry(props, index, player, eb) {
+	Object.assign(this, props);
+	this.index = index;
+	this.player = player;
+	this.eb = eb;
+	this.selected = player.selectedIndex === index;
+}
+PlaylistEntry.prototype = {
+	onClick: function (evt) {
+		console.log(evt);
+		// Check if the native event has something to do about it
+		if (
+			["INPUT", "BUTTON"].includes(evt.target.tagName) ||
+			evt.target.attributes["aria-hidden"]
+		) {
+			console.log("Forget it...");
+			return;
+		}
+		const {
+			eb,
+			selected,
+			index,
+			player: { id, playing }
+		} = this;
 		if (selected) {
 			if (playing) {
-				eb.emit(`${playerId}:pause`, i);
+				eb.emit(`${id}:pause`, index);
 			} else {
-				eb.emit(`${playerId}:play`, i);
+				eb.emit(`${id}:play`, index);
 			}
 		} else {
-			eb.emit(`${playerId}:changeTrack`, i);
+			eb.emit(`${id}:changeTrack`, index);
 		}
-	};
-
-	return (
-		<Box
-			as="li"
-			key={asset_id}
-			onClick={() => changeTrack(index)}
-			className={clsx("playlist_entry", { selected })}
-		>
-			<PlayPauseIcon show={selected} playing={selected && playing} size="2rem" />
-			<Box as="span" ml="1rem">
-				{filename}
-			</Box>
-			<Box as="span" ml="1rem" float="right">
-				{formatDuration(duration)}
-			</Box>
-		</Box>
-	);
+	},
+	toggleAddToPlaylist: function (selected) {
+		this.eb.emit(selected ? "playlist:add" : "playlist:remove", this);
+	}
 };
 
-const Playlist = ({ playerId, playlist = [] }) => (
-	<Box className={styles.playlist}>
-		<PlaylistHeader playlist={playlist} />
-		<Box as="ol">
-			{playlist.map((video, i) => (
-				<PlaylistEntry
-					playerId={playerId}
-					key={`entry-${i}`}
-					index={i}
-					{...video}
-				/>
-			))}
-		</Box>
-	</Box>
-);
+const playlistStyles = {
+	headers: {
+		className: "playlist_header"
+	},
+	rows: {
+		className: "playlist_entry"
+	}
+};
+
+const Playlist = ({
+	playerId,
+	playlist = [],
+	columns = ["play", "title", "duration"]
+}) => {
+	const eb = useEventBus();
+	const player = usePlayerState();
+	player.id = playerId;
+	const data = playlist.map((entry, i) => new PlaylistEntry(entry, i, player, eb));
+
+	return (
+		<DataTable
+			className={styles.playlist}
+			size="sm"
+			columns={makeColumns(columns)}
+			data={data}
+			styles={playlistStyles}
+		/>
+	);
+};
 
 export default Playlist;

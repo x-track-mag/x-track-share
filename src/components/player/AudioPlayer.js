@@ -148,6 +148,7 @@ const AudioPlayer = ({ id, playlist }) => {
 			position="relative"
 			sx={{ position: "-webkit-sticky", /* Safari */ position: "sticky", top: "0" }}
 			overflow="hidden"
+			zIndex={100}
 		/>
 	);
 };

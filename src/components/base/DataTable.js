@@ -39,6 +39,7 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 								{...column.getHeaderProps(column.getSortByToggleProps())}
 								isNumeric={column.isNumeric}
 								minW={column.width || "15rem"}
+								maxWidth={column.maxWidth}
 								position="relative"
 								lineHeight="1"
 							>
@@ -86,7 +87,7 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 							{row.cells.map((cell) => (
 								<Td
 									{...cell.getCellProps()}
-									lineHeight="1"
+									// lineHeight="1"
 									isNumeric={cell.column.isNumeric}
 									textAlign={cell.column.align}
 								>

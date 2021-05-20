@@ -4,11 +4,15 @@ import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer.js";
 import AudioPlaylistPlayer from "./player/AudioPlaylistPlayer.js";
 import Breadcrumbs from "./Breadcrumbs";
 import { useEffect } from "react";
+import { useShareContext } from "./ShareContextProvider";
 
-const CloudinaryFolder = ({ folders = {}, current }) => {
-	const folder = folders[current];
+const CloudinaryFolder = () => {
+	const { folders, current, playlist } = useShareContext();
+	const folder = folders[current] || playlist;
+
 	if (!folder) return null;
-	const { path, label, subfolders, audios, videos } = folder;
+
+	const { path, label, subfolders, audios, videos, displayPlaylist } = folder;
 
 	useEffect(() => {
 		console.log(`Exploring ${current}`, folder);
@@ -16,7 +20,11 @@ const CloudinaryFolder = ({ folders = {}, current }) => {
 
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
-			<Breadcrumbs path={path} />
+			{displayPlaylist ? (
+				<Breadcrumbs path={path} additionalLink={playlist && playlist.path} />
+			) : (
+				<Breadcrumbs path={path} />
+			)}
 
 			{subfolders.length && (
 				<Grid

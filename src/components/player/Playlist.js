@@ -39,17 +39,18 @@ const PlaylistHeaders = {
 				color="blue"
 				size="lg"
 				onClick={(evt) => evt.stopPropagation()}
-				onChange={(evt) => row.toggleAddToPlaylist(evt.checked)}
+				onChange={(evt) => row.toggleAddToPlaylist(evt.target.checked)}
 			/>
 		),
-		sortable: false,
-		width: 15,
+		disableSortBy: true,
+		width: "100px",
+		maxWidth: "100px",
 		align: "center"
 	},
 	duration: {
 		Header: "Durée",
 		accessor: (row) => formatDuration(row.duration),
-		width: 15,
+		width: "15rem",
 		isNumeric: true
 	}
 };
@@ -140,11 +141,11 @@ const Playlist = ({
 
 	return (
 		<DataTable
-			className={styles.playlist}
-			size="sm"
 			columns={displayColumns}
 			data={data}
+			className={styles.playlist}
 			styles={playlistStyles}
+			size="sm"
 		/>
 	);
 };

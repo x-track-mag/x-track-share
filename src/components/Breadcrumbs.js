@@ -12,7 +12,7 @@ import { useShareContext } from "./ShareContextProvider";
  * <grand-parent> / <parent> / location
  * @param {BreadcrumbsProps} props
  */
-const Breadcrumbs = ({ path }) => {
+const Breadcrumbs = ({ path, additionalLink }) => {
 	const { navigate } = useShareContext();
 	const { leaf, parents } = extractPaths(path);
 	// Render the links to the parent folders
@@ -29,6 +29,16 @@ const Breadcrumbs = ({ path }) => {
 			<Heading display="inline-block" key={leaf}>
 				{leaf}
 			</Heading>
+			{additionalLink && (
+				<Heading display="inline-block" float="right" key={additionalLink}>
+					<a
+						href={`/share/${additionalLink}`}
+						onClick={navigate(additionalLink)}
+					>
+						{additionalLink.split("/").pop()}
+					</a>
+				</Heading>
+			)}
 		</Box>
 	);
 };

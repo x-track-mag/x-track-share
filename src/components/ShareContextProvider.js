@@ -1,10 +1,13 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { useEventBus } from "./EventBusProvider";
+import SharedFolder from "../lib/cloudinary/SharedFolder";
 
 /**
  * @typedef SharedFolderContext
- * @property {Object} folders
+ * @property {Object} folders the navigable shared folders
  * @property {String} current Current path
+ * @property {SharedFolder} playlist A virtual folder containing what the user choosed to add to
  * @property {Function} setCurrent Change the current folder path
  */
 
@@ -19,8 +22,24 @@ export const useShareContext = () => {
 };
 
 export const withShareContext = (Component) => ({ folders, path, props }) => {
+	const sharedRoot = path.split("/")[0];
+	Object.keys(folders).forEach((key) => (folders[key].displayPlaylist = true));
+	const [playlist] = useState(
+		new SharedFolder(`${sharedRoot}/playlist`, {
+			hidden: true,
+			displayPlaylist: false
+		})
+	);
 	const [current, setCurrent] = useState(path);
 	const router = useRouter();
+	const eb = useEventBus();
+
+	const addToPlaylist = (track) => {
+		playlist.addMedia(track);
+	};
+	const removeFromPlaylist = (track) => {
+		playlist.removeMedia(track);
+	};
 
 	/**
 	 * Use this to navigate between folders inside a shared context root
@@ -32,7 +51,7 @@ export const withShareContext = (Component) => ({ folders, path, props }) => {
 	};
 
 	/**
-	 * Detect the path changes to set the new current path inside the shared context root
+	 * Detect the router path changes to set the new current path inside the shared context root
 	 * @param {String} path
 	 */
 	const handlePathChange = (path) => {
@@ -44,16 +63,20 @@ export const withShareContext = (Component) => ({ folders, path, props }) => {
 	};
 
 	useEffect(() => {
+		eb.on("playlist:add", addToPlaylist);
+		eb.on("playlist:remove", removeFromPlaylist);
 		router.events.on("routeChangeComplete", handlePathChange);
 		return () => {
-			console.log(`Unregistering router event handler`);
+			console.log(`Unregistering SharedContext event handler`);
+			eb.off("playlist:add", addToPlaylist);
+			eb.off("playlist:remove", removeFromPlaylist);
 			router.events.off("routeChangeComplete", handlePathChange);
 		};
 	}, [current]);
 
 	return (
-		<ShareContext.Provider value={{ folders, current, setCurrent, navigate }}>
-			<Component folders={folders} current={current} {...props} />
+		<ShareContext.Provider value={{ folders, current, playlist, navigate }}>
+			<Component {...props} />
 		</ShareContext.Provider>
 	);
 };

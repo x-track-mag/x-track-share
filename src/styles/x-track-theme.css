@@ -7,6 +7,7 @@
 }
 @font-face {
 	font-family: Conduit ITC W04 Regular;
+	font-weight: 600;
 	src: url("/fonts/Conduit-ITC-W04-Regular.woff2") format("woff2"),
 		url("/fonts/Conduit-ITC-W04-Regular.woff") format("woff");
 }
@@ -17,4 +18,7 @@
 .audio-player-dimensions {
 	width: 100% !important;
 	height: 200px !important;
+}
+.vjs-poster {
+	background-color: blue !important;
 }

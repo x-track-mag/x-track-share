@@ -2,10 +2,21 @@
 .playlist {
 	color: white;
 	text-transform: uppercase;
+	:global(.playlist_header) {
+		svg {
+			fill: blue;
+		}
+	}
+	ol,
+	ul {
+		list-style-type: none;
+	}
 	:global(.playlist_entry) {
 		cursor: pointer;
-		margin: 0;
-		padding: 0.1rem 2rem;
+		// td {
+		// 	padding: 0.5rem 1rem;
+		// 	line-height: "1rem";
+		// }
 		&:global(.selected),
 		&:hover {
 			color: yellow;

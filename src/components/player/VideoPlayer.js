@@ -120,8 +120,7 @@ const VideoPlayer = ({ id, playlist }) => {
 		<Box
 			className="video-container"
 			width="100%"
-			height="40vh"
-			padding="0 2rem"
+			height="45vh"
 			position="relative"
 			overflow="hidden"
 		>

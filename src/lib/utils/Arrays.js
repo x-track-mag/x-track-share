@@ -1,4 +1,4 @@
-// It's usually a bid idea to extend  prototypes but..
+// It's usually a big idea to extend native prototypes but..
 // it can be damn useful too to chain array manipulations
 
 const ArrayExtensions = {
@@ -30,7 +30,7 @@ const ArrayExtensions = {
 
 		if (!arr[from]) {
 			// index not existing
-			return;
+			return arr;
 		}
 
 		const startIndex = from < 0 ? len + from : from;

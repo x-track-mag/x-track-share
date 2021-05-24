@@ -1,17 +1,15 @@
-import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+
+import PageLayout from "../components/layout/PageLayout.js";
 import "../styles/x-track-theme.css";
-import theme from "../theme";
+import theme from "../theme.js";
 
 function MyApp({ Component, pageProps }) {
 	return (
 		<ChakraProvider resetCSS theme={theme}>
-			<ColorModeProvider
-				options={{
-					useSystemColorMode: true
-				}}
-			>
+			<PageLayout bg="brand.blue">
 				<Component {...pageProps} />
-			</ColorModeProvider>
+			</PageLayout>
 		</ChakraProvider>
 	);
 }

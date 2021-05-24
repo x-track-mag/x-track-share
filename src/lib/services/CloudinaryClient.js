@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { loadEnv } from "../utils/Env.js";
-import CloudinaryFolder from "../cloudinary/CloudinaryFolder.js";
+import SharedFolder from "../cloudinary/SharedFolder.js";
 import ApiError from "../ApiError.js";
 
 if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
@@ -26,8 +26,6 @@ export const getContent = async (root) => {
 			.max_results(500)
 			.execute();
 
-		console.log(resources);
-
 		// Keep only the minimal fields information
 		resources = resources.map(
 			({ asset_id, filename, folder, format, duration, secure_url }) => ({
@@ -42,15 +40,14 @@ export const getContent = async (root) => {
 
 		// Keep track of all the folders and sub-folders
 		const folders = {};
-		folders[root] = new CloudinaryFolder(root); // the root
+		folders[root] = new SharedFolder(root); // the root
 
 		resources.forEach((rsc) => {
 			let folder = folders[rsc.folder];
 			if (!folder) {
 				// Not yet known to us
-				folder = folders[rsc.folder] = new CloudinaryFolder(rsc.folder);
+				folder = folders[rsc.folder] = new SharedFolder(rsc.folder);
 				const parent = folder.getParentFolder();
-				console.log(`Adding ${rsc.folder} to ${parent}`);
 				folders[parent]?.subfolders.push(rsc.folder);
 			}
 

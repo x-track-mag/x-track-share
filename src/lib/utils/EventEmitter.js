@@ -64,7 +64,7 @@ EP.off = EP.removeEventListener;
  * @param {...*} var_args Arguments to call listeners with.
  */
 EP.emit = function (name, var_args) {
-	console.log(`Sending ${name} event`);
+	console.log(`Sending ${name}(${var_args}) event`);
 	var eventMap = (this.__events = this.__events || {});
 	var handlerList = eventMap[name];
 	var args = Array.prototype.slice.call(arguments, 1);

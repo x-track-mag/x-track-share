@@ -1,7 +1,7 @@
 import "@fontsource/archivo/800.css";
 
 export const fonts = {
-	heading: `'Conduit ITC W04 Black', Archivo, sans`, // Conduit ITC W02 Bold
+	heading: `'Conduit ITC W04 Regular', Archivo, sans`, // Conduit ITC W02 Bold
 	body: `'Conduit ITC W04 Regular', Raleway`
 };
 
@@ -34,15 +34,19 @@ export const global = {
 		minWidth: "480px",
 		overflowX: "hidden",
 		color: "brand.yellow",
-		backgroundColor: "brand.blue",
-		"p, h1, h2, h3": {
+		backgroundColor: "black",
+		"p, h1, h2, h3, h4": {
 			"&::selection": {
 				color: "brand.blue",
 				backgroundColor: "brand.yellow"
 			}
 		},
-		"h1, h2, h3": {
-			textTransform: "uppercase"
+		"h1, h2, h3, h4": {
+			textTransform: "uppercase",
+			fontWeight: 600
+		},
+		a: {
+			textDecoration: "underline"
 		}
 	}
 };

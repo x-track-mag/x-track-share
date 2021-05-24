@@ -12,7 +12,22 @@ export const Subtitle = ({ children, ...moreStyles }) => (
 	</Heading>
 );
 
+export const ColumnHeader = ({ children, ...moreStyles }) => (
+	<Heading
+		as="h4"
+		fontSize="1.3rem"
+		lineHeight="1rem"
+		fontWeight={600}
+		color="white"
+		display="inline-block"
+		{...moreStyles}
+	>
+		{children}
+	</Heading>
+);
+
 export default {
 	Title,
-	Subtitle
+	Subtitle,
+	ColumnHeader
 };

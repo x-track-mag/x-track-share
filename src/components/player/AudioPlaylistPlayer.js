@@ -16,10 +16,20 @@ const AudioPlayer = dynamic(() => import("./AudioPlayer.js"), { ssr: false });
  */
 const AudioPlaylistPlayer = ({ playerId, playlist = [] }) => {
 	console.log(`We've got some audios to display`, playlist);
+	const columnsToDisplay = ["play", "title"];
+	if (playlist[0].filename.indexOf(" - ") > 0) {
+		columnsToDisplay.push("artist");
+	}
+	columnsToDisplay.push("addToPlaylist");
+	columnsToDisplay.push("duration");
 	return (
 		<PlayerStateProvider>
 			<AudioPlayer id={playerId} playlist={playlist} />
-			<Playlist playerId={playerId} playlist={playlist} />
+			<Playlist
+				playerId={playerId}
+				playlist={playlist}
+				columns={columnsToDisplay}
+			/>
 		</PlayerStateProvider>
 	);
 };

@@ -19,8 +19,11 @@ const createPlayer = (id, playlist, selectedIndex, merge) => {
 			normalize: true,
 			hideScrollbar: true,
 			height: 256,
-			barWidth: 3,
-			barGap: 2
+			barWidth: 2,
+			barGap: 1,
+			scrollParent: true,
+			autoCenterImmediately: true,
+			autoCenterRate: 10
 		}));
 
 		["play", "pause", "load"].map((methodName) => {
@@ -110,6 +113,7 @@ const unregisterPlayerEvents = (playerId, player, eb) => {
 	eb.off(`${playerId}:previous`, player.playPrevious);
 	eb.off(`${playerId}:changeTrack`, player.changeTrack);
 	player.unAll();
+	player.destroy();
 };
 
 /**
@@ -140,10 +144,11 @@ const AudioPlayer = ({ id, playlist }) => {
 			className="audio-container"
 			width="100%"
 			height="256px"
-			padding="0 2rem"
+			margin="0 2rem"
 			position="relative"
 			sx={{ position: "-webkit-sticky", /* Safari */ position: "sticky", top: "0" }}
 			overflow="hidden"
+			zIndex={100}
 		/>
 	);
 };

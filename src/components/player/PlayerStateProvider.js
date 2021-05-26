@@ -37,7 +37,7 @@ export default PlayerStateProvider;
  */
 export const withPlayerState = (Component) => (props) => {
 	return (
-		<PlayerStateProvider>
+		<PlayerStateProvider {...props}>
 			<Component {...props} />
 		</PlayerStateProvider>
 	);

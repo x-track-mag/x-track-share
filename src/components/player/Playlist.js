@@ -24,23 +24,40 @@ const PlaylistHeaders = {
 	},
 	title: {
 		Header: "Titre",
-		accessor: (row) => row.filename.split(" - ")[0],
+		accessor: (row) => row.title || row.filename,
 		minWidth: 50
 	},
 	artist: {
 		Header: "Artiste",
-		accessor: (row) => row.filename.split(" - ")[1] || "",
+		accessor: "artist",
 		minWidth: 50
 	},
-	addToPlaylist: {
-		Header: "Ajouter à ma playliste",
+	song: {
+		Header: "Titre",
+		accessor: "song",
+		minWidth: 50
+	},
+	addToSelection: {
+		Header: "Ajouter à ma sélection",
 		accessor: (row) => (
 			<Checkbox
 				color="blue"
 				size="lg"
 				onClick={(evt) => evt.stopPropagation()}
-				onChange={(evt) => row.toggleAddToPlaylist(evt.target.checked)}
+				onChange={(evt) => row.toggleSelection(evt.target.checked)}
 			/>
+		),
+		disableSortBy: true,
+		width: "100px",
+		maxWidth: "100px",
+		align: "center"
+	},
+	directDownload: {
+		Header: "Télécharger",
+		accessor: (row) => (
+			<a href={`${row.url}`} download={`${row.artist} - ${row.song}.${row.format}`}>
+				Télécharger
+			</a>
 		),
 		disableSortBy: true,
 		width: "100px",
@@ -86,7 +103,7 @@ function PlaylistEntry(props, player, eb) {
 	Object.assign(this, props);
 	this.player = player;
 	this.eb = eb;
-	this.selected = player.selectedIndex === this.index;
+	this.active = player.selectedIndex === this.index;
 }
 PlaylistEntry.prototype = {
 	onClick: function (evt) {
@@ -100,11 +117,11 @@ PlaylistEntry.prototype = {
 		}
 		const {
 			eb,
-			selected,
+			active,
 			index,
 			player: { id, playing }
 		} = this;
-		if (selected) {
+		if (active) {
 			if (playing) {
 				eb.emit(`${id}:pause`, index);
 			} else {
@@ -114,8 +131,8 @@ PlaylistEntry.prototype = {
 			eb.emit(`${id}:changeTrack`, index);
 		}
 	},
-	toggleAddToPlaylist: function (selected) {
-		this.eb.emit(selected ? "playlist:add" : "playlist:remove", this);
+	toggleSelection: function (selected) {
+		this.eb.emit(selected ? "selected-tracks:add" : "selected-tracks:remove", this);
 	}
 };
 

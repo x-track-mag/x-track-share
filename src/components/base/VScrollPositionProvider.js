@@ -1,11 +1,5 @@
-import {
-	createContext,
-	useContext,
-	useState,
-	useEffect,
-	useLayoutEffect,
-	useRef
-} from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
+import useUniversalEffect from "../../hooks/useUniversalEffect";
 
 const VScrollPositionContext = createContext();
 
@@ -34,7 +28,7 @@ const VScrollPositionProvider = ({ children }) => {
 
 	// This useLayoutEffect will execute only once because
 	// it does not have any dependencies.
-	useLayoutEffect(() => {
+	useUniversalEffect(() => {
 		// Listen to window scroll event
 		const measureVScrollPosition = () => {
 			requestAnimationFrame(() => {

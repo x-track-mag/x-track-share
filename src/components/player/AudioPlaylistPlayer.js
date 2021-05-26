@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useShareContext } from "../ShareContextProvider.js";
 import PlayerStateProvider from "./PlayerStateProvider.js";
 import Playlist from "./Playlist.js";
 
@@ -11,17 +12,26 @@ const AudioPlayer = dynamic(() => import("./AudioPlayer.js"), { ssr: false });
  */
 
 /**
- *
+ * Display a soundwave and a playlist of sounds
  * @param {AudioPlaylistPlayerProps} props
  */
 const AudioPlaylistPlayer = ({ playerId, playlist = [] }) => {
-	console.log(`We've got some audios to display`, playlist);
-	const columnsToDisplay = ["play", "title"];
-	if (playlist[0].filename.indexOf(" - ") > 0) {
-		columnsToDisplay.push("artist");
+	const {
+		sharedOptions: { addToSelection, directDownload, displayDownloadForm }
+	} = useShareContext();
+
+	// Build the list of columns to add to the DataTable
+	const columnsToDisplay = ["play"];
+	if (addToSelection) {
+		columnsToDisplay.push("artist", "song", "addToSelection");
+	} else {
+		columnsToDisplay.push("title");
 	}
-	columnsToDisplay.push("addToPlaylist");
+	if (directDownload && !displayDownloadForm) {
+		columnsToDisplay.push("directDownload");
+	}
 	columnsToDisplay.push("duration");
+
 	return (
 		<PlayerStateProvider>
 			<AudioPlayer id={playerId} playlist={playlist} />

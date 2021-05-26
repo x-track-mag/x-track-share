@@ -14,6 +14,30 @@ cloudinary.config({
 });
 
 /**
+ * Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
+ * We remove them
+ * @param {String} filename
+ * @returns String
+ */
+const fileNameExtras = (cloudinaryFileName) => {
+	const filename = cloudinaryFileName
+		.replace(/\_[a-z0_9]{6}$/, "") // Remove the random sequence _jhj7yg at the end of the file names
+		.replace(/\_/gi, " ");
+
+	if (filename.indexOf("-") > 0) {
+		// We have a song title
+		const [artist, song] = filename.split(" - ");
+		console.log(`Found a song : ${artist} - ${song}}`);
+		return {
+			artist,
+			song
+		};
+	} else {
+		return { filename };
+	}
+};
+
+/**
  * Return the list of subfolders and content inside a root folder
  * @see cloudinary-search-results.json to see what the results look like
  * @param {String} root
@@ -30,13 +54,25 @@ export const getContent = async (root) => {
 		resources = resources.map(
 			({ asset_id, filename, folder, format, duration, secure_url }) => ({
 				asset_id,
-				filename,
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
 				duration,
-				url: secure_url
+				url: secure_url,
+				...fileNameExtras(filename)
 			})
 		);
+
+		const sharedOptions = {
+			addToSelection: false,
+			directDownload: true,
+			displayDownloadForm: false
+		};
+
+		if (resources.find((rsc) => rsc.artist)) {
+			// Songs are shared via a virtual playlist and a download form
+			sharedOptions.addToSelection = true;
+			// sharedOptions.displayDownloadForm = true;
+		}
 
 		// Keep track of all the folders and sub-folders
 		const folders = {};
@@ -55,7 +91,7 @@ export const getContent = async (root) => {
 		});
 
 		console.log(`Loaded shared folders`, folders);
-		return folders;
+		return { folders, sharedOptions };
 	} catch (err) {
 		console.error(err);
 		throw new ApiError(500, err.message);

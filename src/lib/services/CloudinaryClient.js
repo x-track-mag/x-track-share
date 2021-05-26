@@ -21,13 +21,13 @@ cloudinary.config({
  */
 const fileNameExtras = (cloudinaryFileName) => {
 	const filename = cloudinaryFileName
-		.replace(/\_[a-z0_9]{6}$/, "") // Remove the random sequence _jhj7yg at the end of the file names
+		.replace(/\_[a-z0-9]{6}$/, "") // Remove the random sequence _jhj7yg at the end of the file names
 		.replace(/\_/gi, " ");
 
 	if (filename.indexOf("-") > 0) {
 		// We have a song title
 		const [artist, song] = filename.split(" - ");
-		console.log(`Found a song : ${artist} - ${song}}`);
+		console.log(`Found a song : ${artist} - ${song}`);
 		return {
 			artist,
 			song

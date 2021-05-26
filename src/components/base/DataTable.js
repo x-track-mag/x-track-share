@@ -1,5 +1,5 @@
 import { Table, Tbody, Th, Thead, Tr, Td } from "@chakra-ui/table";
-import { useTable, useSortBy, Column } from "react-table";
+import { useTable, useSortBy, useRowState, Column } from "react-table";
 import { ColumnHeader } from "./Typography.js";
 import SvgTriangle from "../icons/SvgTriangle.js";
 import clsx from "clsx";
@@ -26,7 +26,8 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 	// Use the hook
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
 		{ columns, data, disableSortRemove: true },
-		useSortBy
+		useSortBy,
+		useRowState
 	);
 
 	return (
@@ -78,8 +79,8 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 						<Tr
 							{...row.getRowProps()}
 							className={clsx(className, {
-								// so that we can add the selected class when it is
-								selected: row.original.selected
+								// so that we can add the active class when it is
+								active: row.original.active
 							})}
 							{...moreStyles}
 							onClick={(evt) => row.original.onClick(evt)}

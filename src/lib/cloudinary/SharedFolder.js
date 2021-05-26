@@ -32,13 +32,11 @@ SharedFolder.prototype = {
 	addAudio: function (media) {
 		media.index = this.audios.length;
 		this.audios.push(media);
-		console.log(`Add audio to ${this.path}`, this);
 		return this;
 	},
 	addVideo: function (media) {
 		media.index = this.videos.length;
 		this.videos.push(media);
-		console.log(`Add video to ${this.path}`, this);
 		return this;
 	},
 	removeMedia: function (media) {

@@ -5,6 +5,7 @@ import styles from "./Playlist.module.scss";
 import { Checkbox } from "@chakra-ui/checkbox";
 import { DataTable } from "../base/DataTable.js";
 import { useMemo } from "react";
+import SelectDownloadFormat from "./DownloadSelect.js";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
@@ -12,12 +13,12 @@ const formatDuration = (ms) =>
 const PlaylistHeaders = {
 	play: {
 		Header: "",
-		width: 10,
+		maxWidth: 10,
 		accessor: (row) => (
 			<PlayPauseIcon
 				className="allow-select"
-				show={row.selected}
-				playing={row.selected && row.player.playing}
+				show={row.active}
+				playing={row.active && row.player.playing}
 				size="2rem"
 			/>
 		)
@@ -30,12 +31,12 @@ const PlaylistHeaders = {
 	artist: {
 		Header: "Artiste",
 		accessor: "artist",
-		minWidth: 50
+		minWidth: "25%"
 	},
 	song: {
 		Header: "Titre",
 		accessor: "song",
-		minWidth: 50
+		minWidth: "25%"
 	},
 	addToSelection: {
 		Header: "Ajouter à ma sélection",
@@ -55,19 +56,19 @@ const PlaylistHeaders = {
 	directDownload: {
 		Header: "Télécharger",
 		accessor: (row) => (
-			<a href={`${row.url}`} download={`${row.artist} - ${row.song}.${row.format}`}>
-				Télécharger
-			</a>
+			<SelectDownloadFormat
+				path={row.public_id}
+				filename={`${row.artist} - ${row.song}`}
+			/>
 		),
 		disableSortBy: true,
-		width: "100px",
-		maxWidth: "100px",
-		align: "center"
+		maxWidth: "10rem",
+		isNumeric: true
 	},
 	duration: {
 		Header: "Durée",
 		accessor: (row) => formatDuration(row.duration),
-		width: "15rem",
+		maxWidth: "15rem",
 		isNumeric: true
 	}
 };
@@ -91,7 +92,7 @@ const makeColumns = (ids) =>
  * @property {Number} index A unique index in the playlist
  * @property {String} filename
  * @property {Number} duration (in secs)
- * @property {String} url The
+ * @property {String} url The raw url
  */
 
 /**
@@ -133,7 +134,8 @@ PlaylistEntry.prototype = {
 	},
 	toggleSelection: function (selected) {
 		this.eb.emit(selected ? "selected-tracks:add" : "selected-tracks:remove", this);
-	}
+	},
+	downloadUrl: function () {}
 };
 
 const playlistStyles = {

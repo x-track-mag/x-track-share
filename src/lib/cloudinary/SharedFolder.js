@@ -49,14 +49,23 @@ SharedFolder.prototype = {
 		return this;
 	},
 	removeAudio: function (media) {
-		const pos = this.audios.findIndex((row) => row.assetId === media.assetId);
+		const pos = this.audios.findIndex((row) => row.public_id === media.public_id);
 		this.audios.splice(pos, 1);
 		return this;
 	},
 	removeVideo: function (media) {
-		const pos = this.videos.findIndex((row) => row.assetId === media.assetId);
+		const pos = this.videos.findIndex((row) => row.public_id === media.public_id);
 		this.videos.splice(pos, 1);
 		return this;
+	},
+	containsAudio: function (search) {
+		return Boolean(this.audios.find((media) => media.public_id === search.public_id));
+	},
+	containsVideo: function (search) {
+		return Boolean(this.videos.find((media) => media.public_id === search.public_id));
+	},
+	containsMedia: function (media) {
+		return isAudio(media) ? this.containsAudio(media) : this.containsVideo(media);
 	},
 
 	/**

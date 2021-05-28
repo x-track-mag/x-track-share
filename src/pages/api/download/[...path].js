@@ -3,7 +3,7 @@ import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 import { proxyRequest } from "../../../lib/utils/http.js";
 
 /**
- *
+ * Take a full resource path and change the extension
  * @param {String} path
  * @param {String} format
  */
@@ -14,7 +14,7 @@ const changeFileFormat = (path = "", format = "wav") => {
 };
 
 /**
- *
+ * /api/download/.../path/.../filename.format
  */
 export default async (req, resp) => {
 	const { path } = req.query;
@@ -23,7 +23,7 @@ export default async (req, resp) => {
 	const resource = await CloudinaryClient.getResource(public_id, {
 		resource_type: "video" // audio and video files have this resource type in Cloudinary
 	});
-	console.log(`Will stream resource in ${format}`, resource);
+	console.log(`Download ${public_id}.${format}`, resource);
 	const { success, error } = await proxyRequest(
 		changeFileFormat(resource.secure_url, format),
 		req,

@@ -6,6 +6,7 @@ import { Checkbox } from "@chakra-ui/checkbox";
 import { DataTable } from "../base/DataTable.js";
 import { useMemo } from "react";
 import SelectDownloadFormat from "./DownloadSelect.js";
+import { useShareContext } from "../ShareContextProvider.js";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
@@ -44,6 +45,7 @@ const PlaylistHeaders = {
 			<Checkbox
 				color="blue"
 				size="lg"
+				defaultChecked={row.selected}
 				onClick={(evt) => evt.stopPropagation()}
 				onChange={(evt) => row.toggleSelection(evt.target.checked)}
 			/>
@@ -100,11 +102,15 @@ const makeColumns = (ids) =>
  * @param {PlaylistEntryProps} props
  * @returns
  */
-function PlaylistEntry(props, player, eb) {
+function PlaylistEntry(props, player, selectedTracks, eb) {
 	Object.assign(this, props);
 	this.player = player;
 	this.eb = eb;
 	this.active = player.selectedIndex === this.index;
+	if (selectedTracks.containsMedia(props)) {
+		console.log(`Track ${props.public_id} is selected`);
+		this.selected = true;
+	}
 }
 PlaylistEntry.prototype = {
 	onClick: function (evt) {
@@ -134,8 +140,7 @@ PlaylistEntry.prototype = {
 	},
 	toggleSelection: function (selected) {
 		this.eb.emit(selected ? "selected-tracks:add" : "selected-tracks:remove", this);
-	},
-	downloadUrl: function () {}
+	}
 };
 
 const playlistStyles = {
@@ -154,8 +159,11 @@ const Playlist = ({
 }) => {
 	const eb = useEventBus();
 	const player = usePlayerState();
+	const { selectedTracks } = useShareContext();
 	player.id = playerId;
-	const data = playlist.map((entry) => new PlaylistEntry(entry, player, eb));
+	const data = playlist.map(
+		(entry) => new PlaylistEntry(entry, player, selectedTracks, eb)
+	);
 	const displayColumns = useMemo(() => makeColumns(columns), [columns]);
 
 	return (

@@ -7,7 +7,7 @@ import SharedFolder from "../lib/cloudinary/SharedFolder";
  * @typedef SharedFolderContext
  * @property {Object} folders the navigable shared folders
  * @property {String} current Current path
- * @property {SharedFolder} playlist A virtual folder containing what the user choosed to add to
+ * @property {SharedFolder} selectedTracks A virtual folder containing what the user choosed to add to
  * @property {Function} navigate Change the current folder path
  */
 

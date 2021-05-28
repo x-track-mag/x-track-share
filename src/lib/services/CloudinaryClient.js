@@ -52,8 +52,8 @@ export const getContent = async (root) => {
 
 		// Keep only the minimal fields information
 		resources = resources.map(
-			({ asset_id, filename, folder, format, duration, secure_url }) => ({
-				asset_id,
+			({ public_id, filename, folder, format, duration, secure_url }) => ({
+				public_id,
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
 				duration,
@@ -98,8 +98,11 @@ export const getContent = async (root) => {
 	}
 };
 
+export const getResource = cloudinary.api.resource;
+
 const CloudinaryClient = {
-	getContent
+	getContent,
+	getResource
 };
 
 export default CloudinaryClient;

@@ -22,6 +22,7 @@ export const proxyRequest = async (target, req, resp) => {
 		ignorePath: true,
 		proxyTimeout: 30_000 // limit proxying to 30 seconds
 	});
+	const start = Date.now();
 
 	try {
 		await new Promise((resolve, reject) => {
@@ -30,6 +31,10 @@ export const proxyRequest = async (target, req, resp) => {
 			proxy.on("proxyReq", (proxyReq) => {
 				proxyReq.on("close", () => {
 					if (!finished) {
+						const elapsed = start - Date.now();
+						console.log(
+							`Proxy request to ${target} succeded after ${elapsed}ms`
+						);
 						finished = true;
 						resolve(true);
 					}
@@ -37,6 +42,11 @@ export const proxyRequest = async (target, req, resp) => {
 			});
 			proxy.on("error", (err) => {
 				if (!finished) {
+					const elapsed = start - Date.now();
+					console.log(
+						`Proxy request to ${target} failed after ${elapsed}ms :`,
+						err
+					);
 					finished = true;
 					reject(err);
 				}

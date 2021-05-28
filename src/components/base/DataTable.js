@@ -39,7 +39,7 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 							<Th
 								{...column.getHeaderProps(column.getSortByToggleProps())}
 								isNumeric={column.isNumeric}
-								minW={column.width || "15rem"}
+								minW={column.minWidth}
 								maxWidth={column.maxWidth}
 								position="relative"
 								lineHeight="1"

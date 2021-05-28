@@ -10,6 +10,15 @@ const { resolve } = require("path");
 
 module.exports = {
 	reactStrictMode: true,
+	/**
+	 * @see https://nextjs.org/docs/api-reference/next.config.js/rewrites
+	 */
+	rewrites: async () => [
+		{
+			source: "/api/download/:path*",
+			destination: "https://res.cloudinary.com/x-track/video/upload/:path*"
+		}
+	],
 	images: {
 		deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
 		imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

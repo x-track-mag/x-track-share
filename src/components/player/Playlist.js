@@ -59,7 +59,7 @@ const PlaylistHeaders = {
 		Header: "Télécharger",
 		accessor: (row) => (
 			<SelectDownloadFormat
-				path={row.public_id}
+				path={row.url.split("upload/")[1]}
 				filename={`${row.artist} - ${row.song}`}
 			/>
 		),

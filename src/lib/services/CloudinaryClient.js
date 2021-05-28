@@ -57,7 +57,7 @@ export const getContent = async (root) => {
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
 				duration,
-				url: secure_url,
+				url: secure_url.replace(/\.\w{3}$/, ""),
 				...fileNameExtras(filename)
 			})
 		);

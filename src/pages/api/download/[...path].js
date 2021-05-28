@@ -31,6 +31,6 @@ export default async (req, resp) => {
 	);
 
 	if (!success) {
-		throw new ApiError(500, error);
+		console.error(`Download of ${public_id}.${format} failed`, error);
 	}
 };

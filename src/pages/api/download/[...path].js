@@ -17,20 +17,21 @@ const changeFileFormat = (path = "", format = "wav") => {
  * /api/download/.../path/.../filename.format
  */
 export default async (req, resp) => {
-	const { path } = req.query;
-	const [public_id, format] = path.join("/").split(".");
+	try {
+		const { path } = req.query;
+		const [public_id, format] = path.join("/").split(".");
 
-	const resource = await CloudinaryClient.getResource(public_id, {
-		resource_type: "video" // audio and video files have this resource type in Cloudinary
-	});
-	console.log(`Download ${public_id}.${format}`, resource);
-	const { success, error } = await proxyRequest(
-		changeFileFormat(resource.secure_url, format),
-		req,
-		resp
-	);
+		const resource = await CloudinaryClient.getResource(public_id, {
+			resource_type: "video" // audio and video files have this resource type in Cloudinary
+		});
+		const cloudinaryDownloadUrl = changeFileFormat(resource.secure_url, format);
+		console.log(`Download ${public_id}.${format}`, resource);
+		const { success, error } = await proxyRequest(cloudinaryDownloadUrl, req, resp);
 
-	if (!success) {
-		console.error(`Download of ${public_id}.${format} failed`, error);
+		if (!success) {
+			console.error(`Download of ${cloudinaryDownloadUrl} failed`, error);
+		}
+	} catch (err) {
+		console.error(err);
 	}
 };

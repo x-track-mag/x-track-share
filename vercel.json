@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"api/download/[...path].js": {
+		"api/download/*.js": {
 			"memory": 1024,
 			"maxDuration": 10
 		}

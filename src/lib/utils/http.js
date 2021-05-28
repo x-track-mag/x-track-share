@@ -20,49 +20,34 @@ export const proxyRequest = async (target, req, resp) => {
 		target,
 		changeOrigin: true,
 		ignorePath: true,
-		proxyTimeout: 30_000 // limit proxying to 30 seconds
+		proxyTimeout: 30000 // limit proxying to 30 seconds
 	});
 	const start = Date.now();
 
-	try {
-		await new Promise((resolve, reject) => {
-			let finished = false;
+	return new Promise((resolve, reject) => {
+		let finished = false;
 
-			proxy.on("proxyReq", (proxyReq) => {
-				proxyReq.on("close", () => {
-					if (!finished) {
-						const elapsed = start - Date.now();
-						console.log(
-							`Proxy request to ${target} succeded after ${elapsed}ms`
-						);
-						finished = true;
-						resolve(true);
-					}
-				});
-			});
-			proxy.on("error", (err) => {
+		proxy.on("proxyReq", (proxyReq) => {
+			proxyReq.on("close", () => {
 				if (!finished) {
-					const elapsed = start - Date.now();
-					console.log(
-						`Proxy request to ${target} failed after ${elapsed}ms :`,
-						err
-					);
+					const elapsed = Date.now() - start;
+					console.log(`Proxy request to ${target} succeded after ${elapsed}ms`);
 					finished = true;
-					reject(err);
+					resolve(target);
 				}
 			});
-			proxy.web(req, resp);
 		});
-
-		return {
-			success: true
-		};
-	} catch (err) {
-		console.error(`Error Proxying API request to '${target}'`, err);
-		return {
-			code: 500,
-			success: false,
-			error: err
-		};
-	}
+		proxy.on("error", (err) => {
+			if (!finished) {
+				const elapsed = start - Date.now();
+				console.log(
+					`Proxy request to ${target} failed after ${elapsed}ms :`,
+					err
+				);
+				finished = true;
+				reject(err);
+			}
+		});
+		proxy.web(req, resp);
+	});
 };

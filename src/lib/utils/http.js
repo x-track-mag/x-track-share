@@ -9,13 +9,13 @@ export const getSearchParams = (req) =>
 	new URL(req.url, `http://${req.headers.host}`).searchParams;
 
 /**
- *
+ * Proxy the incoming http request to an external target
  * @param {String} target
  * @param {IncomingMessage} req
- * @param {ServerRes} resp
+ * @param {ServerResponse} resp
  * @returns {Object}
  */
-export const proxyReq = async (target, req, resp) => {
+export const proxyRequest = async (target, req, resp) => {
 	const proxy = new Proxy({
 		target,
 		changeOrigin: true,

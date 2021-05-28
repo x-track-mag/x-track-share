@@ -1,4 +1,5 @@
 import { Box, Heading } from "@chakra-ui/layout";
+import { useRouter } from "next/router";
 import { extractPaths } from "../lib/utils/Folders";
 import { useShareContext } from "./ShareContextProvider";
 
@@ -14,6 +15,7 @@ import { useShareContext } from "./ShareContextProvider";
  */
 const Breadcrumbs = ({ path, additionalLink }) => {
 	const { navigate } = useShareContext();
+	const router = useRouter();
 	const { leaf, parents } = extractPaths(path);
 	// Render the links to the parent folders
 	return (
@@ -29,13 +31,13 @@ const Breadcrumbs = ({ path, additionalLink }) => {
 			<Heading display="inline-block" key={leaf}>
 				{leaf}
 			</Heading>
-			{additionalLink && (
+			{additionalLink && additionalLink !== path && (
 				<Heading display="inline-block" float="right" key={additionalLink}>
 					<a
 						href={`/share/${additionalLink}`}
 						onClick={navigate(additionalLink)}
 					>
-						{additionalLink.split("/").pop()}
+						Sélection
 					</a>
 				</Heading>
 			)}

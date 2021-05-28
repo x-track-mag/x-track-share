@@ -7,12 +7,12 @@ import { useEffect } from "react";
 import { useShareContext } from "./ShareContextProvider";
 
 const CloudinaryFolder = () => {
-	const { folders, current, selectedTracks } = useShareContext();
+	const { folders, current, selectedTracks, sharedOptions } = useShareContext();
 	const folder = folders[current] || selectedTracks;
 
 	if (!folder) return null;
 
-	const { path, label, subfolders, audios, videos, displayPlaylist } = folder;
+	const { path, label, subfolders, audios, videos } = folder;
 
 	useEffect(() => {
 		console.log(`Exploring ${current}`, folder);
@@ -20,7 +20,7 @@ const CloudinaryFolder = () => {
 
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
-			{displayPlaylist ? (
+			{sharedOptions.addToSelection ? (
 				<Breadcrumbs
 					path={path}
 					additionalLink={selectedTracks && selectedTracks.path}
@@ -47,7 +47,6 @@ const CloudinaryFolder = () => {
 					type="audio"
 					playerId="audio-player"
 					playlist={audios}
-					displayPlaylist={displayPlaylist}
 				/>
 			)}
 
@@ -56,7 +55,6 @@ const CloudinaryFolder = () => {
 					type="video"
 					playerId="video-player"
 					playlist={videos}
-					displayPlaylist={displayPlaylist}
 				/>
 			)}
 		</Stack>

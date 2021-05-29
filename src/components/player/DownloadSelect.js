@@ -15,10 +15,7 @@ const SelectDownloadFormat = ({
 
 	return (
 		<Box onClick={(evt) => evt.stopPropagation()} w="100%" h="100%">
-			<Link
-				href={`/api/download/${path}.${format}`}
-				download={`${filename}.${format}`}
-			>
+			<Link href={`/download/${path}.${format}`} download={`${filename}.${format}`}>
 				Télécharger
 			</Link>
 			&nbsp;

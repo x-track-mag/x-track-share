@@ -15,3 +15,5 @@ FoldersTestSuite("Empty path yields empty leaf and parents", () => {
 	const emptyRailway = extractPaths("");
 	expect(emptyRailway).to.equal(EMPTY_RAILWAY);
 });
+
+export default FoldersTestSuite;

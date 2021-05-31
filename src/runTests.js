@@ -2,13 +2,14 @@
 
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import tk from "terminal-kit";
 import FileWalker from "./lib/utils/FileWalker.js";
 import { loadEnv } from "./lib/utils/Env.js";
+import terminal from "./lib/utils/terminal.js";
 
 // REBUILD THE COMMON JS ENV VARIABLES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const log = console.log;
 
 const runSingleTest = async (sourceFile) => {
 	try {
@@ -16,19 +17,21 @@ const runSingleTest = async (sourceFile) => {
 		const run = new Promise((resolve, reject) => {
 			testSuite.default.after(resolve);
 			testSuite.default.run();
+		}).catch((err) => {
+			terminal.error(`Test suite ${sourceFile} could not be run : ${err}`);
 		});
 
 		return run;
 	} catch (err) {
-		tk.terminal.red(`Test suite ${sourceFile} throwed an error : ${err.message}`);
+		terminal.error(`Test suite ${sourceFile} throwed an error : ${err.message}`);
 	}
 };
 
 (async function runTests() {
-	loadEnv();
 	const messages = [];
+	console.log = console.warn = (...args) => messages.push(...args);
+	loadEnv();
 	try {
-		console.log = (...msgs) => messages.push(...msgs);
 		const sourceDir = path.join(__dirname);
 		const walk = new FileWalker(sourceDir).filterFiles((vfile) =>
 			vfile.path.endsWith(".spec.js")
@@ -39,14 +42,14 @@ const runSingleTest = async (sourceFile) => {
 			await walk
 				.on("file", (testFile) => {
 					testJobs.push(runSingleTest(testFile));
-					tk.terminal.green(`Added test file '${testFile}'` + "\n");
+					terminal.info(`Added test file '${testFile}'`);
 				})
 				.on("end", async () => {
-					tk.terminal.yellow(`We have ${testJobs.length} test jobs pending..`);
+					terminal.info(`We have ${testJobs.length} test jobs pending..\n`);
 					resolve(true);
 				})
 				.on("error", (err) => {
-					tk.terminal.red(err.message || err);
+					terminal.error(err.message || err);
 					reject(err);
 				})
 				.explore();
@@ -59,10 +62,14 @@ const runSingleTest = async (sourceFile) => {
 			0
 		);
 		if (failed === 0) {
-			tk.terminal.green("Great Success. All tests passed !");
+			terminal.success("Great Success. All tests passed !\n");
 		} else {
-			tk.terminal.yellow(`Some tests failed (${failed}/${allDone.length})!`);
+			terminal.warn(`Some tests failed (${failed}/${allDone.length})!\n`);
 		}
+
+		terminal.info("Generated log");
+		terminal.info("=============");
+		terminal.debug(messages.map((msg) => msg + "\n"));
 
 		process.exit(failed);
 	} catch (err) {

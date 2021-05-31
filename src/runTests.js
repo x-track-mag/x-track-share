@@ -12,8 +12,8 @@ const __dirname = dirname(__filename);
 const warn = console.warn;
 
 const runSingleTest = (sourceFile) => {
-	return import(path.join(__dirname, sourceFile)).then(
-		(testSuite) => {
+	return import(path.join(__dirname, sourceFile))
+		.then((testSuite) => {
 			return new Promise((resolve, reject) => {
 				try {
 					if (!testSuite.default) {
@@ -26,13 +26,12 @@ const runSingleTest = (sourceFile) => {
 					reject(new Error(`Test suite ${sourceFile} run failed : ${err}`));
 				}
 			});
-		},
-		(errLoading) => {
+		})
+		.catch((errLoading) => {
 			throw new Error(
 				`Test suite ${sourceFile} couldn't be loaded : ${errLoading} !`
 			);
-		}
-	);
+		});
 };
 
 (async function runTests() {

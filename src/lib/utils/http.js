@@ -1,3 +1,4 @@
+import { IncomingMessage, ServerResponse } from "http";
 import Proxy from "next/dist/compiled/http-proxy";
 
 /**

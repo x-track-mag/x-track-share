@@ -26,28 +26,17 @@ export const proxyRequest = async (target, req, resp) => {
 	const start = Date.now();
 
 	return new Promise((resolve, reject) => {
-		let finished = false;
-
 		proxy.on("proxyReq", (proxyReq) => {
-			proxyReq.on("close", () => {
-				if (!finished) {
-					const elapsed = Date.now() - start;
-					console.log(`Proxy request to ${target} succeded after ${elapsed}ms`);
-					finished = true;
-					resolve(target);
-				}
+			proxyReq.once("close", () => {
+				const elapsed = Date.now() - start;
+				console.log(`Proxy request to ${target} succeded after ${elapsed}ms`);
+				resolve(target);
 			});
 		});
-		proxy.on("error", (err) => {
-			if (!finished) {
-				const elapsed = start - Date.now();
-				console.log(
-					`Proxy request to ${target} failed after ${elapsed}ms :`,
-					err
-				);
-				finished = true;
-				reject(err);
-			}
+		proxy.once("error", (err) => {
+			const elapsed = Date.now() - start;
+			console.log(`Proxy request to ${target} failed after ${elapsed}ms :`, err);
+			reject(err);
 		});
 		proxy.web(req, resp);
 	});

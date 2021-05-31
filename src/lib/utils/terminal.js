@@ -20,7 +20,18 @@ Object.keys(colorTheme).forEach((methodName) => {
 		(console[methodName] || console.info)(
 			...args.map((arg) => colors[methodName](arg))
 		);
+		return terminal; // for chaining
 	};
 });
 
+/**
+ * @typedef terminal
+ * @property {Function} debug
+ * @property {Function} log
+ * @property {Function} info
+ * @property {Function} success
+ * @property {Function} warn
+ * @property {Function} trace
+ * @property {Function} error
+ */
 export default terminal;

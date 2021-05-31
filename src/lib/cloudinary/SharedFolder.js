@@ -22,9 +22,9 @@ function SharedFolder(path, options = {}) {
 
 SharedFolder.prototype = {
 	addMedia: function (media) {
-		if (isAudio(media)) {
+		if (isAudio(media) && !this.containsAudio(media)) {
 			return this.addAudio(media);
-		} else if (isVideo(media)) {
+		} else if (isVideo(media) && !this.containsVideo(media)) {
 			return this.addVideo(media);
 		}
 		return this;

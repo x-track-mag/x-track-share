@@ -15,7 +15,7 @@ module.exports = {
 	 */
 	rewrites: async () => [
 		{
-			source: "/api/download/:path*",
+			source: "/download/:path*",
 			destination: "https://res.cloudinary.com/x-track/video/upload/:path*"
 		}
 	],

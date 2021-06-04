@@ -14,24 +14,24 @@ const warn = console.warn;
 const runSingleTest = (sourceFile) => {
 	return import(path.join(__dirname, sourceFile))
 		.then((testSuite) => {
-			return new Promise((resolve, reject) => {
+			return new Promise(async (resolve, reject) => {
 				try {
 					if (!testSuite.default) {
 						reject(`Test suite ${sourceFile} doesn't export a test suite !`);
 					}
 
 					testSuite.default.after(resolve);
-					testSuite.default.run();
+					await testSuite.default.run();
 				} catch (err) {
 					reject(new Error(`Test suite ${sourceFile} run failed : ${err}`));
 				}
 			});
 		})
-		.catch((errLoading) => {
-			throw new Error(
+		.catch((errLoading) =>
+			Promise.reject(
 				`Test suite ${sourceFile} couldn't be loaded : ${errLoading} !`
-			);
-		});
+			)
+		);
 };
 
 (async function runTests() {
@@ -77,7 +77,7 @@ const runSingleTest = (sourceFile) => {
 
 		terminal.info("\nGenerated log");
 		terminal.info("=============");
-		terminal.debug(messages.map((msg) => msg + "\n"));
+		terminal.debug(messages);
 
 		process.exit(failed);
 	} catch (err) {

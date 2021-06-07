@@ -19,7 +19,7 @@ const PageHeader = ({ title = "", navigation = [], height = "3rem", ...props }) 
 	const { scrollY, direction } = useVScrollPosition();
 
 	useEffect(() => {
-		setVisible(direction === "up" || scrollY < 80);
+		setVisible(direction === "up" || scrollY < 40);
 	});
 
 	return (

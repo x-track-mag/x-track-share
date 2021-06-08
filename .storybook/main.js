@@ -1,3 +1,6 @@
+const path = require("path");
+const toPath = (_path) => path.join(process.cwd(), _path);
+
 module.exports = {
 	stories: [
 		"../src/components/**/*.stories.mdx",
@@ -15,6 +18,16 @@ module.exports = {
 		const nextConfig = require("../next.config.js");
 		const mergedWebpackConfig = nextConfig.webpack(baseConfig);
 		console.dir(mergedWebpackConfig);
-		return mergedWebpackConfig;
+		return {
+			...mergedWebpackConfig,
+			resolve: {
+				...mergedWebpackConfig.resolve,
+				alias: {
+					...mergedWebpackConfig.resolve.alias,
+					"@emotion/core": toPath("node_modules/@emotion/react"),
+					"emotion-theming": toPath("node_modules/@emotion/react")
+				}
+			}
+		};
 	}
 };

@@ -1,4 +1,4 @@
-import MailService, { ClientResponse } from "@sendgrid/mail";
+import MailService from "@sendgrid/mail";
 import { IncomingMessage, ServerResponse } from "http";
 import withCORS from "../../../lib/services/withCORS";
 

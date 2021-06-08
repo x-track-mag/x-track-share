@@ -32,7 +32,7 @@ const Text = ({
 	helperText,
 	required = false,
 	disabled = false,
-	defaultValue,
+	defaultValue = "",
 	autoComplete = false,
 	autoFocus = false,
 	readOnly = false,
@@ -93,8 +93,9 @@ const Text = ({
 			<Input
 				name={name}
 				ref={inputRef}
-				variant="solid"
+				variant="filled"
 				height="2rem"
+				borderRadius={0}
 				borderColor="yellow"
 				bgColor="black"
 				color="yellow"

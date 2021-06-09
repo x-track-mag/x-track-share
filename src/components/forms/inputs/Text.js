@@ -1,8 +1,12 @@
-import { FormLabel } from "@chakra-ui/form-control";
-import { FormHelperText } from "@chakra-ui/form-control";
-import { FormErrorMessage } from "@chakra-ui/form-control";
-import { FormControl } from "@chakra-ui/form-control";
+import {
+	FormLabel,
+	RequiredIndicator,
+	FormHelperText,
+	FormErrorMessage,
+	FormControl
+} from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
+import { Textarea } from "@chakra-ui/textarea";
 import React, { createRef, useEffect, useLayoutEffect } from "react";
 import { useFormValidationContext } from "../validation/FormValidationProvider.js";
 import { evalContextualProp } from "../validation/utils.js";
@@ -30,10 +34,11 @@ const Text = ({
 	label,
 	placeHolder,
 	helperText,
+	size,
+	rows = 1,
 	required = false,
 	disabled = false,
 	defaultValue = "",
-	autoComplete = false,
 	autoFocus = false,
 	readOnly = false,
 	validation = {},
@@ -51,10 +56,9 @@ const Text = ({
 	} = useFormValidationContext();
 
 	const errorMessage = errors[name]?.message || "";
+	const RenderTextInput = rows > 1 ? Textarea : Input;
 
 	if (!label) label = name;
-	// Pass the required attribute to the validation object
-	if (evalContextualProp(data, required)) label += "*";
 
 	// Keep form context data in sync
 	const onChange = (evt) => {
@@ -82,28 +86,36 @@ const Text = ({
 	return (
 		<FormControl
 			id={name}
+			mt={2}
 			onChange={onChange}
-			autoComplete={autoComplete ? "" : "off"}
-			isInvalid={Boolean(errorMessage)}
 			isDisabled={evalContextualProp(data, disabled)}
+			isRequired={evalContextualProp(data, required)}
 			isReadOnly={readOnly}
-			{...moreProps}
+			isInvalid={Boolean(errorMessage)}
+			size={size}
 		>
-			<FormLabel>{label}</FormLabel>
-			<Input
+			<FormLabel mb={0} paddingLeft={1} requiredIndicator={" *"}>
+				{label}
+			</FormLabel>
+			<RenderTextInput
 				name={name}
 				ref={inputRef}
 				variant="filled"
-				height="2rem"
+				height={`${rows * 2}rem`}
 				borderRadius={0}
-				borderColor="yellow"
-				bgColor="black"
-				color="yellow"
 				autoFocus={autoFocus}
 				placeholder={placeHolder}
+				paddingInline={1}
+				{...moreProps}
 			/>
-			<FormErrorMessage>{errorMessage}</FormErrorMessage>
-			<FormHelperText>{helperText}</FormHelperText>
+			<FormErrorMessage fontSize="small" mt={0} paddingLeft={1}>
+				{errorMessage}
+			</FormErrorMessage>
+			{!errorMessage && (
+				<FormHelperText fontSize="small" mt={0} paddingLeft={1}>
+					{helperText}
+				</FormHelperText>
+			)}
 		</FormControl>
 	);
 };

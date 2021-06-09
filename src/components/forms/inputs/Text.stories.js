@@ -4,8 +4,9 @@ import {
 	useFormValidationContext,
 	FormValidationProvider
 } from "../validation/FormValidationProvider.js";
+import HiddenSubmit from "./HiddenSubmit.js";
 
-const VForm = ({ children, ...props }) => {
+const ValidatingForm = ({ children, ...props }) => {
 	const { validate } = useFormValidationContext();
 
 	// Just log what's goin on when submitting
@@ -20,7 +21,7 @@ const VForm = ({ children, ...props }) => {
 	return (
 		<form onSubmit={onSubmit} {...props}>
 			{children}
-			<input type="submit" className="hidden" aria-hidden="true" />
+			<HiddenSubmit label="Valider"></HiddenSubmit>
 		</form>
 	);
 };
@@ -33,19 +34,21 @@ export default {
 		required: false,
 		autoFocus: true,
 		readOnly: false,
+		rows: 1,
 		defaultValue: ""
 	},
 	argTypes: {
 		required: { control: { type: "boolean" } },
 		autoFocus: { control: { type: "boolean" } },
 		readOnly: { control: { type: "boolean" } },
-		defaultValue: { control: { type: "text" } }
+		defaultValue: { control: { type: "text" } },
+		rows: { control: { type: "number" } }
 	}
 };
 
 export const SimpleText = ({ defaultValue, ...args }) => (
 	<FormValidationProvider>
-		<VForm id="simple-text-form">
+		<ValidatingForm id="simple-text-form">
 			<Text
 				{...args}
 				defaultValue={defaultValue}
@@ -55,12 +58,13 @@ export const SimpleText = ({ defaultValue, ...args }) => (
 			/>
 			<Text
 				{...args}
-				placeHolder="Valjean"
-				helperText="With place holder"
 				name="lastName"
 				label="Nom"
+				placeHolder="Valjean"
+				required="Saississez un nom"
+				helperText="With place holder"
 			/>
-		</VForm>
+		</ValidatingForm>
 	</FormValidationProvider>
 );
 SimpleText.args = {
@@ -69,11 +73,22 @@ SimpleText.args = {
 
 export const ReadOnlyTextWithData = ({ ...args }) => (
 	<FormValidationProvider data={{ firstName: "John" }}>
-		<VForm id="simple-text-form">
+		<ValidatingForm id="simple-text-form">
 			<Text {...args} name="firstName" label="Prénom" />
-		</VForm>
+		</ValidatingForm>
 	</FormValidationProvider>
 );
 ReadOnlyTextWithData.args = {
 	readOnly: true
+};
+
+export const TextArea = ({ ...args }) => (
+	<FormValidationProvider data={{ message: "Once upion a time...\n" }}>
+		<ValidatingForm id="simple-textarea-form">
+			<Text {...args} name="message" label="Message" />
+		</ValidatingForm>
+	</FormValidationProvider>
+);
+TextArea.args = {
+	rows: 5
 };

@@ -1,10 +1,12 @@
 import MailService from "@sendgrid/mail";
-import { IncomingMessage, ServerResponse } from "http";
-import withCORS from "../../../lib/services/withCORS";
+import { NextApiRequest, NextApiResponse } from "next";
+import withCORS from "../../../lib/services/withCORS.js";
 
 /**
- * @param {IncomingMessage} req
- * @param {ServerResponse} resp
+ * Send a mail report about a download,
+ * using the data provided by the download form
+ * @param {NextApiRequest} req
+ * @param {NextApiResponse} resp
  */
 const mailReport = async (req, resp) => {
 	try {

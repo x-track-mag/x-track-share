@@ -3,8 +3,8 @@ import Cors from "cors";
 
 // Default CORS options
 const _DEFAULT_OPTIONS = {
-	methods: ["GET", "HEAD"],
-	origin: "http://localhost:6006"
+	methods: ["GET", "HEAD", "POST"],
+	origin: "http://localhost:6006" // That's to accept API request from Storybook
 };
 
 /**
@@ -15,7 +15,7 @@ const _DEFAULT_OPTIONS = {
  * @param {Function} middleware Express compatible middleware
  * @param {NextApiRequest} req
  * @param {NextApiResponse} resp
- * @returns
+ * @returns {Function}
  */
 export const runMiddleware = (middleware, req, resp) => {
 	return new Promise((resolve, reject) => {

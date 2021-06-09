@@ -1,10 +1,6 @@
 import DownloadForm from "./DownloadForm";
 import { FormValidationProvider } from "./validation/FormValidationProvider";
 
-export default {
-	title: "Download Form"
-};
-
 export const DownloadFormDemo = () => (
 	<FormValidationProvider>
 		<Box bgColor="black" w="100%" h="100%">
@@ -12,3 +8,7 @@ export const DownloadFormDemo = () => (
 		</Box>
 	</FormValidationProvider>
 );
+
+export default {
+	title: "Download Form"
+};

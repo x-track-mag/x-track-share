@@ -9,7 +9,7 @@ export const parameters = {
 
 const withThemeProvider = (Story, context) => {
 	return (
-		<ChakraProvider resetCSS theme={theme}>
+		<ChakraProvider resetCSS>
 			<Story {...context} />
 		</ChakraProvider>
 	);

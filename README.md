@@ -29,6 +29,13 @@ CLOUDINARY_API_SECRET=00000000000000000
 
 This repository was bootstraped using [chakra-ui](https://github.com/chakra-ui/chakra-ui) as the component library within a Next.js app.
 
+### Storybook Integration
+
+As many knows, there is still no official Chakra UI plugin for Storybook integration, so we have to do [small tweaks to Storybook configuration](https://dev.to/carlosrafael22/what-i-ve-learned-with-chakra-ui-so-far-4f5e) to ensure that Chakra UI Theme is loaded by all stories.  
+*Essentially : *  
+`main.js` and `preview.js` inside the `.storybook/` folder are responsible to wrap stories inside the `<ChakraProvider>`
+
+
 ### Cloudinary
 
 Cloudinary has some extraordinay capacities, like :

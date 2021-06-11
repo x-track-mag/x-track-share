@@ -5,6 +5,7 @@ import AudioPlaylistPlayer from "./player/AudioPlaylistPlayer.js";
 import Breadcrumbs from "./Breadcrumbs";
 import { useEffect } from "react";
 import { useShareContext } from "./ShareContextProvider";
+import SharedFolderNavigation from "./SharedFolderNavigation";
 
 const CloudinaryFolder = () => {
 	const { folders, current, selectedTracks, sharedOptions } = useShareContext();
@@ -12,7 +13,7 @@ const CloudinaryFolder = () => {
 
 	if (!folder) return null;
 
-	const { path, label, subfolders, audios, videos } = folder;
+	const { path, subfolders, audios, videos } = folder;
 
 	useEffect(() => {
 		console.log(`Exploring ${current}`, folder);
@@ -20,14 +21,7 @@ const CloudinaryFolder = () => {
 
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
-			{sharedOptions.addToSelection ? (
-				<Breadcrumbs
-					path={path}
-					additionalLink={selectedTracks && selectedTracks.path}
-				/>
-			) : (
-				<Breadcrumbs path={path} />
-			)}
+			<SharedFolderNavigation path={path} />
 
 			{subfolders.length && (
 				<Grid

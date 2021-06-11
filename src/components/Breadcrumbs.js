@@ -15,11 +15,10 @@ import { useShareContext } from "./ShareContextProvider";
  */
 const Breadcrumbs = ({ path, additionalLink }) => {
 	const { navigate } = useShareContext();
-	const router = useRouter();
 	const { leaf, parents } = extractPaths(path);
 	// Render the links to the parent folders
 	return (
-		<Box className="breadcrumbs">
+		<Box className="breadcrumbs" float="left">
 			{parents.map((path) => (
 				<Heading key={path} display="inline-block">
 					<a href={`/share/${path}`} onClick={navigate(path)}>
@@ -31,16 +30,6 @@ const Breadcrumbs = ({ path, additionalLink }) => {
 			<Heading display="inline-block" key={leaf}>
 				{leaf}
 			</Heading>
-			{additionalLink && additionalLink !== path && (
-				<Heading display="inline-block" float="right" key={additionalLink}>
-					<a
-						href={`/share/${additionalLink}`}
-						onClick={navigate(additionalLink)}
-					>
-						Sélection
-					</a>
-				</Heading>
-			)}
 		</Box>
 	);
 };

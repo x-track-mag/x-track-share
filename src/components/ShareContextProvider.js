@@ -4,10 +4,18 @@ import { useEventBus } from "./EventBusProvider";
 import SharedFolder from "../lib/cloudinary/SharedFolder";
 
 /**
+ * @typedef SharedOptions
+ * @property {Boolean} addToSelection Show the checkboxes to add track to a private selection
+ * @property {Boolean} directDownload Allow direct download on all tracks
+ * @property {Boolean} displayDownloadForm Display the download form to download a zip of the selected tracks
+ */
+
+/**
  * @typedef SharedFolderContext
  * @property {Object} folders the navigable shared folders
  * @property {String} current Current path
- * @property {SharedFolder} selectedTracks A virtual folder containing what the user choosed to add to
+ * @property {SharedOptions} sharedOptions
+ * @property {SharedFolder} selectedTracks A virtual folder containing what the user added to
  * @property {Function} navigate Change the current folder path
  */
 

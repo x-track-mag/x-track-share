@@ -71,7 +71,7 @@ export const getContent = async (root) => {
 		if (resources.find((rsc) => rsc.artist)) {
 			// Songs are shared via a virtual playlist and a download form
 			sharedOptions.addToSelection = true;
-			// sharedOptions.displayDownloadForm = true;
+			sharedOptions.displayDownloadForm = true;
 		}
 
 		// Keep track of all the folders and sub-folders
@@ -100,9 +100,25 @@ export const getContent = async (root) => {
 
 export const getResource = cloudinary.api.resource;
 
+/**
+ * Return a calculated link to download a list of files
+ * @param {Array<String>} public_ids
+ */
+export const getZipDownloadUrl = async (public_ids) => {
+	try {
+		return cloudinary.utils.download_zip_url({
+			public_ids
+		});
+	} catch (err) {
+		console.error(err);
+		throw new ApiError(500, err.message);
+	}
+};
+
 const CloudinaryClient = {
 	getContent,
-	getResource
+	getResource,
+	getZipDownloadUrl
 };
 
 export default CloudinaryClient;

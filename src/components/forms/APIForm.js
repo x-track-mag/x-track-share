@@ -3,31 +3,35 @@ import { Center } from "@chakra-ui/layout";
 import { CircularProgress } from "@chakra-ui/progress";
 import APIClient from "../../lib/services/APIClient.js";
 import {
-	FormValidationProvider,
+	withFormValidationContext,
 	useFormValidationContext
 } from "./validation/FormValidationProvider.js";
+import { chakra } from "@chakra-ui/system";
 
 /**
  * @typedef APIFormProps
  * @property {String} action local URL of an API page
+ * @property {String} [method=POST] HTTP method to use to submit the form data
  * @property {Function<FormData>} [onSubmit] optional function to handle the form data submission
  * @property {onSuccess} [onSuccess] optional function to handle the successfull API response
  * @property {onError} [onError] optional function to handle the failed API response
  */
+
 /**
+ * Automatically submit validated form data to the API
+ * The APIForm will take care of the inputs validation before submitting to the API
  * @param {APIFormProps} props
  */
-const VAPIForm = ({
+const APIForm = ({
 	action,
 	method = "POST",
 	onSubmit,
 	onSuccess,
 	onError,
 	children,
-	customStyles = {}
+	...moreProps
 }) => {
 	const [submitting, setSubmitting] = useState(false);
-
 	const { validate } = useFormValidationContext();
 
 	/**
@@ -35,9 +39,9 @@ const VAPIForm = ({
 	 */
 	const onValidationSuccess = async (formData) => {
 		try {
-			console.dir(`Sending form data to API : `, JSON.stringify(formData));
+			console.dir(`Sending form data to ${action} : `, JSON.stringify(formData));
 			setSubmitting(true);
-			const apiResponse = await APIClient.post(action, formData);
+			const apiResponse = await APIClient[method.toLowerCase()](action, formData);
 			if (typeof onSuccess === "function") {
 				onSuccess(apiResponse);
 			}
@@ -62,34 +66,20 @@ const VAPIForm = ({
 	};
 
 	return (
-		<>
+		<Center>
 			{!submitting && (
-				<form action={action} method={method} onSubmit={handleValidation}>
+				<chakra.form
+					action={action}
+					method={method}
+					onSubmit={handleValidation}
+					{...moreProps}
+				>
 					{children}
-				</form>
+				</chakra.form>
 			)}
-			{submitting && (
-				<Center w="100%" h="100%">
-					<CircularProgress isIndeterminate />
-				</Center>
-			)}
-		</>
+			{submitting && <CircularProgress isIndeterminate />}
+		</Center>
 	);
 };
 
-/**
- * Automatically submit validated form data to the API
- * The APIForm will take care of the inputs validation before submitting to the API
- * @param apiFormProps
- * @param {string} apiFormProps.action API method URL to submit to
- * @param {string} [apiFormProps.method=POST] the HTTP verb to use
- * @param {JSX.Element} apiFormProps.children the real form content (fields and submit button)
- * @param {Function} [apiFormProps.onSuccess] an optional method to call when the form submission has been a success
- * @param {Function} [apiFormProps.onError] an optional method to call only when the API returned an error
- */
-const APIForm = ({ children, ...apiFormProps }) => (
-	<FormValidationProvider>
-		<VAPIForm {...apiFormProps}>{children}</VAPIForm>
-	</FormValidationProvider>
-);
-export default APIForm;
+export default withFormValidationContext(APIForm);

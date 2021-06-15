@@ -104,7 +104,7 @@ export const getResource = cloudinary.api.resource;
  * Return a calculated link to download a list of files
  * @param {Array<String>} public_ids
  */
-export const getZipDownloadUrl = async (public_ids) => {
+export const getZipDownloadUrl = (public_ids) => {
 	try {
 		return cloudinary.utils.download_zip_url({
 			public_ids

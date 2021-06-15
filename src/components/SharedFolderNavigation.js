@@ -1,10 +1,10 @@
-import { useLayoutEffect } from "react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Box, Heading } from "@chakra-ui/layout";
 import { Drawer, DrawerOverlay, DrawerHeader, DrawerContent } from "@chakra-ui/modal";
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
 import { useShareContext } from "./ShareContextProvider.js";
+import useUnivLayoutEffect from "../hooks/useUnivLayoutEffect.js";
 
 const SharedFolderNavigation = ({ path }) => {
 	const {
@@ -32,25 +32,11 @@ const SharedFolderNavigation = ({ path }) => {
 		}
 	};
 
-	useLayoutEffect(() => {
-		// Show the drawer and resolve when the API call to submit the form data ha been called
-		const showDownloadForm = () =>
-			new Promise((resolve, reject) => {
-				callbacks.onSuccess = (data) => {
-					onClose();
-					resolve(data);
-				};
-				callbacks.onError = reject;
-				console.log(`Show the download form !`);
-				onOpen();
-			});
-		callbacks.download = async (evt) => {
-			evt.preventDefault();
-			// Display the download form and get the download URL
-			const downloadUrl = await showDownloadForm().catch(alert);
-		};
-		console.log("Defined callbacks", callbacks);
-	}, [path]);
+	callbacks.download = async (evt) => {
+		evt.preventDefault();
+		// Display the download form and get the download URL
+		onOpen();
+	};
 
 	return (
 		<Box className="navigation-header" as="header">

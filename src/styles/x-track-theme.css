@@ -22,3 +22,7 @@
 .vjs-poster {
 	background-color: blue !important;
 }
+.neon-text:hover {
+	color: #ffc;
+	text-shadow: 0 0 3px #fff, 0 0 7px #ffc, 0 0 14px #ff7, 0 0 21px #ff0, 0 0 33px #ff0;
+}

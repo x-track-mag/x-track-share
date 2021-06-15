@@ -55,16 +55,17 @@ export const useFormValidationContext = () => {
 
 /**
  * HOC : Wrap a component inside a Form Validation Context provider
- * @param {JSXElementConstructor} Component
+ * @param {JSXElementConstructor} FormComponent
  * @param {ValidationContextOptions} options like `initialValues`
  * @param {Props} initialProps Pass these to the wrapped component (he can receive more)
+ * @returns FormComponent
  */
-export const withFormValidationContext = (Component, options = {}, initialProps) => ({
+export const withFormValidationContext = (FormComponent, options = {}, initialProps) => ({
 	...props
 }) => {
 	return (
 		<FormValidationProvider options={options}>
-			<Component {...initialProps} {...props} />
+			<FormComponent {...initialProps} {...props} />
 		</FormValidationProvider>
 	);
 };

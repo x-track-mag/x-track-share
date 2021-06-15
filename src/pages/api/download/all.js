@@ -11,13 +11,14 @@ import withCORS from "../../../lib/services/withCORS.js";
  */
 const downloadAll = async (req, resp) => {
 	try {
+		console.log("/api/download/all", req.body);
 		const { public_ids } = req.body;
 
 		APIClient.post("/api/mailreport", req.body); // don't wait for the answer
 
-		return resp.status(statusCode).json({
+		return resp.json({
 			success: true,
-			downloadUrl: CloudinaryClient.getDownloadUrl(public_ids)
+			downloadUrl: CloudinaryClient.getZipDownloadUrl(public_ids)
 		});
 	} catch (err) {
 		console.error(JSON.stringify(err, null, "\t"));

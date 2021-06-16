@@ -76,7 +76,29 @@ export const StringExtensions = {
 	toInt: function () {
 		// If the string starts with '0x' or '-0x', parse as hex.
 		return /^\s*-?0x/i.test(this) ? parseInt(this, 16) : parseInt(this, 10);
+	},
+	/**
+	 * Extract the words from this string
+	 * @returns {Array<String>}
+	 */
+	words: function () {
+		return this.match(/[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g);
+	},
+	/**
+	 * Split each words and make them begin with an uppercase
+	 */
+	toStartCase: function () {
+		return this.words().reduce(
+			(result, word, index) => result + (index ? " " : "") + upperFirst(word),
+			""
+		);
 	}
 };
 
-Object.assign(String.prototype, StringExtensions);
+export const applyTo = (target) => {
+	Object.keys(StringExtensions).forEach((methodName) => {
+		if (!target[methodName]) target[methodName] = StringExtensions[methodName];
+	});
+};
+
+export default applyTo(String.prototype);

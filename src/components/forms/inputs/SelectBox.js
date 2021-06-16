@@ -1,5 +1,5 @@
 import { createRef } from "react";
-import { convertOptions } from "./utils.js";
+import { convertOptions, convertToStartCase } from "./utils.js";
 import { evalContextualProp } from "../validation/utils.js";
 import { useFormValidationContext } from "../validation/FormValidationProvider.js";
 import { Select } from "@chakra-ui/select";
@@ -11,12 +11,26 @@ import {
 } from "@chakra-ui/form-control";
 
 /**
+ * @typedef SelectBoxProps
+ * @property {String} name
+ * @property {String} label
+ * @property {Map<String>|Array<code,value>} options
+ * @property {ValidationObject} validation
+ * @property {String} helperText
+ * @property {String} defaultValue
+ * @property {Boolean|Function} [required=false]
+ * @property {Boolean|Function} [disabled=false]
+ * @property {Boolean} [readOnly=false]
+ */
+
+/**
  * Select a value amongst one defined list of options
  * @param {SelectBoxProps} props
  */
 const SelectBox = ({
 	name = "select-box",
 	label = "",
+	options = [],
 	defaultValue = "",
 	helperText = "",
 	autoFocus = false,
@@ -24,13 +38,14 @@ const SelectBox = ({
 	readOnly = false,
 	disabled = false,
 	validation = {},
-	options = [],
 	...moreProps
 }) => {
 	const inputRef = createRef();
 
 	// Accept a hashmap (key : value) as different format
-	if (!Array.isArray(options)) options = convertOptions(options);
+	options = convertOptions(options);
+
+	if (!label) label = convertToStartCase(name);
 
 	// Find the Form Validation Context to register our input
 	const {

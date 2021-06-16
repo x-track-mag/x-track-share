@@ -1,13 +1,28 @@
+import { startCase } from "lodash";
+
+/**
+ *
+ */
+export const convertToStartCase = startCase;
+
 /**
  * Two different formats for options are accepted in the Select, CheckBoxes as well as Radio input
  * Takes a key:value map and return an array with {code, label} entries
- * @param {Object} map
+ * @param {Object} o
+ * @returns {Array}
  */
-export const convertOptions = (map) =>
-	Object.keys(map).reduce((options, key) => {
-		options.push({ code: key, label: map[key] });
-		return options;
-	}, []);
+export const convertOptions = (o) => {
+	if (typeof o === "objects") {
+		return Object.keys(o).reduce((options, key) => {
+			options.push({ code: key, label: o[key] });
+			return options;
+		}, []);
+	} else if (Array.isArray(o)) {
+		return o.map((option) =>
+			option.code ? option : { code: option, label: startCase(option) }
+		);
+	}
+};
 
 /**
  * Display the label associated with the code of a Select list of options

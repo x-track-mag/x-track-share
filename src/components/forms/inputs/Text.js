@@ -10,7 +10,7 @@ import { Textarea } from "@chakra-ui/textarea";
 import React, { createRef, useEffect, useLayoutEffect } from "react";
 import { useFormValidationContext } from "../validation/FormValidationProvider.js";
 import { evalContextualProp } from "../validation/utils.js";
-import { startCase } from "lodash";
+import { convertToStartCase } from "./utils.js";
 
 /**
  * @typedef TextInputProps
@@ -59,7 +59,7 @@ const Text = ({
 	const errorMessage = errors[name]?.message || "";
 	const RenderTextInput = rows > 1 ? Textarea : Input;
 
-	if (!label) label = startCase(name);
+	if (!label) label = convertToStartCase(name);
 
 	// Keep form context data in sync
 	const onChange = (evt) => {

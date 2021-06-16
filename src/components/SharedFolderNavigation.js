@@ -79,8 +79,6 @@ const SharedFolderNavigation = ({ path }) => {
 								<DownloadForm
 									maxWidth="40rem"
 									selectedTracks={selectedTracks}
-									onSuccess={callback("onSuccess")}
-									onError={callback("onError")}
 								/>
 							</DrawerContent>
 						</Drawer>

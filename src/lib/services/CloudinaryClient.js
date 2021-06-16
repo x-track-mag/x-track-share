@@ -101,14 +101,31 @@ export const getContent = async (root) => {
 export const getResource = cloudinary.api.resource;
 
 /**
- * Return a calculated link to download a list of files
+ * Return a calculated link to download a zip archive
+ * containing the selected assets
  * @param {Array<String>} public_ids
+ * @param {String} format to convert each asset
+ * @returns {String}
  */
-export const getZipDownloadUrl = (public_ids) => {
+export const getZipDownloadUrl = (public_ids, format = "wav") => {
 	try {
-		return cloudinary.utils.download_zip_url({
-			public_ids
+		// Add the request format to the end of the public_id
+		// public_ids = public_ids.map((id) => `${id}.${format}`).join(",");
+		const downloadUrl = cloudinary.utils.download_zip_url({
+			public_ids,
+			resource_type: "video",
+			use_original_filename: true,
+			target_public_id: `x-track-share-${new Date()
+				.toISOString()
+				.substr(0, 19)
+				.replace(/[^0-9]/g, "-")}`,
+			transformations: `f_${format}`
 		});
+		console.log(`Generate Zip download URL for ${JSON.stringify(
+			public_ids
+		)} in ${format} format :
+${downloadUrl}`);
+		return downloadUrl;
 	} catch (err) {
 		console.error(err);
 		throw new ApiError(500, err.message);

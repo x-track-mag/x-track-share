@@ -12,13 +12,16 @@ import withCORS from "../../../lib/services/withCORS.js";
 const downloadAll = async (req, resp) => {
 	try {
 		console.log("/api/download/all", req.body);
-		const { public_ids } = req.body;
+		const { public_ids, format, fullName, email, message } = req.body;
 
-		APIClient.post("/api/mailreport", req.body); // don't wait for the answer
+		if (fullName || email || message) {
+			// These fields are not mandatory
+			APIClient.post("/api/mailreport", req.body); // don't wait for the answer
+		}
 
 		return resp.json({
 			success: true,
-			downloadUrl: CloudinaryClient.getZipDownloadUrl(public_ids)
+			downloadUrl: CloudinaryClient.getZipDownloadUrl(public_ids, format)
 		});
 	} catch (err) {
 		console.error(JSON.stringify(err, null, "\t"));

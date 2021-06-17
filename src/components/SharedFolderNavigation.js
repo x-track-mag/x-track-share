@@ -4,7 +4,7 @@ import { Drawer, DrawerOverlay, DrawerHeader, DrawerContent } from "@chakra-ui/m
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
 import { useShareContext } from "./ShareContextProvider.js";
-import useUnivLayoutEffect from "../hooks/useUnivLayoutEffect.js";
+import useIsomorphicLayoutEffect from "../hooks/useIsomorphicLayoutEffect.js";
 
 const SharedFolderNavigation = ({ path }) => {
 	const {
@@ -16,25 +16,9 @@ const SharedFolderNavigation = ({ path }) => {
 	// These variables will control the drawer to show the Download form
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const callbacks = {};
-	/**
-	 * The callback function is static and can be referenced by every components on mount
-	 * But the real callbacks are dynamics and created later
-	 * @param {String} method Name of the callback to invoke
-	 * @return {Function}
-	 */
-	const callback = (method) => (...args) => {
-		console.log(`Calling ${method} on `, callbacks);
-		if (typeof callbacks[method] === "function") {
-			callbacks[method](...args);
-		} else {
-			console.error(`callbacks[${method}] is not defined. Why ?`);
-		}
-	};
-
-	callbacks.download = async (evt) => {
+	// Display the download form which will then display the download URL
+	const download = async (evt) => {
 		evt.preventDefault();
-		// Display the download form and get the download URL
 		onOpen();
 	};
 
@@ -52,7 +36,11 @@ const SharedFolderNavigation = ({ path }) => {
 						href={`/share/${selectedTracks.path}`}
 						onClick={navigate(selectedTracks.path)}
 					>
-						Sélection
+						Ma&nbsp;Sélection&nbsp;
+						<small>
+							({selectedTracks.audios.length + selectedTracks.videos.length}
+							)
+						</small>
 					</a>
 				</Heading>
 			)}
@@ -66,7 +54,7 @@ const SharedFolderNavigation = ({ path }) => {
 					>
 						<a
 							href={`/share/${selectedTracks.path}/download`}
-							onClick={callback("download")}
+							onClick={download}
 						>
 							Download
 						</a>
@@ -77,7 +65,7 @@ const SharedFolderNavigation = ({ path }) => {
 							<DrawerHeader mt="50px">Merci de renseigner</DrawerHeader>
 							<DrawerContent padding={2} bgColor="black">
 								<DownloadForm
-									maxWidth="40rem"
+									maxWidth="50rem"
 									selectedTracks={selectedTracks}
 								/>
 							</DrawerContent>

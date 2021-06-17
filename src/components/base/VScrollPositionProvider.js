@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef } from "react";
-import useUnivLayoutEffect from "../../hooks/useUnivLayoutEffect.js";
+import useIsomorphicLayoutEffect from "../../hooks/useIsomorphicLayoutEffect.js";
 
 const VScrollPositionContext = createContext();
 
@@ -28,7 +28,7 @@ const VScrollPositionProvider = ({ children }) => {
 
 	// This useLayoutEffect will execute only once because
 	// it does not have any dependencies.
-	useUnivLayoutEffect(() => {
+	useIsomorphicLayoutEffect(() => {
 		// Listen to window scroll event
 		const measureVScrollPosition = () => {
 			requestAnimationFrame(() => {

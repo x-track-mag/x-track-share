@@ -19,6 +19,9 @@ const mailReport = async (req, resp) => {
 		} = process.env;
 
 		if (!SENDGRID_API_KEY || !SENDGRID_REPORT_TO || !SENDGRID_REPORT_TEMPLATE_ID) {
+			console.error(
+				"Missing environment variables for Sendgrid client initialization"
+			);
 			return resp.status(500).json({
 				success: false,
 				error: "Missing environment variables for Sendgrid client initialization"

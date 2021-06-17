@@ -107,6 +107,8 @@ const Text = ({
 				autoFocus={autoFocus}
 				placeholder={placeHolder}
 				paddingInline={1}
+				bgColor="transparent"
+				borderColor="white"
 				{...moreProps}
 			/>
 			<FormErrorMessage fontSize="small" mt={0} paddingLeft={1}>

@@ -1,4 +1,4 @@
-import { Center, FormHelperText } from "@chakra-ui/react";
+import { Center, chakra, FormHelperText } from "@chakra-ui/react";
 import { useState } from "react";
 import APIForm from "./APIForm.js";
 import Email from "./inputs/Email.js";
@@ -23,14 +23,13 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 					w="100%"
 					{...props}
 				>
-					<FormHelperText color="white">
-						Indiquez quelques informations sur votre projet si vous le
-						désirez, choisissez le format et cliquez sur Télécharger pour
-						obtenir le lien.
-					</FormHelperText>
+					<chakra.p lineHeight="1em" fontSize="sm" color="white">
+						Partagez quelques informations sur votre projet (si vous le
+						désirez), choisissez le format adéquat et cliquez sur 'Générer'.
+					</chakra.p>
 					<Text name="fullName" label="Votre nom" />
-					<Email name="email" />
-					<Text name="message" rows={5} />
+					<Email name="email" label="Votre email" />
+					<Text name="message" label="Avez-vous un projet ?" rows={5} />
 					<SelectBox
 						name="format"
 						label="Choisissez le format approprié"
@@ -43,7 +42,7 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 						defaultValue={selectedTracks.audios.map((t) => t.public_id)}
 					/>
 					<Submit bgColor="blue" color="yellow">
-						Télécharger
+						Générer...
 					</Submit>
 				</APIForm>
 			)}

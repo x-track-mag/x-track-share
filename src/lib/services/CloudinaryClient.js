@@ -17,12 +17,16 @@ cloudinary.config({
  * Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
  * We remove them
  * @param {String} filename
- * @returns String
+ * @returns {Object}
  */
-const fileNameExtras = (cloudinaryFileName) => {
-	const filename = cloudinaryFileName
+export const extractTrackInfos = (filename) => {
+	if (filename.contains("/")) {
+		// It's a full path : keep only the filename
+		filename = filename.split("/").pop();
+	}
+	filename = filename
 		.replace(/\_[a-z0-9]{6}$/, "") // Remove the random sequence _jhj7yg at the end of the file names
-		.replace(/\_/gi, " ");
+		.replace(/\_/gi, " "); // Restore the spaces between words
 
 	if (filename.indexOf("-") > 0) {
 		// We have a song title
@@ -42,6 +46,7 @@ const fileNameExtras = (cloudinaryFileName) => {
  * @see cloudinary-search-results.json to see what the results look like
  * @param {String} root
  */
+
 export const getContent = async (root) => {
 	try {
 		let { resources } = await cloudinary.search
@@ -58,7 +63,7 @@ export const getContent = async (root) => {
 				format,
 				duration,
 				url: secure_url.replace(/\.\w{3}$/, ""),
-				...fileNameExtras(filename)
+				...extractTrackInfos(filename)
 			})
 		);
 

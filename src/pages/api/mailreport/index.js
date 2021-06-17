@@ -1,6 +1,12 @@
 import MailService from "@sendgrid/mail";
 import { NextApiRequest, NextApiResponse } from "next";
+import { extractTrackInfos } from "../../../lib/services/CloudinaryClient.js";
 import withCORS from "../../../lib/services/withCORS.js";
+
+const enhanceData = (data) => {
+	data.tracks = data.public_ids.map(extractTrackInfos);
+	return data;
+};
 
 /**
  * Send a mail report about a download,
@@ -36,7 +42,7 @@ const mailReport = async (req, resp) => {
 			bcc: SENDGRID_REPORT_BCC.split(","),
 			templateId: SENDGRID_REPORT_TEMPLATE_ID,
 
-			dynamicTemplateData: req.body
+			dynamicTemplateData: enhanceData(req.body)
 		};
 
 		console.log(`Sending mail report`, msg);

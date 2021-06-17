@@ -36,6 +36,8 @@ const mailReport = async (req, resp) => {
 			dynamicTemplateData: req.body
 		};
 
+		console.log(`Sending mail report`, msg);
+
 		// Note : we receive an array of ClientResponse
 		const [{ statusCode }] = await MailService.send(msg);
 

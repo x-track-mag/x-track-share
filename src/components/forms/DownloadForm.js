@@ -1,3 +1,4 @@
+import { Center, FormHelperText } from "@chakra-ui/react";
 import { useState } from "react";
 import APIForm from "./APIForm.js";
 import Email from "./inputs/Email.js";
@@ -15,12 +16,24 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 	return (
 		<>
 			{!downloadUrl && (
-				<APIForm action="/api/download/all" onSuccess={onSuccess} {...props}>
-					<Text name="fullName" />
+				<APIForm
+					action="/api/download/all"
+					onSuccess={onSuccess}
+					h="100%"
+					w="100%"
+					{...props}
+				>
+					<FormHelperText color="white">
+						Indiquez quelques informations sur votre projet si vous le
+						désirez, choisissez le format et cliquez sur Télécharger pour
+						obtenir le lien.
+					</FormHelperText>
+					<Text name="fullName" label="Votre nom" />
 					<Email name="email" />
 					<Text name="message" rows={5} />
 					<SelectBox
 						name="format"
+						label="Choisissez le format approprié"
 						options={options}
 						defaultValue="wav"
 						required={true}
@@ -35,14 +48,16 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 				</APIForm>
 			)}
 			{downloadUrl && (
-				<a
-					href={downloadUrl}
-					download={`playlist-x-track-${new Date()
-						.toISOString()
-						.substr(0, 19)}.zip`}
-				>
-					Votre lien
-				</a>
+				<Center h="100%">
+					<a
+						href={downloadUrl}
+						download={`playlist-x-track-${new Date()
+							.toISOString()
+							.substr(0, 19)}.zip`}
+					>
+						Cliquez ici pour télécharger
+					</a>
+				</Center>
 			)}
 		</>
 	);

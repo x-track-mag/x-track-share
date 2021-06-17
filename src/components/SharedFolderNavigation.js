@@ -1,10 +1,9 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Box, Heading } from "@chakra-ui/layout";
-import { Drawer, DrawerOverlay, DrawerHeader, DrawerContent } from "@chakra-ui/modal";
+import { Drawer, DrawerOverlay, DrawerContent } from "@chakra-ui/modal";
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
 import { useShareContext } from "./ShareContextProvider.js";
-import useIsomorphicLayoutEffect from "../hooks/useIsomorphicLayoutEffect.js";
 
 const SharedFolderNavigation = ({ path }) => {
 	const {
@@ -56,18 +55,14 @@ const SharedFolderNavigation = ({ path }) => {
 							href={`/share/${selectedTracks.path}/download`}
 							onClick={download}
 						>
-							Download
+							Télécharger
 						</a>
 					</Heading>
 					{displayDownloadForm && (
 						<Drawer isOpen={isOpen} onClose={onClose}>
 							<DrawerOverlay />
-							<DrawerHeader mt="50px">Merci de renseigner</DrawerHeader>
-							<DrawerContent padding={2} bgColor="black">
-								<DownloadForm
-									maxWidth="50rem"
-									selectedTracks={selectedTracks}
-								/>
+							<DrawerContent padding="80px 2em" bgColor="black">
+								<DownloadForm selectedTracks={selectedTracks} />
 							</DrawerContent>
 						</Drawer>
 					)}

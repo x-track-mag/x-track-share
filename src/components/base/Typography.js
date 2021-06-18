@@ -1,4 +1,4 @@
-import { Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 
 export const Title = ({ children, ...moreStyles }) => (
 	<Heading as="h2" fontSize="2rem" lineHeight="2.2rem" fontWeight={500} {...moreStyles}>
@@ -26,8 +26,15 @@ export const ColumnHeader = ({ children, ...moreStyles }) => (
 	</Heading>
 );
 
+export const Info = ({ children }) => (
+	<Box as="p" className="info" lineHeight="1rem" fontSize="sm" color="white" mb="1rem">
+		{children}
+	</Box>
+);
+
 export default {
 	Title,
 	Subtitle,
-	ColumnHeader
+	ColumnHeader,
+	Info
 };

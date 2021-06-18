@@ -1,5 +1,6 @@
-import { Center, chakra, FormHelperText } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 import { useState } from "react";
+import { Info } from "../base/Typography.js";
 import APIForm from "./APIForm.js";
 import Email from "./inputs/Email.js";
 import Hidden from "./inputs/Hidden.js";
@@ -11,7 +12,10 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 	const [downloadUrl, setDownloadUrl] = useState();
 
 	const onSuccess = ({ downloadUrl }) => setDownloadUrl(downloadUrl);
-	const options = ["wav", "mp3", "m4a", "ogg"];
+	const options = ["wav", "mp3", "m4a", "ogg"].map((code) => ({
+		code,
+		label: code.toUpperCase()
+	}));
 
 	return (
 		<>
@@ -23,10 +27,10 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 					w="100%"
 					{...props}
 				>
-					<chakra.p lineHeight="1em" fontSize="sm" color="white">
+					<Info>
 						Partagez quelques informations sur votre projet (si vous le
 						désirez), choisissez le format adéquat et cliquez sur 'Générer'.
-					</chakra.p>
+					</Info>
 					<Text name="fullName" label="Votre nom" />
 					<Email name="email" label="Votre email" />
 					<Text name="message" label="Avez-vous un projet ?" rows={5} />
@@ -47,14 +51,15 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 				</APIForm>
 			)}
 			{downloadUrl && (
-				<Center h="100%">
+				<Center h="100%" flexDirection="column">
+					<Info>Votre compilation est prête !</Info>
 					<a
 						href={downloadUrl}
 						download={`playlist-x-track-${new Date()
 							.toISOString()
 							.substr(0, 19)}.zip`}
 					>
-						Cliquez ici pour télécharger
+						Cliquez ici pour la télécharger
 					</a>
 				</Center>
 			)}

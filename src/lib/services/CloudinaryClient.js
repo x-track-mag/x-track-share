@@ -20,7 +20,7 @@ cloudinary.config({
  * @returns {Object}
  */
 export const extractTrackInfos = (filename) => {
-	if (filename.contains("/")) {
+	if (filename.indexOf("/") > 0) {
 		// It's a full path : keep only the filename
 		filename = filename.split("/").pop();
 	}

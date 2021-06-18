@@ -14,9 +14,10 @@ const downloadAll = async (req, resp) => {
 		console.log("/api/download/all", req.body);
 		const { public_ids, format, fullName, email, message } = req.body;
 
+		// These fields are not mandatory
 		if (fullName || email || message) {
-			// These fields are not mandatory
-			await APIClient.post("/api/mailreport", req.body); // don't wait for the answer
+			// We have a message ! Send a report
+			await APIClient.post("/api/mailreport", req.body);
 		}
 
 		return resp.json({

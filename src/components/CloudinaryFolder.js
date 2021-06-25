@@ -2,13 +2,12 @@ import { Stack, Grid } from "@chakra-ui/layout";
 import Folder from "./base/Folder";
 import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer.js";
 import AudioPlaylistPlayer from "./player/AudioPlaylistPlayer.js";
-import Breadcrumbs from "./Breadcrumbs";
 import { useEffect } from "react";
 import { useShareContext } from "./ShareContextProvider";
 import SharedFolderNavigation from "./SharedFolderNavigation";
 
 const CloudinaryFolder = () => {
-	const { folders, current, selectedTracks, sharedOptions } = useShareContext();
+	const { folders, current, selectedTracks, timestamp } = useShareContext();
 	const folder = folders[current] || selectedTracks;
 
 	if (!folder) return null;
@@ -41,6 +40,7 @@ const CloudinaryFolder = () => {
 					type="audio"
 					playerId="audio-player"
 					playlist={audios}
+					timestamp={timestamp}
 				/>
 			)}
 
@@ -49,6 +49,7 @@ const CloudinaryFolder = () => {
 					type="video"
 					playerId="video-player"
 					playlist={videos}
+					timestamp={timestamp}
 				/>
 			)}
 		</Stack>

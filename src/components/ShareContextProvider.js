@@ -17,6 +17,8 @@ import SharedFolder from "../lib/cloudinary/SharedFolder";
  * @property {SharedOptions} sharedOptions
  * @property {SharedFolder} selectedTracks A virtual folder containing what the user added to
  * @property {Function} navigate Change the current folder path
+ * @property {Number} timestamp  Latest modification timestamp (only selected tracks change)
+ * @property {Function} refresh  Force the refresh of the components
  */
 
 const ShareContext = createContext();
@@ -45,14 +47,18 @@ export const withShareContext = (Component) => ({
 		})
 	);
 	const [current, setCurrent] = useState(path);
+	const [timestamp, setTimestamp] = useState(Date.now());
 	const router = useRouter();
 	const eb = useEventBus();
 
+	const refresh = () => setTimestamp(Date.now());
 	const addToSelectedTracks = (track) => {
 		selectedTracks.addMedia(track);
+		refresh();
 	};
 	const removeFromSelectedTracks = (track) => {
 		selectedTracks.removeMedia(track);
+		refresh();
 	};
 
 	/**
@@ -90,7 +96,15 @@ export const withShareContext = (Component) => ({
 
 	return (
 		<ShareContext.Provider
-			value={{ folders, sharedOptions, current, selectedTracks, navigate }}
+			value={{
+				folders,
+				sharedOptions,
+				current,
+				selectedTracks,
+				navigate,
+				timestamp,
+				refresh
+			}}
 		>
 			<Component {...props} />
 		</ShareContext.Provider>

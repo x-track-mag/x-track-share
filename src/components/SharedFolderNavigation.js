@@ -8,6 +8,7 @@ import { useShareContext } from "./ShareContextProvider.js";
 const SharedFolderNavigation = ({ path }) => {
 	const {
 		navigate,
+		timestamp,
 		selectedTracks,
 		sharedOptions: { addToSelection, displayDownloadForm }
 	} = useShareContext();
@@ -30,6 +31,7 @@ const SharedFolderNavigation = ({ path }) => {
 					display="inline-block"
 					float="right"
 					key={selectedTracks.path}
+					timestamp={timestamp}
 				>
 					<a
 						href={`/share/${selectedTracks.path}`}

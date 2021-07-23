@@ -7,7 +7,7 @@ import Icon from "@chakra-ui/icon";
  */
 
 /**
- * Render an equilateral triangle pointing up, down, right or left
+ * Render a bin (trashcan) symbol
  * @param {SvgBinProps} props
  */
 const SvgBin = ({ color = "inherit", size = "18px", ...props }) => (

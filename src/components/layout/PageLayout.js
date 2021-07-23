@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/layout";
 import { withVScrollPosition } from "../base/VScrollPositionProvider.js";
 
 import PageHeader from "./PageHeader.js";
+import Main from "../base/Main.js";
 
 const PageLayout = ({ children }) => (
 	<>
@@ -18,9 +19,7 @@ const PageLayout = ({ children }) => (
 			<meta name="theme-color" content="#00F" />
 		</Head>
 		<PageHeader height="3rem" bg="brand.blue" />
-		<Box as="main" pt="3rem">
-			{children}
-		</Box>
+		<Main>{children}</Main>
 	</>
 );
 

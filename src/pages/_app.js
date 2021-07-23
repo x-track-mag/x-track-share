@@ -7,7 +7,7 @@ import theme from "../theme.js";
 function MyApp({ Component, pageProps }) {
 	return (
 		<ChakraProvider resetCSS theme={theme}>
-			<PageLayout bg="brand.blue">
+			<PageLayout>
 				<Component {...pageProps} />
 			</PageLayout>
 		</ChakraProvider>

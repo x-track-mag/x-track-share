@@ -1,6 +1,6 @@
 import { Flex, Heading } from "@chakra-ui/react";
 
-const HeroSection = ({ title }) => (
+const HeroSection = ({ title, children }) => (
 	<Flex
 		as="section"
 		className="section hero"
@@ -13,6 +13,7 @@ const HeroSection = ({ title }) => (
 				{title}
 			</Heading>
 		)}
+		{children}
 	</Flex>
 );
 

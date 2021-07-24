@@ -19,7 +19,7 @@ const PageLayout = ({ children }) => (
 			<meta name="theme-color" content="#00F" />
 		</Head>
 		<PageHeader height="3rem" bg="brand.blue" />
-		<Main>{children}</Main>
+		<Main bgColor="black">{children}</Main>
 	</>
 );
 

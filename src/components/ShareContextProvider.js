@@ -13,10 +13,10 @@ import SharedFolder from "../lib/cloudinary/SharedFolder";
 /**
  * @typedef SharedFolderContext
  * @property {Object} folders the navigable shared folders
- * @property {String} current Current path
  * @property {SharedOptions} sharedOptions
- * @property {SharedFolder} selectedTracks A virtual folder containing what the user added to
+ * @property {String} current Current path
  * @property {Function} navigate Change the current folder path
+ * @property {SharedFolder} selectedTracks A virtual folder containing what the user added to
  * @property {Number} timestamp  Latest modification timestamp (only selected tracks change)
  * @property {Function} refresh  Force the refresh of the components
  */

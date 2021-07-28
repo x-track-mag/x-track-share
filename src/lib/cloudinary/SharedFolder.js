@@ -36,7 +36,8 @@ SharedFolder.prototype = {
 	},
 	addVideo: function (media) {
 		media.index = this.videos.length;
-		this.videos.push(media);
+		(media.publicId = media.public_id), // GLITCH : The Video Player require publicId instead of public_id !
+			this.videos.push(media);
 		return this;
 	},
 	removeMedia: function (media) {

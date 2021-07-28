@@ -46,15 +46,10 @@ const createPlayer = (id, playlist) => {
 		});
 
 		if (playlist && playlist.length) {
-			player.playlist(
-				playlist.map((p) => p.url.replace(".wav", ".mp3")),
-				{
-					sourceTypes: ["hls"]
-				}
-			);
+			player.playlist(playlist);
 		}
 
-		return player;
+		return (window.player = player); // Make the player available globally
 	} catch (err) {
 		console.error(err);
 	}

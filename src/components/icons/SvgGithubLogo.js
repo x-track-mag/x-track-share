@@ -11,7 +11,7 @@ import Icon from "@chakra-ui/icon";
  * Render the Github Logo
  * @param {SvgGithubLogoProps} props
  */
-const SvgGithubLogo = ({ bgColor, color = "#161514", size = "24px", ...props }) => (
+const SvgGithubLogo = ({ color = "#161514", bgColor, size = "24px", ...props }) => (
 	<Icon height={size} width={size} viewBox="0 0 48 48" {...props}>
 		{bgColor && <path fill={bgColor} d="M0 0h48v48H0z" />}
 		<path

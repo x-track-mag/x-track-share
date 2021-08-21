@@ -10,6 +10,7 @@ const { resolve } = require("path");
 
 module.exports = {
 	reactStrictMode: true,
+	webpack5: false, // Not ready for prime time
 	/**
 	 * @see https://nextjs.org/docs/api-reference/next.config.js/rewrites
 	 */

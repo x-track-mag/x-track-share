@@ -16,6 +16,7 @@ const noop = (val) => val;
  * @property {String} name The name of the field (can use dots to describe a deeply nested property)
  * @property {String} label The field label
  * @property {String}  [placeHolder] Text shown before any input
+ * @property {String}  [helperText] Additional text shown below the input
  * @property {Function} format a function that takes the current input of the field and reformat it
  * @property {Function} serialize a function that takes formatted input of the field and serialize it to its actual storage format
  * @property {Boolean} [required=false] required
@@ -32,6 +33,7 @@ const noop = (val) => val;
 const Formatted = ({
 	name = "formatted-input",
 	label = "Use a label",
+	placeHolder = "",
 	helperText = "",
 	inputType = "text",
 	format = noop,
@@ -44,7 +46,6 @@ const Formatted = ({
 	validation = {},
 	defaultValue,
 	size = 20,
-	placeHolder = "",
 	...moreProps
 }) => {
 	// Find the form validation context to register our input

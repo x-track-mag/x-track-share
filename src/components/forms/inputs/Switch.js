@@ -10,9 +10,9 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
  * @property {Array<checked,unchecked>} values The values to apply when the switch is activated/disactivated
  */
 /**
- * This Switch has only two possible values (on/off) and no undefined state
+ * This Switch has only two possible values (on/off) and cannot be in an undefined state
  * The real `values` can be provided as an array, if not they are equal to the boolean values : [false,true]
- * The default state is the inactivated one, it corresponds to the first value passed to `values`
+ * The first value passed to `values` correspond to the default value
  * @param {SwitchProps} props
  */
 const Switch = ({

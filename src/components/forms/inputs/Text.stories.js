@@ -83,7 +83,7 @@ ReadOnlyTextWithData.args = {
 };
 
 export const TextArea = ({ ...args }) => (
-	<FormValidationProvider data={{ message: "Once upion a time...\n" }}>
+	<FormValidationProvider data={{ message: "Once upon a time...\n" }}>
 		<ValidatingForm id="simple-textarea-form">
 			<Text {...args} name="message" label="Message" />
 		</ValidatingForm>

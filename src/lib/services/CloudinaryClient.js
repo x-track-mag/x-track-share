@@ -13,6 +13,12 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+/**
+ * Upload a single local file to a folder in Cloudinary
+ * @param {String} destPath
+ * @param {String} localPath Path to the local file where the file can be readen
+ * @returns
+ */
 export const uploadToPath = async (destPath, localPath) => {
 	const uploadOptions = {
 		overwrite: true,

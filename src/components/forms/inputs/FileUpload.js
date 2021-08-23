@@ -50,11 +50,7 @@ const FileUpload = ({
 
 		Promise.all(
 			acceptedFiles.map((f) => {
-				// Extract the path from the folder
-				const filePath = f.path.split("/");
-				// Get rid of the file name
-				filePath.pop();
-				return limit(sendFile(`${upload_url}${filePath.join("/")}`), f);
+				return limit(sendFile(upload_url), f);
 			})
 		)
 			.then((status) => {

@@ -1,6 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable-serverless";
+import StringExtensions from "../../../lib/utils/Strings";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient";
+
+/**
+ * Convert all parts of the path in lowercase
+ * @param {String} relativePath
+ * @returns
+ */
+const normalizePath = (relativePath) => {
+	const parts = relativePath.split("/");
+	const fileName = parts.pop();
+	return parts.map((part) => part.slugify()).join("/") + "/" + fileName;
+};
 
 /**
  * Generate a download URL for a zipped archive
@@ -19,11 +31,13 @@ export default async (req, resp) => {
 		const uploadSuccess = new Promise((resolve, reject) => {
 			form.on("file", async (name, file) => {
 				console.log(
-					`/api/upload received file ${file.name} (${file.size}bytes) and saved it ${file.path}`
+					`/api/upload/${path.join("/")} received file ${file.name} (${
+						file.size
+					}bytes) and saved it ${file.path}`
 				);
 				try {
 					const uploaded = await CloudinaryClient.uploadToPath(
-						file.name,
+						path.join("/") + "/" + normalizePath(file.name),
 						file.path
 					);
 					resolve(uploaded);

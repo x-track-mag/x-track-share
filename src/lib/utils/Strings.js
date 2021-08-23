@@ -53,6 +53,16 @@ export const StringExtensions = {
 		return this.split(ss).join(r);
 	},
 	/**
+	 * Convert a string to a URL-safe representation (all lowercase, a-z, 0-9, -)
+	 * @param {String} str
+	 * @returns A URL-safe version of the string
+	 */
+	slugify: function () {
+		return this.toLowerCase()
+			.replace(/[^a-z0-9]+/g, "-") // dashify all forbidden chars
+			.replace(/^-+|-+$/g, ""); // remove leading and trailing dash
+	},
+	/**
 	 * Split a string at given positions
 	 * @param  {Array<Integer>} positions
 	 * @return {Array<String>}

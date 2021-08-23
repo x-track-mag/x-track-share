@@ -13,6 +13,22 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+export const uploadToPath = async (destPath, localPath) => {
+	const uploadOptions = {
+		overwrite: true,
+		public_id: destPath.replace(/\.(\w)+$/i, "") // remove extension from path
+	};
+	return new Promise((resolve, reject) => {
+		cloudinary.uploader.upload(localPath, uploadOptions, (error, result) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+};
+
 /**
  * Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
  * We remove them
@@ -42,11 +58,10 @@ export const extractTrackInfos = (filename) => {
 };
 
 /**
- * Return the list of subfolders and content inside a root folder
+ * Return the list of subfolders and content inside the given root folder
  * @see cloudinary-search-results.json to see what the results look like
  * @param {String} root
  */
-
 export const getContent = async (root) => {
 	try {
 		let { resources } = await cloudinary.search
@@ -138,6 +153,7 @@ ${downloadUrl}`);
 };
 
 const CloudinaryClient = {
+	uploadToPath,
 	getContent,
 	getResource,
 	getZipDownloadUrl

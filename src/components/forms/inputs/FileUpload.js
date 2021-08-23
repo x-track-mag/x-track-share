@@ -48,7 +48,15 @@ const FileUpload = ({
 		console.log("Received some files", acceptedFiles);
 		setFiles(acceptedFiles);
 
-		Promise.all(acceptedFiles.map((f) => limit(sendFile(upload_url), f)))
+		Promise.all(
+			acceptedFiles.map((f) => {
+				// Extract the path from the folder
+				const filePath = f.path.split("/");
+				// Get rid of the file name
+				filePath.pop();
+				return limit(sendFile(`${upload_url}${filePath.join("/")}`), f);
+			})
+		)
 			.then((status) => {
 				console.log("All files have been uploaded");
 			})

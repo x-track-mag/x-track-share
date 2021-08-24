@@ -5,3 +5,4 @@ export { default as MicrosoftLogo } from "./SvgMicrosoftLogo.js";
 export { default as Triangle } from "./SvgTriangle.js";
 export { default as UploadIcon } from "./SvgUpload.js";
 export { default as XtrackLogo } from "./SvgLogo.js";
+export { default as PlusIcon } from "./SvgPlus.js";

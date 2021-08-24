@@ -1,7 +1,7 @@
 import { Box, Heading } from "@chakra-ui/layout";
 import { useRouter } from "next/router";
 import { extractPaths } from "../lib/utils/Folders";
-import { useShareContext } from "./ShareContextProvider";
+import { useSharedFolderContext } from "./SharedFolderContext";
 
 /**
  * @typedef BreadcrumbsProps
@@ -14,7 +14,7 @@ import { useShareContext } from "./ShareContextProvider";
  * @param {BreadcrumbsProps} props
  */
 const Breadcrumbs = ({ path, additionalLink }) => {
-	const { navigate } = useShareContext();
+	const { navigate } = useSharedFolderContext();
 	const { leaf, parents } = extractPaths(path);
 	// Render the links to the parent folders
 	return (

@@ -1,10 +1,10 @@
 import { AspectRatio } from "@chakra-ui/layout";
-import { useShareContext } from "../ShareContextProvider.js";
+import { useSharedFolderContext } from "../SharedFolderContext.js";
 import { Subtitle } from "./Typography.js";
 
 const Folder = ({ path }) => {
-	const title = path.split("/").pop();
-	const { navigate } = useShareContext();
+	const folderName = path.split("/").pop();
+	const { navigate } = useSharedFolderContext();
 
 	return (
 		<a href={path} onClick={navigate(path)}>
@@ -14,7 +14,7 @@ const Folder = ({ path }) => {
 				color="brand.yellow"
 				_hover={{ bg: "brand.yellow", color: "brand.blue" }}
 			>
-				<Subtitle>{title}</Subtitle>
+				<Subtitle>{folderName}</Subtitle>
 			</AspectRatio>
 		</a>
 	);

@@ -10,8 +10,12 @@ function isAudio(media) {
 	return audio_formats.includes(media.format);
 }
 
+/**
+ * Access the media shared in a folder
+ * @param {*} path
+ * @param {*} options
+ */
 function SharedFolder(path, options = {}) {
-	console.log(`Creation of playlist ${path}`);
 	this.path = path;
 	this.label = path.split("/").last();
 	this.subfolders = [];

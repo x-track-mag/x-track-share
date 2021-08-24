@@ -13,35 +13,32 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-/**
- * Upload a single local file to a folder in Cloudinary
- * @param {String} destPath
- * @param {String} localPath Path to the local file where the file can be readen
- * @returns
- */
-export const uploadToPath = async (destPath, localPath) => {
-	const uploadOptions = {
-		overwrite: true,
-		public_id: destPath.replace(/\.(\w)+$/i, "") // remove extension from path
+export const getResourceInfos = ({
+	public_id,
+	filename,
+	folder,
+	format,
+	duration,
+	secure_url
+}) => {
+	const resource = {
+		public_id,
+		folder,
+		sharedFolder: folder.replace(/^share\//, ""), // remove the 'share/' from the folder path
+		format,
+		duration,
+		url: secure_url.replace(`.${format}`, ""), // remove the extension
+		...extractTrackInfos(filename)
 	};
-	return new Promise((resolve, reject) => {
-		cloudinary.uploader.upload(localPath, uploadOptions, (error, result) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(result);
-			}
-		});
-	});
 };
 
 /**
- * Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
- * We remove them
  * @param {String} filename
  * @returns {Object}
  */
 export const extractTrackInfos = (filename) => {
+	// Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
+	// Lest's remove them
 	if (filename.indexOf("/") > 0) {
 		// It's a full path : keep only the filename
 		filename = filename.split("/").pop();
@@ -64,11 +61,65 @@ export const extractTrackInfos = (filename) => {
 };
 
 /**
- * Return the list of subfolders and content inside the given root folder
+ * Upload a single local file to a folder in Cloudinary
+ * @param {String} destPath
+ * @param {String} localPath Path to the local file where the file can be readen
+ * @returns
+ */
+export const uploadToPath = async (destPath, localPath) => {
+	const uploadOptions = {
+		overwrite: true,
+		public_id: destPath.replace(/\.(\w)+$/i, "") // remove extension from path
+	};
+	return new Promise((resolve, reject) => {
+		cloudinary.uploader.upload(localPath, uploadOptions, (error, result) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+};
+
+export const deleteFolder = async (folderPath) => {
+	try {
+		await cloudinary.api.delete_folder(folderPath);
+	} catch (err) {
+		console.error(`Cloudinary folder deletion failed (${folderPath}).`, err);
+		throw new ApiError(500, err.message);
+	}
+};
+
+/**
+ * Return the immediate content of a folder
+ * @param {String} root
+ */
+export const getFlatContent = async (folderPath) => {
+	try {
+		let { resources } = await cloudinary.search
+			.expression(`folder=${folderPath}`)
+			.sort_by("public_id", "desc")
+			.max_results(500)
+			.execute();
+		let { folders } = await cloudinary.api.sub_folders(folderPath);
+
+		return {
+			subfolders: folders,
+			playlist: resources.map(getResourceInfos)
+		};
+	} catch (err) {
+		console.error(err);
+		throw new ApiError(500, err.message);
+	}
+};
+
+/**
+ * Return the full list of subfolders and content inside the given root
  * @see cloudinary-search-results.json to see what the results look like
  * @param {String} root
  */
-export const getContent = async (root) => {
+export const getDeepContent = async (root) => {
 	try {
 		let { resources } = await cloudinary.search
 			.expression(`folder=share/${root}/*`)
@@ -160,7 +211,7 @@ ${downloadUrl}`);
 
 const CloudinaryClient = {
 	uploadToPath,
-	getContent,
+	getDeepContent,
 	getResource,
 	getZipDownloadUrl
 };

@@ -7,7 +7,7 @@ import Icon from "@chakra-ui/icon";
  */
 
 /**
- * Render an equilateral triangle pointing up, down, right or left
+ * Render a rectangle with and upload arrow
  * @param {SvgUploadProps} props
  */
 const SvgUpload = ({ color = "inherit", bgColor = "#444", size = "64px", ...props }) => (

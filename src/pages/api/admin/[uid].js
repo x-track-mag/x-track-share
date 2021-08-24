@@ -6,7 +6,7 @@ import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 export default async (req, resp) => {
 	const { uid } = req.query; // UID of the shared folder
 	try {
-		const respBody = await CloudinaryClient.getDeepContent(uid);
+		const respBody = await CloudinaryClient.getFlatContent(uid);
 		resp.json(respBody);
 	} catch (err) {
 		resp.status(err.code || 500).json({

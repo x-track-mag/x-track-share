@@ -6,7 +6,7 @@ import { Checkbox } from "@chakra-ui/checkbox";
 import { DataTable } from "../base/DataTable.js";
 import { useMemo } from "react";
 import SelectDownloadFormat from "./DownloadSelect.js";
-import { useShareContext } from "../ShareContextProvider.js";
+import { useSharedFolderContext } from "../SharedFolderContext.js";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
@@ -159,7 +159,7 @@ const Playlist = ({
 }) => {
 	const eb = useEventBus();
 	const player = usePlayerState();
-	const { selectedTracks } = useShareContext();
+	const { selectedTracks } = useSharedFolderContext();
 	player.id = playerId;
 	const data = playlist.map(
 		(entry) => new PlaylistEntry(entry, player, selectedTracks, eb)

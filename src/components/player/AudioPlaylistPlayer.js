@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { useShareContext } from "../ShareContextProvider.js";
+import { useSharedFolderContext } from "../SharedFolderContext.js";
 import PlayerStateProvider from "./PlayerStateProvider.js";
 import Playlist from "./Playlist.js";
 
@@ -18,7 +18,7 @@ const AudioPlayer = dynamic(() => import("./AudioPlayer.js"), { ssr: false });
 const AudioPlaylistPlayer = ({ playerId, playlist = [] }) => {
 	const {
 		sharedOptions: { addToSelection, directDownload, displayDownloadForm }
-	} = useShareContext();
+	} = useSharedFolderContext();
 
 	// Build the list of columns to add to the DataTable
 	const columnsToDisplay = ["play"];

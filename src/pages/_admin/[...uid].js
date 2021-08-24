@@ -1,7 +1,6 @@
 import APIClient from "../../lib/services/APIClient.js";
 import { withEventBus } from "../../components/EventBusProvider.js";
-import CloudinaryFolder from "../../components/CloudinaryFolder.js";
-import { withSharedFolderContext } from "../../components/SharedFolderContext.js";
+import CloudinaryAdminFolder from "../../components/CloudinaryAdminFolder.js";
 
 /**
  * Retrieve the folder content /share/${uid}
@@ -15,10 +14,11 @@ export const getServerSideProps = async ({ params }) => {
 	return {
 		props: {
 			folders,
+			editMode: true,
 			sharedOptions,
 			path: uid.join("/")
 		}
 	};
 };
 
-export default withEventBus(withSharedFolderContext(CloudinaryFolder));
+export default withEventBus(CloudinaryAdminFolder);

@@ -21,17 +21,17 @@ import SharedFolder from "../lib/cloudinary/SharedFolder";
  * @property {Function} refresh  Force the refresh of the components
  */
 
-const ShareContext = createContext();
+const SharedFolderContext = createContext();
 
 /**
  * useShareContext() Hook
  * @return {SharedFolderContext}
  */
-export const useShareContext = () => {
-	return useContext(ShareContext);
+export const useSharedFolderContext = () => {
+	return useContext(SharedFolderContext);
 };
 
-export const withShareContext = (Component) => ({
+export const withSharedFolderContext = (Component) => ({
 	folders,
 	sharedOptions,
 	path,
@@ -95,7 +95,7 @@ export const withShareContext = (Component) => ({
 	}, [current]);
 
 	return (
-		<ShareContext.Provider
+		<SharedFolderContext.Provider
 			value={{
 				folders,
 				sharedOptions,
@@ -107,6 +107,6 @@ export const withShareContext = (Component) => ({
 			}}
 		>
 			<Component {...props} />
-		</ShareContext.Provider>
+		</SharedFolderContext.Provider>
 	);
 };

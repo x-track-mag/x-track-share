@@ -3,7 +3,7 @@ import { Box, Heading } from "@chakra-ui/layout";
 import { Drawer, DrawerOverlay, DrawerContent } from "@chakra-ui/modal";
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
-import { useShareContext } from "./ShareContextProvider.js";
+import { useSharedFolderContext } from "./SharedFolderContext.js";
 
 const SharedFolderNavigation = ({ path }) => {
 	const {
@@ -11,7 +11,7 @@ const SharedFolderNavigation = ({ path }) => {
 		timestamp,
 		selectedTracks,
 		sharedOptions: { addToSelection, displayDownloadForm }
-	} = useShareContext();
+	} = useSharedFolderContext();
 
 	// These variables will control the drawer to show the Download form
 	const { isOpen, onOpen, onClose } = useDisclosure();

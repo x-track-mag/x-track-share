@@ -21,7 +21,7 @@ export const getResourceInfos = ({
 	duration,
 	secure_url
 }) => {
-	const resource = {
+	return {
 		public_id,
 		folder,
 		sharedFolder: folder.replace(/^share\//, ""), // remove the 'share/' from the folder path
@@ -33,6 +33,7 @@ export const getResourceInfos = ({
 };
 
 /**
+ * Extract $artist - $title from a track filename
  * @param {String} filename
  * @returns {Object}
  */
@@ -97,12 +98,14 @@ export const deleteFolder = async (folderPath) => {
  */
 export const getFlatContent = async (folderPath) => {
 	try {
-		let { resources } = await cloudinary.search
-			.expression(`folder=${folderPath}`)
-			.sort_by("public_id", "desc")
-			.max_results(500)
-			.execute();
-		let { folders } = await cloudinary.api.sub_folders(folderPath);
+		const [{ resources }, { folders }] = await Promise.all([
+			cloudinary.search
+				.expression(`folder=${folderPath}`)
+				.sort_by("public_id", "desc")
+				.max_results(500)
+				.execute(),
+			cloudinary.api.sub_folders(folderPath)
+		]);
 
 		return {
 			subfolders: folders,
@@ -212,6 +215,7 @@ ${downloadUrl}`);
 const CloudinaryClient = {
 	uploadToPath,
 	getDeepContent,
+	getFlatContent,
 	getResource,
 	getZipDownloadUrl
 };

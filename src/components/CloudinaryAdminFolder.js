@@ -7,13 +7,7 @@ import { useEffect } from "react";
 import SharedFolderNavigation from "./SharedFolderNavigation";
 import { PlusIcon } from "./icons";
 
-const CloudinaryAdminFolder = ({ folder }) => {
-	const { path, subfolders, audios, videos } = folder;
-
-	useEffect(() => {
-		console.log(`Exploring ${current}`, folder);
-	}, [current]);
-
+const CloudinaryAdminFolder = ({ path, subfolders, playlist }) => {
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<SharedFolderNavigation path={path} />

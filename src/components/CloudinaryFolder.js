@@ -3,11 +3,11 @@ import Folder from "./base/Folder";
 import VideoPlaylistPlayer from "./player/VideoPlaylistPlayer.js";
 import AudioPlaylistPlayer from "./player/AudioPlaylistPlayer.js";
 import { useEffect } from "react";
-import { useShareContext } from "./ShareContextProvider";
+import { useSharedFolderContext } from "./SharedFolderContext";
 import SharedFolderNavigation from "./SharedFolderNavigation";
 
 const CloudinaryFolder = () => {
-	const { folders, current, selectedTracks, timestamp } = useShareContext();
+	const { folders, current, selectedTracks, timestamp } = useSharedFolderContext();
 	const folder = folders[current] || selectedTracks;
 
 	if (!folder) return null;

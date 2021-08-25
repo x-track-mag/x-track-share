@@ -1,7 +1,5 @@
 import { Box, Heading } from "@chakra-ui/layout";
-import { useRouter } from "next/router";
 import { extractPaths } from "../lib/utils/Folders";
-import { useSharedFolderContext } from "./SharedFolderContext";
 
 /**
  * @typedef BreadcrumbsProps
@@ -13,15 +11,14 @@ import { useSharedFolderContext } from "./SharedFolderContext";
  * <grand-parent> / <parent> / location
  * @param {BreadcrumbsProps} props
  */
-const Breadcrumbs = ({ path, additionalLink }) => {
-	const { navigate } = useSharedFolderContext();
+const Breadcrumbs = ({ path, prefix = "/share", navigate }) => {
 	const { leaf, parents } = extractPaths(path);
 	// Render the links to the parent folders
 	return (
 		<Box className="breadcrumbs" float="left">
 			{parents.map((path) => (
 				<Heading key={path} display="inline-block">
-					<a href={`/share/${path}`} onClick={navigate(path)}>
+					<a href={`${prefix}/${path}`} onClick={navigate(path)}>
 						{path.split("/").pop()}
 					</a>
 					&nbsp;&#x2F;&nbsp;

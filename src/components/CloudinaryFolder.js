@@ -7,7 +7,13 @@ import { useSharedFolderContext } from "./SharedFolderContext";
 import SharedFolderNavigation from "./SharedFolderNavigation";
 
 const CloudinaryFolder = () => {
-	const { folders, current, selectedTracks, timestamp } = useSharedFolderContext();
+	const {
+		folders,
+		current,
+		selectedTracks,
+		timestamp,
+		navigate
+	} = useSharedFolderContext();
 	const folder = folders[current] || selectedTracks;
 
 	if (!folder) return null;
@@ -30,7 +36,7 @@ const CloudinaryFolder = () => {
 					p={5}
 				>
 					{subfolders.map((path) => (
-						<Folder key={path} path={path} />
+						<Folder key={path} path={path} navigate={navigate} />
 					))}
 				</Grid>
 			)}

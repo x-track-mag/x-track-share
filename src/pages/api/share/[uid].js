@@ -1,7 +1,7 @@
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 
 /**
- * The API entry point (GET) to retrieve the full content of a root shared folder
+ * The API entry point (GET) to retrieve the full (recursive) content of a shared root folder
  */
 export default async (req, resp) => {
 	const { uid } = req.query; // UID of the shared folder

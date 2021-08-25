@@ -22,7 +22,8 @@ const normalizePath = (relativePath) => {
  */
 export default async (req, resp) => {
 	try {
-		const { path } = req.query; // path is an array
+		const { parts } = req.query; // parts is an array
+		const sharedFolderPath = `share/${parts.join("/")}`;
 
 		// Parse the file upload inside the multipart formdata
 		// parse a file upload
@@ -31,13 +32,11 @@ export default async (req, resp) => {
 		const uploadSuccess = new Promise((resolve, reject) => {
 			form.on("file", async (name, file) => {
 				console.log(
-					`/api/upload/${path.join("/")} received file ${file.name} (${
-						file.size
-					}bytes) and saved it ${file.path}`
+					`API Upload received file ${file.name} (${file.size}bytes) to store in ${sharedFolderPath} and saved it ${file.path}`
 				);
 				try {
 					const uploaded = await CloudinaryClient.uploadToPath(
-						path.join("/") + "/" + normalizePath(file.name),
+						sharedFolderPath + "/" + normalizePath(file.name),
 						file.path
 					);
 					resolve(uploaded);

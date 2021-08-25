@@ -5,13 +5,13 @@ import { useRouter } from "next/router";
 
 const UploadPage = () => {
 	const router = useRouter();
-	const { path = [""] } = router.query;
-	const joinedPath = path.join("/");
+	const { parts = [""] } = router.query;
+	const folderPath = parts.join("/");
 
 	return (
 		<>
-			<Subtitle>Upload to /{joinedPath}</Subtitle>
-			<FileUpload upload_url={`/api/upload/share/${joinedPath}`} />
+			<Subtitle>Upload to /{folderPath}</Subtitle>
+			<FileUpload upload_url={`/api/upload/${folderPath}`} />
 		</>
 	);
 };

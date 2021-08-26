@@ -108,7 +108,10 @@ export const getFlatContent = async (folderPath) => {
 		]);
 
 		return {
-			subfolders: folders,
+			subfolders: folders.map(({ name, path }) => ({
+				name,
+				path: path.replace("share/", "") // the share/ common root is allways obfuscated
+			})),
 			playlist: resources.map(getResourceInfos)
 		};
 	} catch (err) {

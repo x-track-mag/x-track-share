@@ -20,7 +20,7 @@ const shapes = {
  */
 const SvgTriangle = ({
 	direction = "up",
-	color = "inherit",
+	color = "currentColor",
 	size = "18px",
 	...props
 }) => (

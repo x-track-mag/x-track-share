@@ -2,7 +2,6 @@ import Icon from "@chakra-ui/icon";
 
 /**
  * @typedef SvgMicrosoftLogoProps
- * @property {CSSColor} [color="#161514"]
  * @property {CSSColor} [bgColor]
  * @property {CSSSize} [size="24px"] Size of the rendered viewport
  */
@@ -11,7 +10,7 @@ import Icon from "@chakra-ui/icon";
  * Render the Microsoft Logo
  * @param {SvgMicrosoftLogoProps} props
  */
-const SvgMicrosoftLogo = ({ bgColor, color = "#161514", size = "24px", ...props }) => (
+const SvgMicrosoftLogo = ({ bgColor, size = "24px", ...props }) => (
 	<Icon height={size} width={size} viewBox="0 0 48 48" {...props}>
 		{bgColor && <path fill={bgColor} d="M0 0h48v48H0z" />}
 		<path fill="#F25022" d="M10 10h13.263v13.263H10z" />

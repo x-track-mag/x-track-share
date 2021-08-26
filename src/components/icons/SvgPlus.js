@@ -2,7 +2,7 @@ import Icon from "@chakra-ui/icon";
 
 /**
  * @typedef SvgPlusProps
- * @property {CSSColor} [color="inherit"]
+ * @property {CSSColor} [color="currentColor"]
  * @property {CSSSize} [size="64px"] Size of the rendered viewport
  */
 
@@ -10,7 +10,7 @@ import Icon from "@chakra-ui/icon";
  * Render a rectangle with and upload arrow
  * @param {SvgPlusProps} props
  */
-const SvgPlus = ({ color = "inherit", size = "64px", ...props }) => (
+const SvgPlus = ({ color = "currentColor", size = "64px", ...props }) => (
 	<Icon height={size} width={size} viewBox="0 0 32 32" {...props}>
 		<path
 			fill={color}

@@ -2,7 +2,7 @@ import Icon from "@chakra-ui/icon";
 
 /**
  * @typedef SvgUploadProps
- * @property {CSSColor} [color="inherit"]
+ * @property {CSSColor} [color="currentColor"]
  * @property {CSSSize} [size="64px"] Size of the rendered viewport
  */
 
@@ -10,7 +10,12 @@ import Icon from "@chakra-ui/icon";
  * Render a rectangle with and upload arrow
  * @param {SvgUploadProps} props
  */
-const SvgUpload = ({ color = "inherit", bgColor = "#444", size = "64px", ...props }) => (
+const SvgUpload = ({
+	color = "currentColor",
+	bgColor = "#444",
+	size = "64px",
+	...props
+}) => (
 	<Icon height={size} width={size} viewBox="0 0 48 48" {...props}>
 		<rect x="5" y="13" width="38" height="25" fill={bgColor} />
 		<path

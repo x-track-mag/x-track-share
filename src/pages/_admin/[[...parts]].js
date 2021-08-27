@@ -29,7 +29,7 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<Box className="navigation-header" as="header">
-				<Breadcrumbs prefix="/_admin" path={path} />
+				<Breadcrumbs root="/_admin" path={path} />
 			</Box>
 
 			<Grid

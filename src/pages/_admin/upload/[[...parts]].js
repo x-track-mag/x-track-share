@@ -24,7 +24,7 @@ const UploadPage = ({ folderPath }) => {
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<Box className="navigation-header" as="header">
-				<Breadcrumbs prefix="/_admin" path={folderPath} linkLeaf={true}>
+				<Breadcrumbs root="/_admin" path={folderPath} linkLeaf={true}>
 					Upload&nbsp;to&nbsp;
 				</Breadcrumbs>
 			</Box>

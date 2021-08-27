@@ -1,10 +1,14 @@
 import { Box, Heading } from "@chakra-ui/layout";
-import { extractPaths } from "../lib/utils/Folders";
+import { makeBreadcrumbs } from "../lib/utils/Folders";
 import { VLink } from "./base/Link";
 
 /**
  * @typedef BreadcrumbsProps
- * @param {String} path the '/' separated path to our current location
+ * @property {String} path the full path ('/' separated) to our current location
+ * @property {String} [root=""] an optional root folder to all links
+ * @property {Function} [navigate] optional alternative navigation method
+ * @property {String} children Things to append to the breadcrumbs
+ * @property {Boolean} [linkLeaf=false] Make the leaf itself a navigation link
  */
 
 /**
@@ -12,16 +16,9 @@ import { VLink } from "./base/Link";
  * <grand-parent> / <parent> / location
  * @param {BreadcrumbsProps} props
  */
-const Breadcrumbs = ({
-	path,
-	prefix = "/share",
-	navigate,
-	children,
-	linkLeaf = false
-}) => {
-	const { leaf, parents } = extractPaths(path, linkLeaf);
+const Breadcrumbs = ({ path, root = "", navigate, children, linkLeaf = false }) => {
 	const Link = VLink(navigate);
-	// Render the links to the parent folders
+	const { leaf, parents } = makeBreadcrumbs(path, linkLeaf);
 	return (
 		<Box className="breadcrumbs" float="left">
 			{children && (
@@ -31,7 +28,7 @@ const Breadcrumbs = ({
 			)}
 			{parents.map((path) => (
 				<Heading key={path} display="inline-block">
-					<Link href={`${prefix}/${path}`}>{path.split("/").pop()}</Link>
+					<Link href={`${root}/${path}`}>{path.split("/").pop()}</Link>
 					&nbsp;&#x2F;&nbsp;
 				</Heading>
 			))}

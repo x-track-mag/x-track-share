@@ -23,10 +23,10 @@ export const EMPTY_RAILWAY = {
  *     ]
  *   }
  * @param {String} path
- * @param {Boolean} [includeLeaf=false]
+ * @param {Boolean} [includeLeaf=false] Include the leaf to the parents list
  * @returns {Breadcrumbs}
  */
-export const extractPaths = (path, includeLeaf = false) => {
+export const makeBreadcrumbs = (path, includeLeaf = false) => {
 	if (!path) {
 		return EMPTY_RAILWAY;
 	}

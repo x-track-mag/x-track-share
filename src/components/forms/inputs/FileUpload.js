@@ -28,6 +28,8 @@ const sendFile = (uploadUrl) => async (file) => {
 	});
 };
 
+const noop = () => {};
+
 /**
  * Drag and drop file uploader
  * @param {FileUploadProps} props -
@@ -35,7 +37,8 @@ const sendFile = (uploadUrl) => async (file) => {
 const FileUpload = ({
 	label = "Drag files or folder here...",
 	upload_url,
-	concurrency = 3
+	concurrency = 3,
+	callback = noop
 }) => {
 	const [files, setFiles] = useState([]);
 	const limit = pLimit(concurrency);
@@ -55,6 +58,7 @@ const FileUpload = ({
 		)
 			.then((status) => {
 				console.log("All files have been uploaded");
+				callback(status);
 			})
 			.catch(console.error);
 	}, []);

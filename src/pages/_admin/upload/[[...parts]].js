@@ -1,18 +1,30 @@
 import FileUpload from "../../../components/forms/inputs/FileUpload.js";
 import withAuth from "../../../components/auth/withAuth.js";
-import { Subtitle } from "../../../components/base/Typography.js";
-import { useRouter } from "next/router";
+import Breadcrumbs from "../../../components/Breadcrumbs.js";
+import { Box, Stack } from "@chakra-ui/react";
 
-const UploadPage = () => {
-	const router = useRouter();
-	const { parts = [""] } = router.query;
-	const folderPath = parts.join("/");
+export const getServerSideProps = async ({ params }) => {
+	const parts = params.parts || [""];
 
+	const props = {
+		folderPath: parts.join("/")
+	};
+
+	return {
+		props
+	};
+};
+
+const UploadPage = ({ folderPath }) => {
 	return (
-		<>
-			<Subtitle>Upload to /{folderPath}</Subtitle>
+		<Stack className="folder-content" minH="100vh" margin="0 1rem">
+			<Box className="navigation-header" as="header">
+				<Breadcrumbs prefix="/_admin" path={folderPath}>
+					Upload&nbsp;to&nbsp;
+				</Breadcrumbs>
+			</Box>
 			<FileUpload upload_url={`/api/upload/${folderPath}`} />
-		</>
+		</Stack>
 	);
 };
 

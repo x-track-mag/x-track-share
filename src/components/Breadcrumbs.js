@@ -12,8 +12,14 @@ import { VLink } from "./base/Link";
  * <grand-parent> / <parent> / location
  * @param {BreadcrumbsProps} props
  */
-const Breadcrumbs = ({ path, prefix = "/share", navigate, children }) => {
-	const { leaf, parents } = extractPaths(path);
+const Breadcrumbs = ({
+	path,
+	prefix = "/share",
+	navigate,
+	children,
+	linkLeaf = false
+}) => {
+	const { leaf, parents } = extractPaths(path, linkLeaf);
 	const Link = VLink(navigate);
 	// Render the links to the parent folders
 	return (
@@ -29,9 +35,11 @@ const Breadcrumbs = ({ path, prefix = "/share", navigate, children }) => {
 					&nbsp;&#x2F;&nbsp;
 				</Heading>
 			))}
-			<Heading display="inline-block" key={leaf}>
-				{leaf}
-			</Heading>
+			{!linkLeaf && (
+				<Heading display="inline-block" key={leaf}>
+					{leaf}
+				</Heading>
+			)}
 		</Box>
 	);
 };

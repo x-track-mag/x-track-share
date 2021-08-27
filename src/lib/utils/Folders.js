@@ -5,8 +5,8 @@ export const EMPTY_RAILWAY = {
 
 /**
  * @typedef Breadcrumbs
- * @property {String} leaf
- * @property {Array<String>} parents
+ * @property {String} leaf The name of the last node in the path
+ * @property {Array<String>} parents An ordonned array of paths
  */
 
 /**
@@ -23,17 +23,23 @@ export const EMPTY_RAILWAY = {
  *     ]
  *   }
  * @param {String} path
+ * @param {Boolean} [includeLeaf=false]
  * @returns {Breadcrumbs}
  */
-export const extractPaths = (path) => {
+export const extractPaths = (path, includeLeaf = false) => {
 	if (!path) {
 		return EMPTY_RAILWAY;
 	}
 	const parents = path.split("/");
 	const leaf = parents.pop();
-	for (let i = parents; i < parents.length; i++) {
-		if (i > 0) {
-			parents[i] = parents[i - 1] + "/" + parents[i];
+	for (let i = 1; i < parents.length; i++) {
+		parents[i] = parents[i - 1] + "/" + parents[i];
+	}
+	if (includeLeaf) {
+		if (parents.length) {
+			parents.push(parents[parents.length - 1] + "/" + leaf);
+		} else {
+			parents.push(leaf);
 		}
 	}
 	return {

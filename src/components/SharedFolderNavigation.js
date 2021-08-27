@@ -24,7 +24,7 @@ const SharedFolderNavigation = ({ path }) => {
 
 	return (
 		<Box className="navigation-header" as="header">
-			<Breadcrumbs path={path} navigate={navigate} />
+			<Breadcrumbs root="/share" path={path} navigate={navigate} />
 			{addToSelection && selectedTracks.path !== path && (
 				<Heading
 					className="neon-text"

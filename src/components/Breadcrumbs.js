@@ -1,5 +1,6 @@
 import { Box, Heading } from "@chakra-ui/layout";
 import { extractPaths } from "../lib/utils/Folders";
+import { VLink } from "./base/Link";
 
 /**
  * @typedef BreadcrumbsProps
@@ -11,16 +12,20 @@ import { extractPaths } from "../lib/utils/Folders";
  * <grand-parent> / <parent> / location
  * @param {BreadcrumbsProps} props
  */
-const Breadcrumbs = ({ path, prefix = "/share", navigate }) => {
+const Breadcrumbs = ({ path, prefix = "/share", navigate, children }) => {
 	const { leaf, parents } = extractPaths(path);
+	const Link = VLink(navigate);
 	// Render the links to the parent folders
 	return (
 		<Box className="breadcrumbs" float="left">
+			{children && (
+				<Heading display="inline-block" key="intro">
+					{children}
+				</Heading>
+			)}
 			{parents.map((path) => (
 				<Heading key={path} display="inline-block">
-					<a href={`${prefix}/${path}`} onClick={navigate(path)}>
-						{path.split("/").pop()}
-					</a>
+					<Link href={`${prefix}/${path}`}>{path.split("/").pop()}</Link>
 					&nbsp;&#x2F;&nbsp;
 				</Heading>
 			))}

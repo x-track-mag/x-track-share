@@ -67,7 +67,8 @@ export const withSharedFolderContext = (Component) => ({
 	 */
 	const navigate = (path) => (evt) => {
 		evt.preventDefault();
-		router.push(`/share/${path}`, undefined, { shallow: true }); // shallow TRUE will not call getServerSideProps
+		console.log(`NAVIGATE TO ${path}`);
+		router.push(path, undefined, { shallow: true }); // shallow TRUE will not call getServerSideProps
 	};
 
 	/**

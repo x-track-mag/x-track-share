@@ -2,6 +2,7 @@ import FileUpload from "../../../components/forms/inputs/FileUpload.js";
 import withAuth from "../../../components/auth/withAuth.js";
 import Breadcrumbs from "../../../components/Breadcrumbs.js";
 import { Box, Stack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async ({ params }) => {
 	const parts = params.parts || [""];
@@ -16,6 +17,10 @@ export const getServerSideProps = async ({ params }) => {
 };
 
 const UploadPage = ({ folderPath }) => {
+	const router = useRouter();
+	const comeBack = () => {
+		router.push(`/admin/${forlderPath}`);
+	};
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<Box className="navigation-header" as="header">
@@ -23,7 +28,7 @@ const UploadPage = ({ folderPath }) => {
 					Upload&nbsp;to&nbsp;
 				</Breadcrumbs>
 			</Box>
-			<FileUpload upload_url={`/api/upload/${folderPath}`} />
+			<FileUpload upload_url={`/api/upload/${folderPath}`} callback={comeBack} />
 		</Stack>
 	);
 };

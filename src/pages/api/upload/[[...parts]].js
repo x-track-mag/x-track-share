@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable-serverless";
 import StringExtensions from "../../../lib/utils/Strings";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient";
+import fs from "fs-extra";
 
 /**
  * Convert all parts of the path in lowercase
@@ -22,7 +23,7 @@ const normalizePath = (relativePath) => {
  */
 export default async (req, resp) => {
 	try {
-		const { parts } = req.query; // parts is an array
+		const { parts = [""] } = req.query; // parts is an array
 		const sharedFolderPath = `share/${parts.join("/")}`;
 
 		// Parse the file upload inside the multipart formdata
@@ -43,6 +44,9 @@ export default async (req, resp) => {
 				} catch (err) {
 					console.error(`Error uploading ${file.name} to Cloudinary`, err);
 					reject(err);
+				} finally {
+					// Delete our temporary file after upload
+					fs.rm(file.path);
 				}
 			});
 		});

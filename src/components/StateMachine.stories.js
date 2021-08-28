@@ -26,7 +26,7 @@ const OnOff = ({ state, actions }) => {
 			>
 				<FormLabel>
 					{state.label}
-					<Switch value={state.checked} />
+					<Switch checked={state.checked} />
 				</FormLabel>
 			</FormControl>
 

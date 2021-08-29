@@ -33,4 +33,5 @@ const UploadPage = ({ folderPath }) => {
 	);
 };
 
-export default withAuth(UploadPage);
+// export default withAuth(UploadPage);
+export default UploadPage;

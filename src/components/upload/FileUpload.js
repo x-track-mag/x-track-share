@@ -1,10 +1,11 @@
-import { Center } from "@chakra-ui/layout";
-import { useDropzone } from "react-dropzone";
 import { createRef, useCallback, useState } from "react";
-import { UploadIcon } from "../../icons";
-import { Box } from "@chakra-ui/react";
-import { Info } from "../../base/Typography";
+import { useDropzone } from "react-dropzone";
+import { Center } from "@chakra-ui/layout";
+import { Box, Container } from "@chakra-ui/react";
+import { UploadIcon } from "../icons";
+import { Info } from "../base/Typography";
 import pLimit from "@lib/utils/p-limit.js";
+import FileUploadProgress from "./FileUploadProgress";
 
 /**
  * @typedef FileUploadProps
@@ -66,36 +67,39 @@ const FileUpload = ({
 	// @see
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 	return (
-		<Center>
-			<Box
-				{...getRootProps()}
-				bg="#222"
-				borderStyle="double"
-				borderColor="blue"
-				borderWidth="10px"
-				w="100%"
-				h="100%"
-				padding="2rem"
-				margin="2rem"
-				maxW="1200px"
-				position="relative"
-			>
-				{files.length ? (
-					files.map((file, i) => <Info key={`file-${i}`}>{file.name}</Info>)
-				) : isDragActive ? (
-					<Info>You can drop the files now</Info>
-				) : (
-					<Info>{label}</Info>
-				)}
-				<Center>
-					<UploadIcon
-						color="yellow"
-						bgColor="blue"
-						size={{ sm: "64px", md: "128px" }}
-					/>
-				</Center>
-			</Box>
-		</Center>
+		<Container maxW="container.xl">
+			<Center>
+				<Box
+					{...getRootProps()}
+					bg="#222"
+					borderStyle="double"
+					borderColor="blue"
+					borderWidth="10px"
+					w="100%"
+					h="100%"
+					padding="2rem"
+					margin="2rem"
+					maxW="1200px"
+					position="relative"
+				>
+					{isDragActive ? (
+						<Info>You can drop the files now</Info>
+					) : (
+						<Info>{label}</Info>
+					)}
+					<Center>
+						<UploadIcon
+							color="yellow"
+							bgColor="blue"
+							size={{ sm: "64px", md: "128px" }}
+						/>
+					</Center>
+				</Box>
+			</Center>
+			{files.map((file, i) => (
+				<FileUploadProgress key={`file-${i}`} fileName={file.name} />
+			))}
+		</Container>
 	);
 };
 

@@ -42,7 +42,7 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 					<PlusIcon />
 				</Folder>
 				{subfolders.map(({ name, path }) => (
-					<Folder key={name} path={path} />
+					<Folder key={name} path={`/_admin/${path}`} />
 				))}
 			</Grid>
 		</Stack>

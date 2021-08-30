@@ -24,7 +24,12 @@ const UploadPage = ({ folderPath }) => {
 	return (
 		<VStack className="folder-content" minH="100vh" margin="0 1rem" align="stretch">
 			<Box className="navigation-header" as="header">
-				<Breadcrumbs root="/_admin" path={folderPath} linkLeaf={true}>
+				<Breadcrumbs
+					root="/_admin"
+					path={folderPath}
+					linkLeaf={true}
+					linkRoot="Share"
+				>
 					Upload&nbsp;to&nbsp;
 				</Breadcrumbs>
 			</Box>

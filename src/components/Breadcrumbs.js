@@ -16,7 +16,14 @@ import { VLink } from "./base/Link";
  * <grand-parent> / <parent> / location
  * @param {BreadcrumbsProps} props
  */
-const Breadcrumbs = ({ path, root = "", navigate, children, linkLeaf = false }) => {
+const Breadcrumbs = ({
+	path,
+	root = "",
+	navigate,
+	children,
+	linkLeaf = false,
+	linkRoot = false
+}) => {
 	const Link = VLink(navigate);
 	const { leaf, parents } = makeBreadcrumbs(path, linkLeaf);
 	return (
@@ -24,6 +31,12 @@ const Breadcrumbs = ({ path, root = "", navigate, children, linkLeaf = false }) 
 			{children && (
 				<Heading display="inline-block" key="intro">
 					{children}
+				</Heading>
+			)}
+			{linkRoot && (
+				<Heading key={root} display="inline-block">
+					<Link href={`${root}`}>{linkRoot}</Link>
+					&nbsp;&#x2F;&nbsp;
 				</Heading>
 			)}
 			{parents.map((path) => (

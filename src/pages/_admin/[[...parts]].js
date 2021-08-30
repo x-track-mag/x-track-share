@@ -2,7 +2,8 @@ import APIClient from "../../lib/services/APIClient.js";
 import { Box, Stack, Grid } from "@chakra-ui/layout";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
 import Folder from "../../components/base/Folder.js";
-import { PlusIcon } from "../../components/icons";
+import { Bin, PlusIcon } from "../../components/icons";
+import { useRouter } from "next/router";
 
 /**
  * Retrieves the subfolders and playlist linked to this shared folder
@@ -21,11 +22,25 @@ export const getServerSideProps = async ({ params }) => {
 	};
 };
 
+const deleteFolder = (folderPath, refresh) => async (evt) => {
+	evt.stopPropagation();
+	if (confirm(`Do you confirm the suppression of folder ${folderPath} ?`)) {
+		await APIClient.del(`/api/admin/${folderPath}`);
+		refresh();
+	}
+};
+
+const deleteIcon = (path, refresh) => (
+	<Bin size="1rem" onClick={deleteFolder(path, refresh)} />
+);
+
 /**
  * Display the admin view of a shared folder
  */
 const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 	const uploadPath = `/_admin/upload/${path}`;
+	const router = useRouter();
+	const reloadPage = () => router.reload(`/_admin/${path}`);
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<Box className="navigation-header" as="header">
@@ -42,7 +57,11 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 					<PlusIcon />
 				</Folder>
 				{subfolders.map(({ name, path }) => (
-					<Folder key={name} path={`/_admin/${path}`} />
+					<Folder
+						key={name}
+						path={`/_admin/${path}`}
+						icons={[deleteIcon(path, reloadPage)]}
+					/>
 				))}
 			</Grid>
 		</Stack>

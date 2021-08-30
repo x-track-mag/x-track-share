@@ -1,9 +1,5 @@
-import { Main, HeroSection } from "../components/base";
+import { HeroSection } from "../components/base";
 
-const Index = () => (
-	<Main>
-		<HeroSection title="X-TRACK-SHARE" />
-	</Main>
-);
+const Index = () => <HeroSection title="X-TRACK-SHARE" />;
 
 export default Index;

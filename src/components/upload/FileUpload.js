@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Center, Container } from "@chakra-ui/react";
+import prettyBytes from "pretty-bytes";
 import { UploadIcon } from "../icons";
 import { Info } from "../base/Typography";
 import pLimit from "@lib/utils/p-limit.js";
@@ -70,39 +71,34 @@ const FileUpload = ({
 	callback = noop
 }) => {
 	const [files, setFiles] = useState([]);
-	const [ts, setTimestamp] = useState(Date.now());
 	const limit = pLimit(concurrency);
 
-	const updateProgress = (f, i) => {
-		files[i] = {
-			name: f.name,
-			progress: f.progress,
-			error: f.error
-		};
+	// Call this to re-display the list of uploaded files
+	const updateProgress = ({ name, size, progress, error }, i) => {
+		const f = (files[i] = { name, size, progress, error }); // new instance
 		setFiles([...files]); // duplicate the array of files to re-render
-		// setTimestamp(Date.now());
 		console.log(`File ${f.name} (#${i}) has been updated :`, f, files);
 	};
 
 	// React Drop zone
 	const onDrop = useCallback((acceptedFiles) => {
-		// Do something with the files
+		// Map the files to display only upload tracking infos
 		console.log("Received some files", acceptedFiles);
 
 		setFiles(
 			acceptedFiles.map((f) => ({
-				name: f.name,
+				name: `${f.name} (${prettyBytes(f.size)})`,
 				progress: 0,
 				error: false
 			}))
 		);
 
-		Promise.all(
+		Promise.allSettled(
 			acceptedFiles.map((f, i) => {
 				limit(sendFile(upload_url, updateProgress), f, i);
 			})
 		)
-			.then((status) => {
+			.then((uploadStatus) => {
 				console.log("All files have been uploaded");
 				// callback(status);
 			})
@@ -141,7 +137,7 @@ const FileUpload = ({
 					</Center>
 				</Box>
 			</Center>
-			<FileUploadReport files={files} ts={ts} />
+			<FileUploadReport files={files} />
 		</Container>
 	);
 };

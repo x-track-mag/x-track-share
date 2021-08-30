@@ -11,6 +11,14 @@ function isAudio(media) {
 }
 
 /**
+ * @typedef SharedFolder
+ * @property {Function} addMedia
+ * @property {Function} getAllMediaIds
+ * @property {Function} addAudio
+ * @property {Function} addVideo
+ */
+
+/**
  * Access the media shared in a folder
  * @param {*} path
  * @param {*} options
@@ -21,6 +29,7 @@ function SharedFolder(path, options = {}) {
 	this.subfolders = [];
 	this.audios = [];
 	this.videos = [];
+	this.others = [];
 	Object.assign(this, options);
 }
 
@@ -30,8 +39,16 @@ SharedFolder.prototype = {
 			return this.addAudio(media);
 		} else if (isVideo(media) && !this.containsVideo(media)) {
 			return this.addVideo(media);
+		} else {
+			return this.addOtherFile(media);
 		}
-		return this;
+	},
+	getAllMediaIds: function () {
+		return [
+			...this.audios.map((audio) => audio.public_id),
+			...this.videos.map((video) => video.public_id),
+			...this.others.map((file) => file.public_id)
+		];
 	},
 	addAudio: function (media) {
 		media.index = this.audios.length;
@@ -42,6 +59,10 @@ SharedFolder.prototype = {
 		media.index = this.videos.length;
 		(media.publicId = media.public_id), // GLITCH : The Video Player require publicId instead of public_id !
 			this.videos.push(media);
+		return this;
+	},
+	addOtherFile: function (somethingElse) {
+		this.others.push(somethingElse);
 		return this;
 	},
 	removeMedia: function (media) {

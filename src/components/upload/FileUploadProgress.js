@@ -15,13 +15,19 @@ import { Box, Progress } from "@chakra-ui/react";
 const FileUploadProgress = ({
 	fileName,
 	color = "white",
-	progress = 0,
+	progress,
 	error = false,
 	...props
 }) => (
 	<Box w="100%" {...props}>
 		<em>{fileName}</em>
-		<Progress size="sm" value={progress} colorScheme={error ? "red" : color} />
+		<Progress
+			size="sm"
+			value={progress}
+			min={0}
+			max={100}
+			colorScheme={error ? "red" : color}
+		/>
 		{error && <code>{error}</code>}
 	</Box>
 );

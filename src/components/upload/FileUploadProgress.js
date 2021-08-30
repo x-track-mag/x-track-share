@@ -23,7 +23,7 @@ const FileUploadProgress = ({
 		<em>{fileName}</em>
 		<Progress
 			size="sm"
-			value={progress}
+			value={error ? 100 : progress}
 			min={0}
 			max={100}
 			colorScheme={error ? "red" : color}

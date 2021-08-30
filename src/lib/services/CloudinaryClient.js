@@ -104,7 +104,43 @@ export const uploadToPath = async (destPath, localPath) => {
 
 export const deleteFolder = async (folderPath) => {
 	try {
-		await cloudinary.api.delete_folder(folderPath);
+		const { folders } = await getDeepContent(folderPath);
+
+		// We must recursively delete all content first
+		const folder = folders[folderPath]; // SharedFolder
+		// const public_ids = Object.keys(folders)
+		// 	.map((p) => folders[p].getAllMediaIds())
+		// 	.flat();
+		console.log(`Deleting all resources inside share/${folderPath}`);
+
+		// We have to delete separately all different types of resources !
+		const deletions = await Promise.allSettled([
+			cloudinary.api.delete_resources_by_prefix(`share/${folderPath}`, {
+				all: true,
+				resource_type: "video"
+			}),
+			cloudinary.api.delete_resources_by_prefix(`share/${folderPath}`, {
+				all: true,
+				resource_type: "image"
+			}),
+			cloudinary.api.delete_resources_by_prefix(`share/${folderPath}`, {
+				all: true,
+				resource_type: "raw"
+			})
+		]);
+
+		console.log("Deletions result", deletions);
+
+		const deepFoldersList = Object.keys(folders).sort((a, b) => (a > b ? -1 : 1));
+		console.log("Deleting folders", deepFoldersList);
+
+		for (folderPath of deepFoldersList) {
+			await cloudinary.api.delete_folder(`share/${folderPath}`);
+		}
+
+		return {
+			success: true
+		};
 	} catch (err) {
 		console.error(`Cloudinary folder deletion failed (${folderPath}).`, err);
 		throw new ApiError(500, err.message);
@@ -153,13 +189,17 @@ export const getDeepContent = async (root) => {
 			.execute();
 
 		// Keep only the minimal fields information
+		console.log(
+			`getDeepContent(share/${root}/*)`,
+			resources.map((rsc) => rsc.public_id)
+		);
 		resources = resources.map(
 			({ public_id, filename, folder, format, duration, secure_url }) => ({
 				public_id,
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
 				duration,
-				url: secure_url.replace(/\.\w{3}$/, ""),
+				url: secure_url.replace(/\.\w+$/, ""),
 				...extractTrackInfos(filename)
 			})
 		);
@@ -235,6 +275,7 @@ ${downloadUrl}`);
 };
 
 const CloudinaryClient = {
+	deleteFolder,
 	uploadToPath,
 	getDeepContent,
 	getFlatContent,

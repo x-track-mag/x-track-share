@@ -1,3 +1,4 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 import { proxyRequest } from "../../../lib/utils/http.js";
 

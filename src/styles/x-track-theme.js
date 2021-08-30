@@ -55,7 +55,8 @@ export const components = {
 	Progress: {
 		variants: {
 			"x-track": {
-				bg: "gray.700"
+				bg: "gray.700",
+				bgColor: "#ff0"
 			}
 		}
 	}

@@ -28,7 +28,9 @@ export default async (req, resp) => {
 
 		// Parse the file upload inside the multipart formdata
 		// parse a file upload
-		const form = new formidable.IncomingForm();
+		const form = new formidable.IncomingForm({
+			keepExtensions: true
+		});
 
 		const uploadSuccess = new Promise((resolve, reject) => {
 			form.on("file", async (name, file) => {
@@ -46,7 +48,7 @@ export default async (req, resp) => {
 					reject(err);
 				} finally {
 					// Delete our temporary file after upload
-					fs.rm(file.path);
+					fs.remove(file.path);
 				}
 			});
 		});

@@ -32,6 +32,24 @@ export const getResourceInfos = ({
 	};
 };
 
+const getResourceType = (fileName) => {
+	const ext = fileName.split(".").pop().toLowerCase();
+	switch (ext) {
+		case "jpg":
+		case "png":
+		case "svg":
+			return "image";
+		case "mp3":
+		case "mp4":
+		case "ogg":
+		case "wav":
+			return "video";
+
+		default:
+			return "raw";
+	}
+};
+
 /**
  * Extract $artist - $title from a track filename
  * @param {String} filename
@@ -70,7 +88,8 @@ export const extractTrackInfos = (filename) => {
 export const uploadToPath = async (destPath, localPath) => {
 	const uploadOptions = {
 		overwrite: true,
-		public_id: destPath.replace(/\.(\w)+$/i, "") // remove extension from path
+		public_id: destPath.replace(/\.(\w)+$/i, ""), // remove extension from path
+		resource_type: getResourceType(localPath)
 	};
 	return new Promise((resolve, reject) => {
 		cloudinary.uploader.upload(localPath, uploadOptions, (error, result) => {

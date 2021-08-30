@@ -1,11 +1,10 @@
-import { createRef, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Center, Container } from "@chakra-ui/react";
 import { UploadIcon } from "../icons";
 import { Info } from "../base/Typography";
 import pLimit from "@lib/utils/p-limit.js";
 import FileUploadProgress from "./FileUploadProgress";
-import clsx from "clsx";
 
 /**
  * @typedef FileUploadProps
@@ -22,7 +21,7 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 	let formData = new FormData();
 	formData.append("file", file);
 	console.log(`Uploading ${file.name}`);
-	file.progress = undefined; // We will use the undefined state when upload actueally begins
+	file.progress = undefined; // We will use the undefined state when upload actually begins
 	updateProgress(file, i);
 
 	try {
@@ -105,7 +104,7 @@ const FileUpload = ({
 		)
 			.then((status) => {
 				console.log("All files have been uploaded");
-				callback(status);
+				// callback(status);
 			})
 			.catch(console.error);
 	}, []);

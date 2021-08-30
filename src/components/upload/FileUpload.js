@@ -1,10 +1,11 @@
-import { createRef, useCallback, useState } from "react";
+import { createRef, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Center, Container } from "@chakra-ui/react";
 import { UploadIcon } from "../icons";
 import { Info } from "../base/Typography";
 import pLimit from "@lib/utils/p-limit.js";
 import FileUploadProgress from "./FileUploadProgress";
+import clsx from "clsx";
 
 /**
  * @typedef FileUploadProps
@@ -38,18 +39,24 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 	return true; //
 };
 
-const FileUploadReport = ({ files }) => (
-	<Box className="upload-report">
-		{files.map((file, i) => (
-			<FileUploadProgress
-				key={`file-${i}`}
-				fileName={file.name}
-				progress={file.progress}
-				error={file.error}
-			/>
-		))}
-	</Box>
-);
+const FileUploadReport = ({ files }) => {
+	useEffect(() => {
+		console.log("Re-rendering files", JSON.stringify(files));
+	}, [files]);
+	return (
+		<Box className="upload-report">
+			{files.map((file, i) => (
+				<FileUploadProgress
+					key={`file-${i}`}
+					fileName={file.name}
+					progress={file.progress}
+					color="blue"
+					error={file.error}
+				/>
+			))}
+		</Box>
+	);
+};
 
 const noop = () => {};
 
@@ -64,21 +71,28 @@ const FileUpload = ({
 	callback = noop
 }) => {
 	const [files, setFiles] = useState([]);
+	const [ts, setTimestamp] = useState(Date.now());
 	const limit = pLimit(concurrency);
 
 	const updateProgress = (f, i) => {
-		files[i] = f;
+		files[i] = {
+			name: f.name,
+			progress: f.progress,
+			error: f.error
+		};
 		setFiles([...files]); // duplicate the array of files to re-render
-		console.log(`File ${f.name} as been updated : ${f.progress}, ${f.error}`);
+		// setTimestamp(Date.now());
+		console.log(`File ${f.name} (#${i}) has been updated :`, f, files);
 	};
 
 	// React Drop zone
 	const onDrop = useCallback((acceptedFiles) => {
 		// Do something with the files
 		console.log("Received some files", acceptedFiles);
+
 		setFiles(
 			acceptedFiles.map((f) => ({
-				...f,
+				name: f.name,
 				progress: 0,
 				error: false
 			}))
@@ -86,7 +100,7 @@ const FileUpload = ({
 
 		Promise.all(
 			acceptedFiles.map((f, i) => {
-				return limit(sendFile(upload_url, updateProgress), f, i);
+				limit(sendFile(upload_url, updateProgress), f, i);
 			})
 		)
 			.then((status) => {
@@ -128,7 +142,7 @@ const FileUpload = ({
 					</Center>
 				</Box>
 			</Center>
-			<FileUploadReport files={files} />
+			<FileUploadReport files={files} ts={ts} />
 		</Container>
 	);
 };

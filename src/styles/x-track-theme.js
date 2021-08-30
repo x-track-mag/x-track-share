@@ -50,3 +50,13 @@ export const global = {
 		}
 	}
 };
+
+export const components = {
+	Progress: {
+		variants: {
+			"x-track": {
+				bg: "gray.700"
+			}
+		}
+	}
+};

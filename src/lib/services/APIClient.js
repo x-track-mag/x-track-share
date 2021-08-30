@@ -147,4 +147,36 @@ export const post = (APIClient.post = async (apiEntryPoint, postBody = {}) => {
 	}
 });
 
+/**
+ * DEL to Next.js API
+ * @param {String} postUrl
+ * @param {Object} postBody Body data
+ * @return {Promise<Object>} return the parsed API response
+ */
+export const del = (APIClient.del = async (apiEntryPoint, postBody = {}) => {
+	try {
+		console.log(`API CALL : DELETE ${apiEntryPoint}`);
+
+		const resp = await fetch(buildURL(apiEntryPoint), {
+			method: "DELETE",
+			headers: _DEFAULT_REQUEST_HEADERS,
+			body: JSON.stringify(postBody)
+		});
+
+		const respBody = await readResponseBody(resp);
+
+		if (respBody.error) {
+			throw new ApiError(respBody.code, respBody.error);
+		}
+
+		return respBody;
+	} catch (err) {
+		console.error(`DELETE ${apiEntryPoint} raised an API error response`, err);
+		throw new ApiError(
+			err.code || 500,
+			`Call to ${apiEntryPoint} failed : ${err.message}`
+		);
+	}
+});
+
 export default APIClient;

@@ -12,8 +12,8 @@ const Folder = ({ path, children, navigate, icons = [] }) => {
 			<AspectRatio
 				w="100%"
 				bg="brand.blue"
-				style={{ cursor: "pointer" }}
 				color="brand.yellow"
+				style={{ cursor: "pointer" }}
 				_hover={{ bg: "brand.yellow", color: "brand.blue" }}
 			>
 				<Subtitle>

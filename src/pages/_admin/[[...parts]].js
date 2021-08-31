@@ -1,9 +1,10 @@
-import APIClient from "../../lib/services/APIClient.js";
-import { Box, Stack, Grid } from "@chakra-ui/layout";
-import Breadcrumbs from "../../components/Breadcrumbs.js";
+import { Box, Grid, Stack } from "@chakra-ui/layout";
+import { useEffect, useState } from "react";
+import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
+import Breadcrumbs from "../../components/Breadcrumbs.js";
 import { Bin, PlusIcon } from "../../components/icons";
-import { useRouter } from "next/router";
+import APIClient from "../../lib/services/APIClient.js";
 
 /**
  * Retrieves the subfolders and playlist linked to this shared folder
@@ -22,25 +23,41 @@ export const getServerSideProps = async ({ params }) => {
 	};
 };
 
-const deleteFolder = (folderPath, refresh) => async (evt) => {
-	evt.stopPropagation();
-	if (confirm(`Do you confirm the suppression of folder ${folderPath} ?`)) {
-		await APIClient.del(`/api/admin/${folderPath}`);
-		refresh();
-	}
-};
-
-const deleteIcon = (path, refresh) => (
-	<Bin size="1rem" onClick={deleteFolder(path, refresh)} />
-);
+const deleteIcon = (action) => <Bin size="1rem" onClick={action} />;
 
 /**
  * Display the admin view of a shared folder
  */
 const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 	const uploadPath = `/_admin/upload/${path}`;
-	const router = useRouter();
-	const reloadPage = () => router.reload(`/_admin/${path}`);
+	const [vFolders, setVFolders] = useState();
+	const { confirm } = useDialogContext();
+
+	useEffect(() => {
+		// Replace the real subfolder list by the virtual one
+		setVFolders(subfolders);
+	}, [subfolders]);
+
+	const deleteFolder = (folderPath) => async (evt) => {
+		evt.stopPropagation();
+		const confirmDeletion = await confirm({
+			title: "SUPPRESSION DE PARTAGE",
+			message: `Supprimer le dossier de partage '${folderPath}' ?`,
+			yes: "Oui",
+			no: "Non"
+		});
+		if (confirmDeletion) {
+			// Remove the folder from the virtual folder list without reloading the page
+			setVFolders(vFolders.filter(({ path }) => path !== folderPath));
+			const { success } = await APIClient.del(`/api/admin/${folderPath}`);
+			if (!success) {
+				alert(
+					"La suppression totale du dossier n'a pu être effective. Il faut le supprimer totalement dans Cloudinary"
+				);
+			}
+		}
+	};
+
 	return (
 		<Stack className="folder-content" minH="100vh" margin="0 1rem">
 			<Box className="navigation-header" as="header">
@@ -56,13 +73,14 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 				<Folder key="upload" path={uploadPath}>
 					<PlusIcon />
 				</Folder>
-				{subfolders.map(({ name, path }) => (
-					<Folder
-						key={name}
-						path={`/_admin/${path}`}
-						icons={[deleteIcon(path, reloadPage)]}
-					/>
-				))}
+				{vFolders &&
+					vFolders.map(({ name, path }) => (
+						<Folder
+							key={name}
+							path={`/_admin/${path}`}
+							icons={[deleteIcon(deleteFolder(path))]}
+						/>
+					))}
 			</Grid>
 		</Stack>
 	);

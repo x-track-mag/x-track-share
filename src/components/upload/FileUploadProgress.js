@@ -1,4 +1,5 @@
 import { Box, Progress } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 /**
  * @typedef FileUploadProgressProps
@@ -18,20 +19,28 @@ const FileUploadProgress = ({
 	progress,
 	error = false,
 	...props
-}) => (
-	<Box w="100%" {...props}>
-		<em>{fileName}</em>
-		<Progress
-			size="sm"
-			value={error ? 100 : progress}
-			min={0}
-			max={100}
-			bgColor="gray.700"
-			color={error ? "red" : color}
-			colorScheme={error ? "red" : color}
-		/>
-		{error && <code>{error}</code>}
-	</Box>
-);
+}) => {
+	useEffect(() => {
+		console.log(
+			`Re-rendering file ${fileName} : progress=${progress}, error=${error}`
+		);
+	}, []);
+
+	return (
+		<Box w="100%" {...props}>
+			<em>{fileName}</em>
+			<Progress
+				size="sm"
+				value={error ? 100 : progress}
+				min={0}
+				max={100}
+				bgColor="gray.700"
+				color={error ? "red" : color}
+				colorScheme={error ? "red" : color}
+			/>
+			{error && <code>{error}</code>}
+		</Box>
+	);
+};
 
 export default FileUploadProgress;

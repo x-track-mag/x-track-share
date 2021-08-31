@@ -40,9 +40,6 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 };
 
 const FileUploadReport = ({ files }) => {
-	useEffect(() => {
-		console.log("Re-rendering files", JSON.stringify(files));
-	}, [files]);
 	return (
 		<Box className="upload-report">
 			{files.map((file, i) => (
@@ -77,7 +74,7 @@ const FileUpload = ({
 	const updateProgress = ({ name, size, progress, error }, i) => {
 		const f = (files[i] = { name, size, progress, error }); // new instance
 		setFiles([...files]); // duplicate the array of files to re-render
-		console.log(`File ${f.name} (#${i}) has been updated :`, f, files);
+		console.log(`File ${f.name} (#${i}) has been updated :`, f);
 	};
 
 	// React Drop zone

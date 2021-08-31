@@ -106,14 +106,13 @@ export const deleteFolder = async (folderPath) => {
 	try {
 		const { folders } = await getDeepContent(folderPath);
 
-		// We must recursively delete all content first
-		const folder = folders[folderPath]; // SharedFolder
+		// We must delete all recursive content first
+		console.log(`Deleting all resources inside share/${folderPath}`);
 		// const public_ids = Object.keys(folders)
 		// 	.map((p) => folders[p].getAllMediaIds())
 		// 	.flat();
-		console.log(`Deleting all resources inside share/${folderPath}`);
 
-		// We have to delete separately all different types of resources !
+		// But we have to delete separately all different types of resources !
 		const deletions = await Promise.allSettled([
 			cloudinary.api.delete_resources_by_prefix(`share/${folderPath}`, {
 				all: true,
@@ -134,12 +133,15 @@ export const deleteFolder = async (folderPath) => {
 		const deepFoldersList = Object.keys(folders).sort((a, b) => (a > b ? -1 : 1));
 		console.log("Deleting folders", deepFoldersList);
 
-		for (folderPath of deepFoldersList) {
-			await cloudinary.api.delete_folder(`share/${folderPath}`);
-		}
-
 		return {
-			success: true
+			success: deepFoldersList.reduce(async (success, folderPath) => {
+				try {
+					await cloudinary.api.delete_folder(`share/${folderPath}`);
+					return success;
+				} catch (err) {
+					return false;
+				}
+			}, true)
 		};
 	} catch (err) {
 		console.error(`Cloudinary folder deletion failed (${folderPath}).`, err);

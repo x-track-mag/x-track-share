@@ -66,7 +66,7 @@ export const extractTrackInfos = (filename) => {
 		.replace(/\_[a-z0-9]{6}$/, "") // Remove the random sequence _jhj7yg at the end of the file names
 		.replace(/\_/gi, " "); // Restore the spaces between words
 
-	if (filename.indexOf("-") > 0) {
+	if (filename.indexOf(" - ") > 0) {
 		// We have a song title
 		const [artist, song] = filename.split(" - ");
 		console.log(`Found a song : ${artist} - ${song}`);

@@ -18,7 +18,7 @@ const VideoPlaylistPlayer = ({ type = "video", playerId, playlist = [] }) => {
 	console.log(`We've got some ${type}s to display`, playlist);
 	return (
 		<PlayerStateProvider>
-			<VideoPlayer id={playerId} playlist={playlist} />
+			<VideoPlayer id={playerId} playlist={playlist} withPlaylistEvents={true} />
 			<Playlist playerId={playerId} playlist={playlist} />
 		</PlayerStateProvider>
 	);

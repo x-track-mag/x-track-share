@@ -55,7 +55,7 @@ const createPlayer = (id, playlist) => {
 	}
 };
 
-const registerPlayerEvents = (playerId, player, eb, merge) => {
+const registerPlaylistEvents = (playerId, player, eb, merge) => {
 	if (!player) return;
 	eb.on(`${playerId}:play`, player.play);
 	eb.on(`${playerId}:pause`, player.pause);
@@ -81,7 +81,7 @@ const registerPlayerEvents = (playerId, player, eb, merge) => {
 		});
 	});
 };
-const unregisterPlayerEvents = (playerId, player, eb) => {
+const unregisterPlaylistEvents = (playerId, player, eb) => {
 	if (!player) return;
 	eb.off(`${playerId}:play`, player.play);
 	eb.off(`${playerId}:pause`, player.pause);
@@ -93,7 +93,7 @@ const unregisterPlayerEvents = (playerId, player, eb) => {
  *
  * @param {VideoPlayerProps} props
  */
-const VideoPlayer = ({ id, playlist }) => {
+const VideoPlayer = ({ id, playlist, withPlaylistEvents = false }) => {
 	let player; // the CloudinaryPlayer instance
 	const { merge } = usePlayerState();
 	let eb = useEventBus();
@@ -102,11 +102,14 @@ const VideoPlayer = ({ id, playlist }) => {
 	useEffect(() => {
 		console.log(`Creating video player ${id}`);
 		player = createPlayer(id, playlist);
-		registerPlayerEvents(id, player, eb, merge);
+
+		if (withPlaylistEvents) {
+			registerPlaylistEvents(id, player, eb, merge);
+		}
 
 		return () => {
 			console.log(`Unregistrating video player ${id}`);
-			unregisterPlayerEvents(id, player, eb);
+			unregisterPlaylistEvents(id, player, eb);
 			player = null;
 		};
 	}, [id]);
@@ -115,7 +118,6 @@ const VideoPlayer = ({ id, playlist }) => {
 		<Box
 			className="video-container"
 			width="100%"
-			height="45vh"
 			position="relative"
 			overflow="hidden"
 		>

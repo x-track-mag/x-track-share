@@ -84,7 +84,7 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 						/>
 					))}
 			</Grid>
-			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }}>
+			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
 				<MiniPlaylist tracks={playlist} />
 				<MiniPlayer />
 			</Grid>

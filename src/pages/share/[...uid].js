@@ -1,5 +1,4 @@
 import APIClient from "../../lib/services/APIClient.js";
-import { withEventBus } from "../../components/EventBusProvider.js";
 import CloudinaryFolder from "../../components/CloudinaryFolder.js";
 import { withSharedFolderContext } from "../../components/SharedFolderContext.js";
 
@@ -21,4 +20,4 @@ export const getServerSideProps = async ({ params }) => {
 	};
 };
 
-export default withEventBus(withSharedFolderContext(CloudinaryFolder));
+export default withSharedFolderContext(CloudinaryFolder);

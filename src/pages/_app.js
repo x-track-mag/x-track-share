@@ -1,5 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { DialogContextProvider } from "../components/base/Dialog.js";
+import EventBusProvider from "../components/EventBusProvider.js";
 
 import PageLayout from "../components/layout/PageLayout.js";
 import "../styles/x-track-theme.css";
@@ -9,9 +10,11 @@ function MyApp({ Component, pageProps }) {
 	return (
 		<ChakraProvider resetCSS theme={theme}>
 			<PageLayout>
-				<DialogContextProvider>
-					<Component {...pageProps} />
-				</DialogContextProvider>
+				<EventBusProvider>
+					<DialogContextProvider>
+						<Component {...pageProps} />
+					</DialogContextProvider>
+				</EventBusProvider>
 			</PageLayout>
 		</ChakraProvider>
 	);

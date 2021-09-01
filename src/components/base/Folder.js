@@ -16,14 +16,21 @@ const Folder = ({ path, children, navigate, icons = [] }) => {
 				style={{ cursor: "pointer" }}
 				_hover={{ bg: "brand.yellow", color: "brand.blue" }}
 			>
-				<Subtitle>
-					{children || folderName}
+				<>
+					<Subtitle>{children || folderName}</Subtitle>
 					{icons.length > 0 && (
-						<Box key="icons" position="absolute" bottom={1} right={2}>
-							{icons}
+						<Box as="aside" className="icons-container" position="relative">
+							<Box
+								className="icons"
+								position="absolute"
+								bottom={1}
+								right={2}
+							>
+								{icons}
+							</Box>
 						</Box>
 					)}
-				</Subtitle>
+				</>
 			</AspectRatio>
 		</Link>
 	);

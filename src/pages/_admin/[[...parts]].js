@@ -4,6 +4,8 @@ import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
 import { Bin, PlusIcon } from "../../components/icons";
+import MiniPlayer from "../../components/player/MiniPlayer.js";
+import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import APIClient from "../../lib/services/APIClient.js";
 
 /**
@@ -81,6 +83,10 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 							icons={[deleteIcon(deleteFolder(path))]}
 						/>
 					))}
+			</Grid>
+			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }}>
+				<MiniPlaylist tracks={playlist} />
+				<MiniPlayer />
 			</Grid>
 		</Stack>
 	);

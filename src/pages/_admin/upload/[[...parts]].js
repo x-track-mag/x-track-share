@@ -4,18 +4,23 @@ import { Box, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import FileUpload from "../../../components/upload/FileUpload.js";
 
+/**
+ * Join every parts of the dynamic path
+ */
 export const getServerSideProps = async ({ params }) => {
 	const parts = params.parts || [""];
 
-	const props = {
-		folderPath: parts.join("/")
-	};
-
 	return {
-		props
+		props: {
+			folderPath: parts.join("/")
+		}
 	};
 };
 
+/**
+ * Display the upload page at /_admin/upload/[more]/[things]/[here]..
+ * Files are send to          /api/upload/[same]/[things]/[here]..
+ */
 const UploadPage = ({ folderPath }) => {
 	const router = useRouter();
 	const comeBack = () => {

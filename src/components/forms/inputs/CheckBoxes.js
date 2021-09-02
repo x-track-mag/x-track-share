@@ -11,6 +11,11 @@ import { CheckboxGroup } from "@chakra-ui/checkbox";
  * @property {String} name
  * @property {String} label
  * @property {Array|Object} options Available options to choose from (code + label) or map
+ * @property {"array"|"object"} [serialization="array"] Choose how to serialize the checked values
+ * @property {Array|Object} [defaultValue=[]] The initial checked values (conforming to the serialization choice)
+ * @property {Number} [columns=3]
+ * @property {Function} [onChange] An optional callback for when things change..
+ * @property {Object} validation Validation rules
  */
 /**
  * A group of checkboxes used to display an array of possible values
@@ -23,7 +28,9 @@ const CheckBoxes = ({
 	required = false,
 	autoFocus = false,
 	defaultValue = [],
+	serialization = "array", // serialize checked options as an "array" or an "object"
 	validation = {},
+	onChange,
 	columns = 3 // checkboxes are arranged in 3 columns
 }) => {
 	const inputRef = createRef(); // This ref will reference the first checkbox in the serie
@@ -47,25 +54,37 @@ const CheckBoxes = ({
 	 * When a single checkbox change : add or remove the value from the list
 	 * @param {Event} evt
 	 */
-	const onChange = (evt) => {
+	const _onChange = (evt) => {
 		const valueToToggle = evt.target.value;
-		if (values.includes(valueToToggle)) {
-			setData(
-				name,
-				values.filter((val) => val !== valueToToggle)
-			);
+		if (serialization === "array") {
+			if (values.includes(valueToToggle)) {
+				setData(
+					name,
+					values.filter((val) => val !== valueToToggle)
+				);
+			} else {
+				setData(name, [...values, valueToToggle]);
+			}
 		} else {
-			setData(name, [...values, valueToToggle]);
+			setData(`${name}.${valueToToggle}`, !values[valueToToggle]);
 		}
-		setValues(getData(name));
-		if (evt.key === "Enter" && !evt.shiftKey) {
+
+		if (evt.key === "Enter") {
 			validate();
 		}
+		if (onChange) {
+			onChange();
+		}
+		// Update the local state
+		setValues(getData(name));
 	};
+
+	const isChecked =
+		serialization === "array" ? (val) => values.includes(val) : (val) => values[val];
 
 	useLayoutEffect(() => {
 		if (autoFocus) {
-			inputRef.current.focus();
+			inputRef.current?.focus();
 		}
 	}, [name]);
 
@@ -80,8 +99,8 @@ const CheckBoxes = ({
 								name={`${name}:${code}`}
 								key={`${name}:${code}`}
 								value={code}
-								checked={values.includes(code)}
-								onChange={onChange}
+								checked={isChecked(code)}
+								onChange={_onChange}
 							>
 								{label}
 							</Checkbox>
@@ -92,8 +111,8 @@ const CheckBoxes = ({
 								name={`${name}:${code}`}
 								key={`${name}:${code}`}
 								value={code}
-								checked={values.includes(code)}
-								onChange={onChange}
+								checked={isChecked(code)}
+								onChange={_onChange}
 							>
 								{label}
 							</Checkbox>

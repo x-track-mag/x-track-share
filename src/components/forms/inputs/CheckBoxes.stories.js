@@ -32,12 +32,14 @@ export default {
 	args: {
 		required: false,
 		autoFocus: true,
+		serialization: "array",
 		readOnly: false
 	},
 	argTypes: {
 		required: { control: { type: "boolean" } },
 		autoFocus: { control: { type: "boolean" } },
 		readOnly: { control: { type: "boolean" } },
+		serialization: { control: { type: "select", options: ["array", "object"] } },
 		defaultValue: { control: { type: null } },
 		name: { control: { type: null } },
 		label: { control: { type: null } }
@@ -79,5 +81,7 @@ export const MoreCheckBoxesInputs = ({ prefix, suffix, ...args }) => (
 				}}
 			/>
 		</ValidatingForm>
+
+		<Box>Selected values :</Box>
 	</FormValidationProvider>
 );

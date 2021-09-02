@@ -12,7 +12,7 @@ export const convertToStartCase = startCase;
  * @returns {Array}
  */
 export const convertOptions = (o) => {
-	if (typeof o === "objects") {
+	if (typeof o === "object") {
 		return Object.keys(o).reduce((options, key) => {
 			options.push({ code: key, label: o[key] });
 			return options;

@@ -209,7 +209,6 @@ export const getFlatContent = async (folderPath) => {
 		const [{ resources }, { folders }] = await Promise.all([
 			cloudinary.search
 				.expression(`folder=${folderPath}`)
-				.sort_by("public_id", "desc")
 				.max_results(500)
 				.execute(),
 			cloudinary.api.sub_folders(folderPath)

@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { loadEnv } from "../utils/Env.js";
 import SharedFolder from "../cloudinary/SharedFolder.js";
 import ApiError from "../ApiError.js";
+import { getFontDefinitionFromManifest } from "next/dist/next-server/server/font-utils";
 
 if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
 	loadEnv();
@@ -12,6 +13,15 @@ cloudinary.config({
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+export const getResource = async (resource_id) => {
+	try {
+		return await cloudinary.api.resource(resource_id);
+	} catch (err) {
+		console.error(err);
+		return undefined;
+	}
+};
 
 export const getResourceInfos = ({
 	public_id,
@@ -32,18 +42,29 @@ export const getResourceInfos = ({
 	};
 };
 
-const getResourceType = (fileName) => {
-	const ext = fileName.split(".").pop().toLowerCase();
-	switch (ext) {
+const getResourceType = (format) => {
+	if (format.indexOf(".") > 0) {
+		// It may be the file name
+		format = format.split(".").pop().toLowerCase();
+	}
+
+	// Note : the switch order is defined by our most common use cases
+	switch (format) {
+		case "mp3":
+		case "wav":
+		case "mp4":
+		case "mov":
+		case "mpeg":
+		case "webm":
+		case "aac":
+		case "ogg":
+			return "video";
+
 		case "jpg":
 		case "png":
 		case "svg":
+		case "webp":
 			return "image";
-		case "mp3":
-		case "mp4":
-		case "ogg":
-		case "wav":
-			return "video";
 
 		default:
 			return "raw";
@@ -100,6 +121,36 @@ export const uploadToPath = async (destPath, localPath) => {
 			}
 		});
 	});
+};
+
+export const deleteResource = async (public_id) => {
+	try {
+		console.log("Cloudinary delete resource", public_id);
+		// If we don't know the resource type, try them all..
+		const deletions = await Promise.allSettled([
+			cloudinary.api.delete_resources([public_id], {
+				all: true,
+				resource_type: "video"
+			}),
+			cloudinary.api.delete_resources([public_id], {
+				all: true,
+				resource_type: "image"
+			}),
+			cloudinary.api.delete_resources([public_id], {
+				all: true,
+				resource_type: "raw"
+			})
+		]);
+		// The deletion count total should be 1
+		const count = deletions.reduce((prev, deletion) => {
+			return prev + deletion.value.deleted_counts;
+		}, 0);
+
+		return { success: count === 1, resource: public_id };
+	} catch (err) {
+		console.error(`Cloudinary resource deletion failed (${public_id}).`, err);
+		return { success: false, error: err.message };
+	}
 };
 
 export const deleteFolder = async (folderPath) => {
@@ -242,8 +293,6 @@ export const getDeepContent = async (root) => {
 	}
 };
 
-export const getResource = cloudinary.api.resource;
-
 /**
  * Return a calculated link to download a zip archive
  * containing the selected assets
@@ -278,11 +327,12 @@ ${downloadUrl}`);
 
 const CloudinaryClient = {
 	deleteFolder,
-	uploadToPath,
+	deleteResource,
 	getDeepContent,
 	getFlatContent,
 	getResource,
-	getZipDownloadUrl
+	getZipDownloadUrl,
+	uploadToPath
 };
 
 export default CloudinaryClient;

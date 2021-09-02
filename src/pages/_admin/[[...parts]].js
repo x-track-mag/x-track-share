@@ -17,7 +17,7 @@ export const getServerSideProps = async ({ params }) => {
 	const parts = params.parts || [""];
 	const folderPath = parts.join("/");
 
-	const props = await APIClient.get(`/api/admin/${folderPath}`);
+	const props = await APIClient.get(`/api/folders/${folderPath}`);
 	console.log(`getServerSideProps(${folderPath}) returned`, props);
 
 	return {
@@ -51,7 +51,7 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 		if (confirmDeletion) {
 			// Remove the folder from the virtual folder list without reloading the page
 			setVFolders(vFolders.filter(({ path }) => path !== folderPath));
-			const { success } = await APIClient.del(`/api/admin/${folderPath}`);
+			const { success } = await APIClient.del(`/api/folders/${folderPath}`);
 			if (!success) {
 				alert(
 					"La suppression totale du dossier n'a pu être effective. Il faut le supprimer totalement dans Cloudinary"

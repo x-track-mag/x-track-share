@@ -2,38 +2,37 @@ import { NextApiRequest, NextApiResponse } from "next";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 
 /**
- * The API entry point (GET) to retrieve the flat content of a shared folder
+ * GET a resource by its public_id
+ * DELETE a resource
  * @param {NextApiRequest} req
  * @param {NextApiResponse} resp
  */
 export default async (req, resp) => {
-	const { parts = [""] } = req.query; // parts give path to a shared folder
-	const path = parts.join("/");
+	const { parts = [""] } = req.query; // parts gives the public_id of a resource
+	const public_id = parts.join("/");
 	const method = req.method;
 	let msg;
 	try {
 		switch (method) {
 			case "GET":
-				msg = await CloudinaryClient.getFlatContent(`share/${path}`);
+				msg = await CloudinaryClient.getResource(`share/${public_id}`);
 				break;
 
 			case "DELETE":
-				msg = await CloudinaryClient.deleteFolder(path);
+				msg = CloudinaryClient.deleteResource(public_id);
 
 			default:
 				break;
 		}
 		resp.json({
 			success: true,
-			path,
+			resource: public_id,
 			...msg
 		});
 	} catch (err) {
 		resp.status(err.code || 500).json({
 			success: false,
-			path,
-			subfolders: [],
-			playlist: [],
+			resource: public_id,
 			error: err.message
 		});
 	}

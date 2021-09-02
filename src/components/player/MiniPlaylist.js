@@ -1,4 +1,6 @@
 import { Box, Grid, GridItem, Stack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import APIClient from "../../lib/services/APIClient";
 import { useDialogContext } from "../base/Dialog";
 import { useEventBus } from "../EventBusProvider";
 import SvgBin from "../icons/SvgBin";
@@ -18,6 +20,12 @@ const TrackEntry = ({ index, public_id, song, artist, filename, onDeleteAction }
 const MiniPlaylist = ({ tracks = [] }) => {
 	const { confirm } = useDialogContext();
 	const eb = useEventBus();
+	const [vTracks, setVTracks] = useState(tracks);
+
+	useEffect(() => {
+		// Replace the real subfolder list by the virtual one
+		setVTracks(tracks);
+	}, [tracks]);
 
 	// Define the actions associated with each button
 	const deleteTrack = ({ filename, song, public_id }) => async (evt) => {
@@ -26,6 +34,16 @@ const MiniPlaylist = ({ tracks = [] }) => {
 			message: `Supprimer '${song || filename}' du partage ?`
 		});
 		if (confirmDeletion) {
+			// Remove the resource  reloading the page
+			setVTracks(vTracks.filter((track) => track.public_id !== public_id));
+			const { success } = await APIClient.del(`/api/resources/${public_id}`);
+			if (!success) {
+				alert(
+					`La suppression du partage '${
+						song || filename
+					}' n'a pu être effective. Il faut le supprimer totalement dans Cloudinary`
+				);
+			}
 		}
 	};
 	const playTrack = (track) => () => {
@@ -36,7 +54,7 @@ const MiniPlaylist = ({ tracks = [] }) => {
 		<Box className="mini-playlist">
 			<h3>TRACKS</h3>
 			<Stack spacing={0}>
-				{tracks.map((track, i) => (
+				{vTracks.map((track, i) => (
 					<TrackEntry
 						key={`track-${i}`}
 						index={i + 1}

@@ -3,9 +3,16 @@ import { useEffect, useState } from "react";
 import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
+import CheckBoxes from "../../components/forms/inputs/CheckBoxes.js";
+import {
+	FormValidationProvider,
+	useFormValidationContext,
+	withFormValidationContext
+} from "../../components/forms/validation/FormValidationProvider.js";
 import { Bin, PlusIcon } from "../../components/icons";
 import MiniPlayer from "../../components/player/MiniPlayer.js";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
+import SharedSettings from "../../components/SharedSettings.js";
 import APIClient from "../../lib/services/APIClient.js";
 
 /**
@@ -86,7 +93,7 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 			</Grid>
 			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
 				<MiniPlaylist tracks={playlist} />
-				<MiniPlayer />
+				<SharedSettings folderPath={path} />
 			</Grid>
 		</Stack>
 	);

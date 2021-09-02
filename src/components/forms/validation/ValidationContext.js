@@ -128,7 +128,7 @@ export const validateField = (name, value, required = false, validation = {}, da
 };
 
 /**
- * Validate the whole data against more validation rules who acts globally
+ * Validate the whole data against more validation rules who act globally
  * @param {Object} [validation] Additional validation rules with their own keys
  * @param {Object} data The whole data object in the validation context
  */
@@ -248,7 +248,9 @@ const buildValidate = (validationContext) => (name, options = {}) => {
 
 /**
  * @typedef ValidationContextOptions
- * @property {Object} [data={}] load pre-existing data
+ * @property {Object} [data={}] initial data
+ * @property {Function} onSuccess Callback when data validation has been successful
+ * @property {Function} onError Callback when data validation has been a failure
  */
 
 /**

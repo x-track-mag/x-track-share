@@ -1,3 +1,4 @@
+import { Readable } from "stream";
 import { v2 as cloudinary } from "cloudinary";
 import { loadEnv } from "../utils/Env.js";
 import SharedFolder from "../cloudinary/SharedFolder.js";
@@ -120,6 +121,36 @@ export const uploadToPath = async (destPath, localPath) => {
 				resolve(result);
 			}
 		});
+	});
+};
+
+/**
+ * Upload a piece of text content inside a file in Cloudinary
+ * @param {String} destPath The destination path (URL)
+ * @param {String} textData Content of a file in text format (TXT, JSON, Markdown, ...)
+ */
+export const uploadData = async (destPath, textData) => {
+	const uploadOptions = {
+		overwrite: true,
+		public_id: destPath, // Don't allow Cloudinary to do 'smart' things on the public_id
+		resource_type: "raw"
+	};
+
+	const textStream = Readable.from([textData]);
+
+	return new Promise((resolve, reject) => {
+		const uploadStream = cloudinary.uploader.upload_stream(
+			uploadOptions,
+			(err, result) => {
+				if (err) {
+					console.error(err);
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			}
+		);
+		textStream.pipe(uploadStream);
 	});
 };
 
@@ -333,6 +364,7 @@ const CloudinaryClient = {
 	getFlatContent,
 	getResource,
 	getZipDownloadUrl,
+	uploadData,
 	uploadToPath
 };
 

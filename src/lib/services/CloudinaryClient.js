@@ -220,7 +220,9 @@ export const getFlatContent = async (folderPath) => {
 				name,
 				path: path.replace("share/", "") // the share/ common root is allways obfuscated
 			})),
-			playlist: resources.map(getResourceInfos)
+			playlist: resources
+				.map(getResourceInfos)
+				.sort((a, b) => (a.filename > b.filename ? 1 : -1))
 		};
 	} catch (err) {
 		console.error(err);

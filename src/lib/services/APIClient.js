@@ -3,7 +3,7 @@ import ApiError from "../ApiError.js";
 
 const APIClient = {};
 
-const _DEFAULT_REQUEST_HEADERS = {
+const _JSON_CONTENT_REQUEST_HEADERS = {
 	Accept: "application/json",
 	"Content-Type": "application/json"
 };
@@ -93,7 +93,7 @@ export const get = (APIClient.get = async (apiEntryPoint, apiParams) => {
 
 		resp = await fetch(buildURL(apiEntryPoint, apiParams), {
 			method: "GET",
-			headers: _DEFAULT_REQUEST_HEADERS
+			headers: _JSON_CONTENT_REQUEST_HEADERS
 		});
 		const respBody = await readResponseBody(resp);
 
@@ -102,6 +102,36 @@ export const get = (APIClient.get = async (apiEntryPoint, apiParams) => {
 		}
 
 		return respBody;
+	} catch (err) {
+		console.error(
+			`GET to ${apiEntryPoint} raised an API error response`,
+			err.message
+		);
+		const errorCode = err.code || resp?.status || 500;
+		throw new ApiError(
+			errorCode,
+			`Call to ${apiEntryPoint} failed : ${err.message} (${errorCode})`
+		);
+	}
+});
+
+/**
+ * HTTP GET
+ * @param {String} apiEntryPoint
+ * @param {Object} [apiParams] Optional parameters (as key-value pairs)
+ * @return {Object} the TEXT response if no error was thrown
+ * @throws {ApiError}
+ */
+export const getText = (APIClient.getText = async (apiEntryPoint, apiParams) => {
+	let resp;
+	try {
+		console.log(`API CALL : GET ${apiEntryPoint}`);
+
+		resp = await fetch(buildURL(apiEntryPoint, apiParams), {
+			method: "GET"
+		});
+		const textContent = await resp.text();
+		return textContent.trim();
 	} catch (err) {
 		console.error(
 			`GET to ${apiEntryPoint} raised an API error response`,
@@ -127,7 +157,7 @@ export const post = (APIClient.post = async (apiEntryPoint, postBody = {}) => {
 
 		const resp = await fetch(buildURL(apiEntryPoint), {
 			method: "POST",
-			headers: _DEFAULT_REQUEST_HEADERS,
+			headers: _JSON_CONTENT_REQUEST_HEADERS,
 			body: JSON.stringify(postBody)
 		});
 
@@ -159,7 +189,7 @@ export const del = (APIClient.del = async (apiEntryPoint, postBody = {}) => {
 
 		const resp = await fetch(buildURL(apiEntryPoint), {
 			method: "DELETE",
-			headers: _DEFAULT_REQUEST_HEADERS,
+			headers: _JSON_CONTENT_REQUEST_HEADERS,
 			body: JSON.stringify(postBody)
 		});
 

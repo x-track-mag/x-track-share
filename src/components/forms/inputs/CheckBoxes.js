@@ -1,10 +1,10 @@
-import { createRef, useState, useEffect, useLayoutEffect } from "react";
-import GroupLabel from "../GroupLabel.js";
+import { createRef, useState } from "react";
 import { useFormValidationContext } from "../validation/FormValidationProvider.js";
 import { convertOptions } from "./utils.js";
 import { SimpleGrid } from "@chakra-ui/layout";
 import { Checkbox } from "@chakra-ui/checkbox";
 import { CheckboxGroup } from "@chakra-ui/checkbox";
+import useIsomorphicLayoutEffect from "../../../hooks/useIsomorphicLayoutEffect.js";
 
 /**
  * @typedef CheckBoxesProps
@@ -82,7 +82,7 @@ const CheckBoxes = ({
 	const isChecked =
 		serialization === "array" ? (val) => values.includes(val) : (val) => values[val];
 
-	useLayoutEffect(() => {
+	useIsomorphicLayoutEffect(() => {
 		if (autoFocus) {
 			inputRef.current?.focus();
 		}
@@ -95,7 +95,7 @@ const CheckBoxes = ({
 					if (i === 0) {
 						return (
 							<Checkbox
-								inputRef={inputRef} // the ref for focus is on the first element
+								ref={inputRef} // the ref for focus is on the first element
 								name={`${name}:${code}`}
 								key={`${name}:${code}`}
 								value={code}

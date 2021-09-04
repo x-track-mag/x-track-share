@@ -8,6 +8,7 @@ const VideoPlayer = dynamic(() => import("./VideoPlayer.js"), { ssr: false });
  * @typedef VideoPlaylistPlayerProps
  * @property {String} playerId Unique id of the player where to send events
  * @property {Array} playlist list of tracks
+ * @property {String} [type="video"]
  */
 
 /**

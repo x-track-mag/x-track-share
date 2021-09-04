@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import StringExtensions from "../../../lib/utils/Strings";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient";
-import fs from "fs-extra";
 
 /**
  * Generate a download URL for a zipped archive
@@ -14,18 +12,29 @@ export default async (req, resp) => {
 		const { parts = [""] } = req.query; // parts is an array
 		const sharedFolderPath = `share/${parts.join("/")}`;
 
-		// Parse the settings passed inside the JSON body
-		const { settings } = req.body;
+		switch (req.method) {
+			case "GET":
+				const body = await CloudinaryClient.getResourceContent(
+					sharedFolderPath + "/settings.json"
+				);
 
-		const uploadSuccess = await CloudinaryClient.uploadData(
-			sharedFolderPath + "/settings.json",
-			JSON.stringify({ settings })
-		);
+			case "POST":
+				// Parse the settings passed inside the JSON body
+				const { settings } = req.body;
 
-		return resp.json({
-			success: true,
-			...uploadSuccess
-		});
+				const uploadSuccess = await CloudinaryClient.uploadData(
+					sharedFolderPath + "/settings.json",
+					JSON.stringify({ settings })
+				);
+
+				return resp.json({
+					success: true,
+					...uploadSuccess
+				});
+
+			default:
+				return null;
+		}
 	} catch (err) {
 		console.error(JSON.stringify(err, null, "\t"));
 		return resp.status(err.code || 500).json({

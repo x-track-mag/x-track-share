@@ -1,4 +1,6 @@
+import { SHARED_SETTINGS_DEFAULTS } from "../services/CloudinaryClient.js";
 import ArrayExtensions from "../utils/Arrays.js";
+import { merge } from "../utils/deepMerge.js";
 
 const audio_formats = ["wav", "mp3", "aac", "ogg"];
 const video_formats = ["mp4", "mpg", "mpeg", "avi", "mov", "mkv", "qt", "wmv", "asf"];
@@ -30,17 +32,21 @@ function SharedFolder(path, options = {}) {
 	this.audios = [];
 	this.videos = [];
 	this.others = [];
+	this.settings = SHARED_SETTINGS_DEFAULTS;
 	Object.assign(this, options);
 }
 
 SharedFolder.prototype = {
-	addMedia: function (media) {
-		if (isAudio(media) && !this.containsAudio(media)) {
-			return this.addAudio(media);
-		} else if (isVideo(media) && !this.containsVideo(media)) {
-			return this.addVideo(media);
+	addResource: async function (file) {
+		if (isAudio(file) && !this.containsAudio(file)) {
+			return this.addAudio(file);
+		} else if (isVideo(file) && !this.containsVideo(file)) {
+			return this.addVideo(file);
 		} else {
-			return this.addOtherFile(media);
+			this.addOtherFile(file);
+			const specialContent = await getRawResourceContent(file);
+			merge(this, specialContent);
+			return this;
 		}
 	},
 	getAllMediaIds: function () {

@@ -1,9 +1,7 @@
 import { createRef, useState } from "react";
 import { useFormValidationContext } from "../validation/FormValidationProvider.js";
 import { convertOptions } from "./utils.js";
-import { SimpleGrid } from "@chakra-ui/layout";
-import { Checkbox } from "@chakra-ui/checkbox";
-import { CheckboxGroup } from "@chakra-ui/checkbox";
+import { SimpleGrid, Checkbox, CheckboxGroup } from "@chakra-ui/react";
 import useIsomorphicLayoutEffect from "../../../hooks/useIsomorphicLayoutEffect.js";
 
 /**
@@ -43,6 +41,7 @@ const CheckBoxes = ({
 
 	// Get the current checked values from the ValidationContext
 	const [values, setValues] = useState(getData(name));
+	console.log("Checkboxes received default values", name, values);
 
 	// Do we  have an error ?
 	const errorMessage = errors[name]?.message || "";
@@ -79,8 +78,12 @@ const CheckBoxes = ({
 		setValues(getData(name));
 	};
 
-	const isChecked =
-		serialization === "array" ? (val) => values.includes(val) : (val) => values[val];
+	const isChecked = (val) => {
+		const checked =
+			serialization === "array" ? values.includes(val) : Boolean(values[val]);
+		console.log(`Checkbox '${val}' is ${checked ? "" : "not"} checked`, checked);
+		return checked;
+	};
 
 	useIsomorphicLayoutEffect(() => {
 		if (autoFocus) {
@@ -99,7 +102,7 @@ const CheckBoxes = ({
 								name={`${name}:${code}`}
 								key={`${name}:${code}`}
 								value={code}
-								checked={isChecked(code)}
+								isChecked={isChecked(code)}
 								onChange={_onChange}
 							>
 								{label}
@@ -111,7 +114,7 @@ const CheckBoxes = ({
 								name={`${name}:${code}`}
 								key={`${name}:${code}`}
 								value={code}
-								checked={isChecked(code)}
+								isChecked={isChecked(code)}
 								onChange={_onChange}
 							>
 								{label}

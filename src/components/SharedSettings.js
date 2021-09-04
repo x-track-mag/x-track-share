@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import APIClient from "../lib/services/APIClient";
 import CheckBoxes from "./forms/inputs/CheckBoxes";
 import {
@@ -25,17 +26,23 @@ const SHARE_OPTIONS_DEFAULTS = {
  * Display the mini settings form for a shared folder
  */
 const SharedSettings = ({ folderPath, settings = SHARE_OPTIONS_DEFAULTS }) => {
-	const { getData } = useFormValidationContext({ data: { settings } });
+	const { setData, getData } = useFormValidationContext();
+	setData("settings", settings);
+
 	const submitOnChange = () => {
 		const settings = getData("settings");
 		APIClient.post("/api/settings/" + folderPath, { settings });
 	};
 
+	useEffect(() => {
+		console.log();
+	});
+
 	return (
 		<CheckBoxes
 			name="settings"
 			onChange={submitOnChange}
-			defaultValue={settings}
+			// defaultValue={settings}
 			options={SHARE_OPTIONS}
 			serialization="object"
 			columns={1}

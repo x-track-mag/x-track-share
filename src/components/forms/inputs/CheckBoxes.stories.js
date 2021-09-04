@@ -81,7 +81,5 @@ export const MoreCheckBoxesInputs = ({ prefix, suffix, ...args }) => (
 				}}
 			/>
 		</ValidatingForm>
-
-		<Box>Selected values :</Box>
 	</FormValidationProvider>
 );

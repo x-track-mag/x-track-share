@@ -1,14 +1,8 @@
-import { Box, Grid, Stack } from "@chakra-ui/layout";
+import { Box, Center, Grid, Stack } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
-import CheckBoxes from "../../components/forms/inputs/CheckBoxes.js";
-import {
-	FormValidationProvider,
-	useFormValidationContext,
-	withFormValidationContext
-} from "../../components/forms/validation/FormValidationProvider.js";
 import { Bin, PlusIcon } from "../../components/icons";
 import MiniPlayer from "../../components/player/MiniPlayer.js";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
@@ -37,7 +31,7 @@ const deleteIcon = (action) => <Bin size="1rem" onClick={action} />;
 /**
  * Display the admin view of a shared folder
  */
-const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
+const AdminPage = ({ path, subfolders = [], tracks = [], settings = {} }) => {
 	const uploadPath = `/_admin/upload/${path}`;
 	const [vFolders, setVFolders] = useState();
 	const { confirm } = useDialogContext();
@@ -92,8 +86,10 @@ const AdminPage = ({ path, subfolders = [], playlist = [] }) => {
 					))}
 			</Grid>
 			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
-				<MiniPlaylist tracks={playlist} />
-				<SharedSettings folderPath={path} />
+				<MiniPlaylist tracks={tracks} />
+				<Center>
+					<SharedSettings settings={settings} folderPath={path} />
+				</Center>
 			</Grid>
 		</Stack>
 	);

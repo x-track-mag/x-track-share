@@ -1,10 +1,7 @@
-import { useEffect } from "react";
+import { Checkbox } from "@chakra-ui/checkbox";
+import { Stack } from "@chakra-ui/layout";
+import { useEffect, useState } from "react";
 import APIClient from "../lib/services/APIClient";
-import CheckBoxes from "./forms/inputs/CheckBoxes";
-import {
-	useFormValidationContext,
-	withFormValidationContext
-} from "./forms/validation/FormValidationProvider";
 
 const SHARE_OPTIONS = {
 	download_links: "Téléchargement Individuel",
@@ -26,28 +23,42 @@ const SHARE_OPTIONS_DEFAULTS = {
  * Display the mini settings form for a shared folder
  */
 const SharedSettings = ({ folderPath, settings = SHARE_OPTIONS_DEFAULTS }) => {
-	const { setData, getData } = useFormValidationContext();
-	setData("settings", settings);
+	const [sharedSettings, setSharedSettings] = useState(settings);
 
-	const submitOnChange = () => {
-		const settings = getData("settings");
-		APIClient.post("/api/settings/" + folderPath, { settings });
+	const toggle = (code) => (evt) => {
+		sharedSettings[code] = !sharedSettings[code];
+
+		// Some options are in  fact exclusives from each other
+		if (sharedSettings.download_links || sharedSettings.download_zip) {
+			sharedSettings.download_form = false;
+		} else if (sharedSettings.download_form) {
+			sharedSettings.download_links = sharedSettings.download_zip = false;
+		}
+		setSharedSettings({
+			...sharedSettings
+		});
+		APIClient.post("/api/settings/" + folderPath, { settings: sharedSettings });
 	};
 
 	useEffect(() => {
-		console.log();
-	});
+		console.log("Re-rendering setting choices");
+	}, [sharedSettings]);
 
 	return (
-		<CheckBoxes
-			name="settings"
-			onChange={submitOnChange}
-			// defaultValue={settings}
-			options={SHARE_OPTIONS}
-			serialization="object"
-			columns={1}
-		/>
+		<Stack>
+			{Object.keys(SHARE_OPTIONS).map((code, i) => (
+				<Checkbox
+					name={code}
+					key={code}
+					value={code}
+					isChecked={sharedSettings[code]}
+					onChange={toggle(code)}
+				>
+					{SHARE_OPTIONS[code]}
+				</Checkbox>
+			))}
+		</Stack>
 	);
 };
 
-export default withFormValidationContext(SharedSettings);
+export default SharedSettings;

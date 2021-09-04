@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
 import ApiError from "../ApiError.js";
 import SharedFolder from "../cloudinary/SharedFolder.js";
+import { merge } from "../utils/deepMerge.js";
 import { loadEnv } from "../utils/Env.js";
 import APIClient from "./APIClient.js";
 
@@ -14,6 +15,12 @@ cloudinary.config({
 	api_key: process.env.CLOUDINARY_API_KEY,
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+export const SHARED_SETTINGS_DEFAULTS = {
+	download_links: false,
+	download_zip: false,
+	download_form: false
+};
 
 export const getResource = async (resource_id) => {
 	try {
@@ -73,6 +80,26 @@ const getResourceType = (format) => {
 };
 
 /**
+ * Some resource like settings.json and playlist.m3u have text content that we must parse
+ * @param {*} rsc
+ * @returns
+ */
+const getRawResourceContent = async (rsc) => {
+	if (rsc.filename === "settings.json") {
+		return await APIClient.get(rsc.url);
+	} else if (rsc.filename === "playlist.m3u") {
+		const playListContent = await APIClient.getText(rsc.url);
+		return {
+			settings: {
+				playlist: playListContent.split("\n")
+			}
+		};
+	} else {
+		return null;
+	}
+};
+
+/**
  * Extract $artist - $title from a track filename
  * @param {String} filename
  * @returns {Object}
@@ -119,16 +146,13 @@ export const getFlatContent = async (folderPath) => {
 		const { settings, tracks } = await resources.reduce(
 			async (folderPromise, file) => {
 				const folder = await folderPromise;
-				if (file.format === "json") {
-					// We've got our settings here
-					Object.assign(folder, await APIClient.get(file.url));
-				} else if (file.format === "m3u") {
-					if (!folder.settings.playlist) {
-						const playlist = await APIClient.getText(file.url);
-						folder.settings.playlist = playlist.split("\n"); // parse the playlist format
-					}
-				} else {
+				const rscType = getResourceType(file);
+
+				if (rscType === "video") {
 					folder.tracks.push(getResourceInfos(file));
+				} else if (rscType === "raw") {
+					const specialContent = await getRawResourceContent(file);
+					merge(folder, specialContent);
 				}
 				return folder;
 			},
@@ -181,24 +205,13 @@ export const getDeepContent = async (root) => {
 			})
 		);
 
-		const sharedOptions = {
-			addToSelection: false,
-			directDownload: true,
-			displayDownloadForm: false
-		};
-
-		if (resources.find((rsc) => rsc.artist)) {
-			// Songs are shared via a virtual playlist and a download form
-			sharedOptions.addToSelection = true;
-			sharedOptions.displayDownloadForm = true;
-		}
-
 		// Keep track of all the folders and sub-folders
 		const folders = {};
 		folders[root] = new SharedFolder(root); // the root
 
-		resources.forEach((rsc) => {
+		const updateFolders = async (rsc) => {
 			let folder = folders[rsc.folder];
+
 			if (!folder) {
 				// Not yet known to us
 				folder = folders[rsc.folder] = new SharedFolder(rsc.folder);
@@ -206,11 +219,14 @@ export const getDeepContent = async (root) => {
 				folders[parent]?.subfolders.push(rsc.folder);
 			}
 
-			folder.addMedia(rsc);
-		});
+			await folder.addResource(rsc);
+			return true;
+		};
+
+		await Promise.allSettled(resources.map(updateFolders));
 
 		console.log(`Loaded shared folders`, folders);
-		return { folders, sharedOptions };
+		return { folders };
 	} catch (err) {
 		console.error(err);
 		throw new ApiError(500, err.message);

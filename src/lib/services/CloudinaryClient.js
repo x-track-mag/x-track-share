@@ -1,9 +1,9 @@
-import { Readable } from "stream";
 import { v2 as cloudinary } from "cloudinary";
-import { loadEnv } from "../utils/Env.js";
-import SharedFolder from "../cloudinary/SharedFolder.js";
+import { Readable } from "stream";
 import ApiError from "../ApiError.js";
-import { getFontDefinitionFromManifest } from "next/dist/next-server/server/font-utils";
+import SharedFolder from "../cloudinary/SharedFolder.js";
+import { loadEnv } from "../utils/Env.js";
+import APIClient from "./APIClient.js";
 
 if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
 	loadEnv();
@@ -98,6 +98,154 @@ export const extractTrackInfos = (filename) => {
 		};
 	} else {
 		return { filename };
+	}
+};
+
+/**
+ * Return the immediate content of a folder
+ * @param {String} root
+ */
+export const getFlatContent = async (folderPath) => {
+	try {
+		const [{ resources }, { folders }] = await Promise.all([
+			cloudinary.search
+				.expression(`folder=${folderPath}`)
+				.max_results(500)
+				.execute(),
+			cloudinary.api.sub_folders(folderPath)
+		]);
+
+		// Extract the special resources : settings.json and playlist.m3u if they exist
+		const { settings, tracks } = await resources.reduce(
+			async (folderPromise, file) => {
+				const folder = await folderPromise;
+				if (file.format === "json") {
+					// We've got our settings here
+					Object.assign(folder, await APIClient.get(file.url));
+				} else if (file.format === "m3u") {
+					if (!folder.settings.playlist) {
+						const playlist = await APIClient.getText(file.url);
+						folder.settings.playlist = playlist.split("\n"); // parse the playlist format
+					}
+				} else {
+					folder.tracks.push(getResourceInfos(file));
+				}
+				return folder;
+			},
+			{
+				tracks: [],
+				settings: {}
+			}
+		);
+
+		return {
+			subfolders: folders.map(({ name, path }) => ({
+				name,
+				path: path.replace("share/", "") // the share/ common root is allways obfuscated
+			})),
+			settings,
+			tracks
+		};
+	} catch (err) {
+		console.error(err);
+		throw new ApiError(500, err.message);
+	}
+};
+
+/**
+ * Return the full list of subfolders and content inside the given root
+ * @see cloudinary-search-results.json to see what the results look like
+ * @param {String} root
+ */
+export const getDeepContent = async (root) => {
+	try {
+		let { resources } = await cloudinary.search
+			.expression(`folder=share/${root}/*`)
+			.sort_by("public_id", "desc")
+			.max_results(500)
+			.execute();
+
+		// Keep only the minimal fields information
+		console.log(
+			`getDeepContent(share/${root}/*)`,
+			resources.map((rsc) => rsc.public_id)
+		);
+		resources = resources.map(
+			({ public_id, filename, folder, format, duration, secure_url }) => ({
+				public_id,
+				folder: folder.substr(6), // remove the 'share/' from the folder path
+				format,
+				duration,
+				url: secure_url.replace(/\.\w+$/, ""),
+				...extractTrackInfos(filename)
+			})
+		);
+
+		const sharedOptions = {
+			addToSelection: false,
+			directDownload: true,
+			displayDownloadForm: false
+		};
+
+		if (resources.find((rsc) => rsc.artist)) {
+			// Songs are shared via a virtual playlist and a download form
+			sharedOptions.addToSelection = true;
+			sharedOptions.displayDownloadForm = true;
+		}
+
+		// Keep track of all the folders and sub-folders
+		const folders = {};
+		folders[root] = new SharedFolder(root); // the root
+
+		resources.forEach((rsc) => {
+			let folder = folders[rsc.folder];
+			if (!folder) {
+				// Not yet known to us
+				folder = folders[rsc.folder] = new SharedFolder(rsc.folder);
+				const parent = folder.getParentFolder();
+				folders[parent]?.subfolders.push(rsc.folder);
+			}
+
+			folder.addMedia(rsc);
+		});
+
+		console.log(`Loaded shared folders`, folders);
+		return { folders, sharedOptions };
+	} catch (err) {
+		console.error(err);
+		throw new ApiError(500, err.message);
+	}
+};
+
+/**
+ * Return a calculated link to download a zip archive
+ * containing the selected assets
+ * @param {Array<String>} public_ids
+ * @param {String} format to convert each asset
+ * @returns {String}
+ */
+export const getZipDownloadUrl = (public_ids, format = "wav") => {
+	try {
+		// Add the request format to the end of the public_id
+		// public_ids = public_ids.map((id) => `${id}.${format}`).join(",");
+		const downloadUrl = cloudinary.utils.download_zip_url({
+			public_ids,
+			resource_type: "video",
+			use_original_filename: true,
+			target_public_id: `x-track-share-${new Date()
+				.toISOString()
+				.substr(0, 19)
+				.replace(/[^0-9]/g, "-")}`,
+			transformations: `f_${format}`
+		});
+		console.log(`Generate Zip download URL for ${JSON.stringify(
+			public_ids
+		)} in ${format} format :
+${downloadUrl}`);
+		return downloadUrl;
+	} catch (err) {
+		console.error(err);
+		throw new ApiError(500, err.message);
 	}
 };
 
@@ -227,132 +375,6 @@ export const deleteFolder = async (folderPath) => {
 		};
 	} catch (err) {
 		console.error(`Cloudinary folder deletion failed (${folderPath}).`, err);
-		throw new ApiError(500, err.message);
-	}
-};
-
-/**
- * Return the immediate content of a folder
- * @param {String} root
- */
-export const getFlatContent = async (folderPath) => {
-	try {
-		const [{ resources }, { folders }] = await Promise.all([
-			cloudinary.search
-				.expression(`folder=${folderPath}`)
-				.max_results(500)
-				.execute(),
-			cloudinary.api.sub_folders(folderPath)
-		]);
-
-		return {
-			subfolders: folders.map(({ name, path }) => ({
-				name,
-				path: path.replace("share/", "") // the share/ common root is allways obfuscated
-			})),
-			playlist: resources
-				.map(getResourceInfos)
-				.sort((a, b) => (a.filename > b.filename ? 1 : -1))
-		};
-	} catch (err) {
-		console.error(err);
-		throw new ApiError(500, err.message);
-	}
-};
-
-/**
- * Return the full list of subfolders and content inside the given root
- * @see cloudinary-search-results.json to see what the results look like
- * @param {String} root
- */
-export const getDeepContent = async (root) => {
-	try {
-		let { resources } = await cloudinary.search
-			.expression(`folder=share/${root}/*`)
-			.sort_by("public_id", "desc")
-			.max_results(500)
-			.execute();
-
-		// Keep only the minimal fields information
-		console.log(
-			`getDeepContent(share/${root}/*)`,
-			resources.map((rsc) => rsc.public_id)
-		);
-		resources = resources.map(
-			({ public_id, filename, folder, format, duration, secure_url }) => ({
-				public_id,
-				folder: folder.substr(6), // remove the 'share/' from the folder path
-				format,
-				duration,
-				url: secure_url.replace(/\.\w+$/, ""),
-				...extractTrackInfos(filename)
-			})
-		);
-
-		const sharedOptions = {
-			addToSelection: false,
-			directDownload: true,
-			displayDownloadForm: false
-		};
-
-		if (resources.find((rsc) => rsc.artist)) {
-			// Songs are shared via a virtual playlist and a download form
-			sharedOptions.addToSelection = true;
-			sharedOptions.displayDownloadForm = true;
-		}
-
-		// Keep track of all the folders and sub-folders
-		const folders = {};
-		folders[root] = new SharedFolder(root); // the root
-
-		resources.forEach((rsc) => {
-			let folder = folders[rsc.folder];
-			if (!folder) {
-				// Not yet known to us
-				folder = folders[rsc.folder] = new SharedFolder(rsc.folder);
-				const parent = folder.getParentFolder();
-				folders[parent]?.subfolders.push(rsc.folder);
-			}
-
-			folder.addMedia(rsc);
-		});
-
-		console.log(`Loaded shared folders`, folders);
-		return { folders, sharedOptions };
-	} catch (err) {
-		console.error(err);
-		throw new ApiError(500, err.message);
-	}
-};
-
-/**
- * Return a calculated link to download a zip archive
- * containing the selected assets
- * @param {Array<String>} public_ids
- * @param {String} format to convert each asset
- * @returns {String}
- */
-export const getZipDownloadUrl = (public_ids, format = "wav") => {
-	try {
-		// Add the request format to the end of the public_id
-		// public_ids = public_ids.map((id) => `${id}.${format}`).join(",");
-		const downloadUrl = cloudinary.utils.download_zip_url({
-			public_ids,
-			resource_type: "video",
-			use_original_filename: true,
-			target_public_id: `x-track-share-${new Date()
-				.toISOString()
-				.substr(0, 19)
-				.replace(/[^0-9]/g, "-")}`,
-			transformations: `f_${format}`
-		});
-		console.log(`Generate Zip download URL for ${JSON.stringify(
-			public_ids
-		)} in ${format} format :
-${downloadUrl}`);
-		return downloadUrl;
-	} catch (err) {
-		console.error(err);
 		throw new ApiError(500, err.message);
 	}
 };

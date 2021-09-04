@@ -1,17 +1,14 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Box, Heading } from "@chakra-ui/layout";
 import { Drawer, DrawerOverlay, DrawerContent } from "@chakra-ui/modal";
+import React from "react";
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
 import { useSharedFolderContext } from "./SharedFolderContext.js";
 
-const SharedFolderNavigation = ({ path }) => {
-	const {
-		navigate,
-		timestamp,
-		selectedTracks,
-		sharedOptions: { addToSelection, displayDownloadForm }
-	} = useSharedFolderContext();
+const SharedFolderNavigation = ({ path, settings = {} }) => {
+	const { navigate, timestamp, selectedTracks } = useSharedFolderContext();
+	const { download_form = false } = settings;
 
 	// These variables will control the drawer to show the Download form
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,7 +22,7 @@ const SharedFolderNavigation = ({ path }) => {
 	return (
 		<Box className="navigation-header" as="header">
 			<Breadcrumbs root="/share" path={path} navigate={navigate} />
-			{addToSelection && selectedTracks.path !== path && (
+			{download_form && selectedTracks.path !== path && (
 				<Heading
 					className="neon-text"
 					display="inline-block"
@@ -45,7 +42,7 @@ const SharedFolderNavigation = ({ path }) => {
 					</a>
 				</Heading>
 			)}
-			{addToSelection && selectedTracks.path === path && (
+			{download_form && selectedTracks.path === path && (
 				<>
 					<Heading
 						className="neon-text"
@@ -60,14 +57,12 @@ const SharedFolderNavigation = ({ path }) => {
 							Télécharger
 						</a>
 					</Heading>
-					{displayDownloadForm && (
-						<Drawer isOpen={isOpen} onClose={onClose}>
-							<DrawerOverlay />
-							<DrawerContent padding="80px 2em" bgColor="black">
-								<DownloadForm selectedTracks={selectedTracks} />
-							</DrawerContent>
-						</Drawer>
-					)}
+					<Drawer isOpen={isOpen} onClose={onClose}>
+						<DrawerOverlay />
+						<DrawerContent padding="80px 2em" bgColor="black">
+							<DownloadForm selectedTracks={selectedTracks} />
+						</DrawerContent>
+					</Drawer>
 				</>
 			)}
 		</Box>

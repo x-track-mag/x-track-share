@@ -39,7 +39,7 @@ const PlaylistHeaders = {
 		accessor: "song",
 		minWidth: "25%"
 	},
-	addToSelection: {
+	download_form: {
 		Header: "Ajouter à ma sélection",
 		accessor: (row) => (
 			<Checkbox
@@ -55,7 +55,7 @@ const PlaylistHeaders = {
 		maxWidth: "100px",
 		align: "center"
 	},
-	directDownload: {
+	download_links: {
 		Header: "Télécharger",
 		accessor: (row) => (
 			<SelectDownloadFormat

@@ -1,19 +1,19 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useEventBus } from "./EventBusProvider";
 import SharedFolder from "../lib/cloudinary/SharedFolder";
+import React from "react";
 
 /**
  * @typedef SharedOptions
- * @property {Boolean} addToSelection Show the checkboxes to add track to a private selection
- * @property {Boolean} directDownload Allow direct download on all tracks
+ * @property {Boolean} download_form Show the checkboxes to add track to a private selection
+ * @property {Boolean} download_links Allow direct download on all tracks
  * @property {Boolean} displayDownloadForm Display the download form to download a zip of the selected tracks
  */
 
 /**
  * @typedef SharedFolderContext
  * @property {Object} folders the navigable shared folders
- * @property {SharedOptions} sharedOptions
  * @property {String} current Current path
  * @property {Function} navigate Change the current folder path
  * @property {SharedFolder} selectedTracks A virtual folder containing what the user added to
@@ -31,12 +31,7 @@ export const useSharedFolderContext = () => {
 	return useContext(SharedFolderContext);
 };
 
-export const withSharedFolderContext = (Component) => ({
-	folders,
-	sharedOptions,
-	path,
-	props
-}) => {
+export const withSharedFolderContext = (Component) => ({ folders, path, props }) => {
 	const sharedRoot = path.split("/")[0];
 
 	// There is an option to add selected tracks to a virtual playlist
@@ -53,7 +48,7 @@ export const withSharedFolderContext = (Component) => ({
 
 	const refresh = () => setTimestamp(Date.now());
 	const addToSelectedTracks = (track) => {
-		selectedTracks.addMedia(track);
+		selectedTracks.addResource(track);
 		refresh();
 	};
 	const removeFromSelectedTracks = (track) => {
@@ -99,7 +94,6 @@ export const withSharedFolderContext = (Component) => ({
 		<SharedFolderContext.Provider
 			value={{
 				folders,
-				sharedOptions,
 				current,
 				selectedTracks,
 				navigate,

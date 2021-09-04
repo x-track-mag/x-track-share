@@ -23,35 +23,44 @@ const SHARE_OPTIONS_DEFAULTS = {
  * Display the mini settings form for a shared folder
  */
 const SharedSettings = ({ folderPath, settings = SHARE_OPTIONS_DEFAULTS }) => {
-	const [sharedSettings, setSharedSettings] = useState(settings);
+	const [sharedSettings, setSharedSettings] = useState(SHARE_OPTIONS_DEFAULTS);
 
 	const toggle = (code) => (evt) => {
 		sharedSettings[code] = !sharedSettings[code];
 
 		// Some options are in  fact exclusives from each other
-		if (sharedSettings.download_links || sharedSettings.download_zip) {
-			sharedSettings.download_form = false;
-		} else if (sharedSettings.download_form) {
-			sharedSettings.download_links = sharedSettings.download_zip = false;
+		if (sharedSettings[code] === true) {
+			switch (code) {
+				case "download_links":
+				case "download_zip":
+					sharedSettings.download_form = false;
+					break;
+				case "download_form":
+					sharedSettings.download_links = sharedSettings.download_zip = false;
+			}
 		}
 		setSharedSettings({
 			...sharedSettings
 		});
+		console.log("Post new settings", sharedSettings);
 		APIClient.post("/api/settings/" + folderPath, { settings: sharedSettings });
 	};
 
 	useEffect(() => {
-		console.log("Re-rendering setting choices");
-	}, [sharedSettings]);
+		setSharedSettings(settings);
+		console.log("Re-rendering setting choices", sharedSettings);
+	}, [settings]);
 
 	return (
 		<Stack>
+			<h3>PARAMETRES</h3>
 			{Object.keys(SHARE_OPTIONS).map((code, i) => (
 				<Checkbox
+					title={folderPath}
 					name={code}
 					key={code}
 					value={code}
-					isChecked={sharedSettings[code]}
+					isChecked={Boolean(sharedSettings[code])}
 					onChange={toggle(code)}
 				>
 					{SHARE_OPTIONS[code]}

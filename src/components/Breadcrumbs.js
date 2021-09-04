@@ -4,11 +4,13 @@ import { VLink } from "./base/Link";
 
 /**
  * @typedef BreadcrumbsProps
+ * @property {Any} children
  * @property {String} path the full path ('/' separated) to our current location
  * @property {String} [root=""] an optional root folder to all links
  * @property {Function} [navigate] optional alternative navigation method
  * @property {String} children Things to append to the breadcrumbs
  * @property {Boolean} [linkLeaf=false] Make the leaf itself a navigation link
+ * @property {Boolean} [linkRoot=false] Make the root itself a navigation link
  */
 
 /**

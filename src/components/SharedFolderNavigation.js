@@ -1,28 +1,27 @@
-import { useDisclosure } from "@chakra-ui/hooks";
 import { Box, Heading } from "@chakra-ui/layout";
 import { Drawer, DrawerOverlay, DrawerContent } from "@chakra-ui/modal";
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
 import { useSharedFolderContext } from "./SharedFolderContext.js";
 
 const SharedFolderNavigation = ({ path, settings = {} }) => {
 	const { navigate, timestamp, selectedTracks } = useSharedFolderContext();
-	const { download_form = false } = settings;
+	const showSelectedTracks =
+		selectedTracks.audios.length + selectedTracks.audios.length > 0;
 
 	// These variables will control the drawer to show the Download form
-	const { isOpen, onOpen, onClose } = useDisclosure();
-
-	// Display the download form which will then display the download URL
-	const download = async (evt) => {
+	const [showDownloadForm, setDrawerVisibility] = useState(false);
+	const toggleDownloadForm = (visible) => (evt) => {
 		evt.preventDefault();
-		onOpen();
+		setDrawerVisibility(visible);
+		return false;
 	};
 
 	return (
 		<Box className="navigation-header" as="header">
 			<Breadcrumbs root="/share" path={path} navigate={navigate} />
-			{download_form && selectedTracks.path !== path && (
+			{showSelectedTracks && selectedTracks.path !== path && (
 				<Heading
 					className="neon-text"
 					display="inline-block"
@@ -32,7 +31,7 @@ const SharedFolderNavigation = ({ path, settings = {} }) => {
 				>
 					<a
 						href={`/share/${selectedTracks.path}`}
-						onClick={navigate(selectedTracks.path)}
+						onClick={navigate(`/share/${selectedTracks.path}`)}
 					>
 						Ma&nbsp;Sélection&nbsp;
 						<small>
@@ -42,7 +41,7 @@ const SharedFolderNavigation = ({ path, settings = {} }) => {
 					</a>
 				</Heading>
 			)}
-			{download_form && selectedTracks.path === path && (
+			{selectedTracks.path === path && (
 				<>
 					<Heading
 						className="neon-text"
@@ -52,12 +51,12 @@ const SharedFolderNavigation = ({ path, settings = {} }) => {
 					>
 						<a
 							href={`/share/${selectedTracks.path}/download`}
-							onClick={download}
+							onClick={toggleDownloadForm(true)}
 						>
 							Télécharger
 						</a>
 					</Heading>
-					<Drawer isOpen={isOpen} onClose={onClose}>
+					<Drawer isOpen={showDownloadForm} onClose={toggleDownloadForm(false)}>
 						<DrawerOverlay />
 						<DrawerContent padding="80px 2em" bgColor="black">
 							<DownloadForm selectedTracks={selectedTracks} />

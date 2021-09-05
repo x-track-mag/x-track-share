@@ -82,6 +82,7 @@ const getResourceType = (format) => {
  * @returns
  */
 export const getRawResourceContent = async (rsc) => {
+	console.log("Loading special content for ", rsc);
 	if (rsc.filename === "settings.json") {
 		return await APIClient.get(rsc.url); // { "settings": {...} }
 	} else if (rsc.filename === "playlist.m3u") {
@@ -192,12 +193,21 @@ export const getDeepContent = async (root) => {
 			resources.map((rsc) => rsc.public_id)
 		);
 		resources = resources.map(
-			({ public_id, filename, folder, format, duration, secure_url }) => ({
+			({
+				public_id,
+				filename,
+				resource_type,
+				folder,
+				format,
+				duration,
+				secure_url
+			}) => ({
 				public_id,
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
+				type: resource_type,
 				duration,
-				url: secure_url.replace(/\.\w+$/, ""),
+				url: secure_url,
 				...extractTrackInfos(filename)
 			})
 		);
@@ -216,7 +226,14 @@ export const getDeepContent = async (root) => {
 				folders[parent]?.subfolders.push(rsc.folder);
 			}
 
-			await folder.addResource(rsc);
+			folder.addResource(rsc);
+
+			// Load special resources content (settings.json and playlist.m3u)
+			if (rsc.type === "raw") {
+				const specialContent = await getRawResourceContent(rsc);
+				merge(folder, specialContent);
+			}
+
 			return true;
 		};
 
@@ -370,8 +387,6 @@ export const deleteFolder = async (folderPath) => {
 				resource_type: "raw"
 			})
 		]);
-
-		console.log("Deletions result", deletions);
 
 		const deepFoldersList = Object.keys(folders).sort((a, b) => (a > b ? -1 : 1));
 		console.log("Deleting folders", deepFoldersList);

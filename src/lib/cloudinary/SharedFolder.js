@@ -36,16 +36,13 @@ function SharedFolder(path, options = {}) {
 }
 
 SharedFolder.prototype = {
-	addResource: async function (file) {
+	addResource: function (file) {
 		if (isAudio(file) && !this.containsAudio(file)) {
 			return this.addAudio(file);
 		} else if (isVideo(file) && !this.containsVideo(file)) {
 			return this.addVideo(file);
 		} else {
-			this.addOtherFile(file);
-			// const specialContent = await getRawResourceContent(file);
-			// merge(this, specialContent);
-			return this;
+			return this.addOtherFile(file);
 		}
 	},
 	getAllMediaIds: function () {

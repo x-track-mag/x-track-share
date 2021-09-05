@@ -2,7 +2,12 @@ import { Checkbox } from "@chakra-ui/checkbox";
 import { Stack } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import APIClient from "../lib/services/APIClient";
-import { SHARED_SETTINGS_DEFAULTS } from "../lib/services/CloudinaryClient";
+
+export const SHARED_SETTINGS_DEFAULTS = {
+	download_links: false,
+	download_zip: false,
+	download_form: false
+};
 
 const SHARE_OPTIONS = {
 	download_links: "Téléchargement Individuel",

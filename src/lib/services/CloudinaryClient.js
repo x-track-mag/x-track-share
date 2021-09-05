@@ -16,12 +16,6 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-export const SHARED_SETTINGS_DEFAULTS = {
-	download_links: false,
-	download_zip: false,
-	download_form: false
-};
-
 export const getResource = async (resource_id) => {
 	try {
 		return await cloudinary.api.resource(resource_id);
@@ -31,6 +25,9 @@ export const getResource = async (resource_id) => {
 	}
 };
 
+/**
+ * @returns {ResourceDef}
+ */
 export const getResourceInfos = ({
 	public_id,
 	filename,
@@ -45,7 +42,7 @@ export const getResourceInfos = ({
 		sharedFolder: folder.replace(/^share\//, ""), // remove the 'share/' from the folder path
 		format,
 		duration,
-		url: secure_url.replace(`.${format}`, ""), // remove the extension
+		url: secure_url, // remove the extension
 		...extractTrackInfos(filename)
 	};
 };
@@ -84,9 +81,9 @@ const getResourceType = (format) => {
  * @param {*} rsc
  * @returns
  */
-const getRawResourceContent = async (rsc) => {
+export const getRawResourceContent = async (rsc) => {
 	if (rsc.filename === "settings.json") {
-		return await APIClient.get(rsc.url);
+		return await APIClient.get(rsc.url); // { "settings": {...} }
 	} else if (rsc.filename === "playlist.m3u") {
 		const playListContent = await APIClient.getText(rsc.url);
 		return {
@@ -117,11 +114,11 @@ export const extractTrackInfos = (filename) => {
 
 	if (filename.indexOf(" - ") > 0) {
 		// We have a song title
-		const [artist, song] = filename.split(" - ");
-		console.log(`Found a song : ${artist} - ${song}`);
+		const [artist, title] = filename.split(" - ");
+		console.log(`Found a title : ${artist} - ${title}`);
 		return {
 			artist,
-			song
+			title
 		};
 	} else {
 		return { filename };

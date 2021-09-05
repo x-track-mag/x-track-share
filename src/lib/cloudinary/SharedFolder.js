@@ -1,6 +1,5 @@
-import { SHARED_SETTINGS_DEFAULTS } from "../services/CloudinaryClient.js";
+import { SHARED_SETTINGS_DEFAULTS } from "../../components/SharedSettings.js";
 import ArrayExtensions from "../utils/Arrays.js";
-import { merge } from "../utils/deepMerge.js";
 
 const audio_formats = ["wav", "mp3", "aac", "ogg"];
 const video_formats = ["mp4", "mpg", "mpeg", "avi", "mov", "mkv", "qt", "wmv", "asf"];
@@ -44,8 +43,8 @@ SharedFolder.prototype = {
 			return this.addVideo(file);
 		} else {
 			this.addOtherFile(file);
-			const specialContent = await getRawResourceContent(file);
-			merge(this, specialContent);
+			// const specialContent = await getRawResourceContent(file);
+			// merge(this, specialContent);
 			return this;
 		}
 	},

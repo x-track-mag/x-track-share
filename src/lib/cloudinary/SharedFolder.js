@@ -21,8 +21,8 @@ function isAudio(media) {
 
 /**
  * Access the media shared in a folder
- * @param {*} path
- * @param {*} options
+ * @param {String} path
+ * @param {Object} options
  */
 function SharedFolder(path, options = {}) {
 	this.path = path;
@@ -31,7 +31,7 @@ function SharedFolder(path, options = {}) {
 	this.audios = [];
 	this.videos = [];
 	this.others = [];
-	this.settings = SHARED_SETTINGS_DEFAULTS;
+	this.settings = { ...SHARED_SETTINGS_DEFAULTS };
 	Object.assign(this, options);
 }
 

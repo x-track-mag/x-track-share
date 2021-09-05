@@ -34,9 +34,9 @@ const PlaylistHeaders = {
 		accessor: "artist",
 		minWidth: "25%"
 	},
-	song: {
+	title: {
 		Header: "Titre",
-		accessor: "song",
+		accessor: "title",
 		minWidth: "25%"
 	},
 	download_form: {
@@ -60,7 +60,7 @@ const PlaylistHeaders = {
 		accessor: (row) => (
 			<SelectDownloadFormat
 				path={row.url.split("upload/")[1]}
-				filename={`${row.artist} - ${row.song}`}
+				filename={`${row.artist} - ${row.title}`}
 			/>
 		),
 		disableSortBy: true,

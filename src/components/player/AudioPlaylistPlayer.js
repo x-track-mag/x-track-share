@@ -24,7 +24,7 @@ const AudioPlaylistPlayer = ({ playerId, playlist = [], settings = {} }) => {
 	// Build the list of columns to add to the DataTable
 	const columnsToDisplay = ["play"];
 	if (download_form) {
-		columnsToDisplay.push("artist", "song", "download_form");
+		columnsToDisplay.push("artist", "title", "download_form");
 	} else {
 		columnsToDisplay.push("title");
 	}

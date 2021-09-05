@@ -5,10 +5,10 @@ import { useDialogContext } from "../base/Dialog";
 import { useEventBus } from "../EventBusProvider";
 import SvgBin from "../icons/SvgBin";
 
-const TrackEntry = ({ index, public_id, song, artist, filename, onDeleteAction }) => (
+const TrackEntry = ({ index, public_id, title, artist, filename, onDeleteAction }) => (
 	<Grid templateColumns="4ch 1fr 1fr 3ch" _hover={{ bgColor: "gray.700" }}>
 		<GridItem>#{index}</GridItem>
-		{song && <GridItem>{song}</GridItem>}
+		{title && <GridItem>{title}</GridItem>}
 		{artist && <GridItem>{artist}</GridItem>}
 		{filename && <GridItem colSpan={2}>{filename}</GridItem>}
 		<GridItem>
@@ -28,10 +28,10 @@ const MiniPlaylist = ({ tracks = [] }) => {
 	}, [tracks]);
 
 	// Define the actions associated with each button
-	const deleteTrack = ({ filename, song, public_id }) => async (evt) => {
+	const deleteTrack = ({ filename, title, public_id }) => async (evt) => {
 		const confirmDeletion = await confirm({
 			title: "TRACK SUPPRESSION",
-			message: `Supprimer '${song || filename}' du partage ?`
+			message: `Supprimer '${title || filename}' du partage ?`
 		});
 		if (confirmDeletion) {
 			// Remove the resource  reloading the page
@@ -40,7 +40,7 @@ const MiniPlaylist = ({ tracks = [] }) => {
 			if (!success) {
 				alert(
 					`La suppression du partage '${
-						song || filename
+						title || filename
 					}' n'a pu être effective. Il faut le supprimer totalement dans Cloudinary`
 				);
 			}

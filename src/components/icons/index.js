@@ -6,6 +6,7 @@ export { default as Triangle } from "./SvgTriangle.js";
 export { default as UploadIcon } from "./SvgUpload.js";
 export { default as XtrackLogo } from "./SvgLogo.js";
 export { default as PlusIcon } from "./SvgPlus.js";
+export { default as LinkIcon } from "./SvgLink.js";
 
 const Icon = ({ name, ...props }) => {
 	switch (name) {
@@ -23,6 +24,8 @@ const Icon = ({ name, ...props }) => {
 			return <UploadIcon {...props} />;
 		case "PlusIcon":
 			return <PlusIcon {...props} />;
+		case "LinkIcon":
+			return <LinkIcon {...props} />;
 
 		default:
 			return null;

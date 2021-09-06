@@ -3,6 +3,7 @@ import Icon, {
 	UploadIcon,
 	PlusIcon,
 	Bin,
+	LinkIcon,
 	Triangle,
 	GithubLogo,
 	GoogleLogo,
@@ -25,6 +26,7 @@ export default {
 				type: "select",
 				options: [
 					"Bin",
+					"LinkIcon",
 					"Logo",
 					"Triangle",
 					"Plus",
@@ -46,6 +48,7 @@ export const DisplayGithubLogoIcon = ({ ...args }) => <GithubLogo {...args} />;
 export const DisplayGoogleLogoIcon = ({ ...args }) => <GoogleLogo {...args} />;
 export const DisplayMicrosoftLogoIcon = ({ ...args }) => <MicrosoftLogo {...args} />;
 export const DisplayBinIcon = ({ ...args }) => <Bin {...args} />;
+export const DisplayLinkIcon = ({ ...args }) => <LinkIcon {...args} />;
 export const DisplayUploadIcon = ({ ...args }) => <UploadIcon {...args} />;
 export const DisplayPlusIcon = ({ ...args }) => <PlusIcon {...args} />;
 

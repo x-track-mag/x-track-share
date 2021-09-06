@@ -5,14 +5,13 @@ import CloudinaryClient from "../../../lib/services/CloudinaryClient";
 import fs from "fs-extra";
 
 /**
- * Convert all parts of the path in lowercase
+ * Convert all parts of the path in lowercase and URL-safe characters
  * @param {String} relativePath
- * @returns
+ * @returns {String}
  */
 const normalizePath = (relativePath) => {
 	const parts = relativePath.split("/");
-	const fileName = parts.pop();
-	return parts.map((part) => part.slugify()).join("/") + "/" + fileName;
+	return parts.map((part) => part.slugify()).join("/") + "/";
 };
 
 /**
@@ -34,12 +33,13 @@ export default async (req, resp) => {
 
 		const uploadSuccess = new Promise((resolve, reject) => {
 			form.on("file", async (name, file) => {
+				const fileName = file.name.split("/").pop(); // Firefox send the full path instead of the file name
 				console.log(
-					`API Upload received file ${file.name} (${file.size}bytes) to store in ${sharedFolderPath} and saved it ${file.path}`
+					`API Upload received file ${fileName} (${file.size}bytes) to store in ${sharedFolderPath} and saved it ${file.path}`
 				);
 				try {
 					const uploaded = await CloudinaryClient.uploadToPath(
-						sharedFolderPath + "/" + normalizePath(file.name),
+						normalizePath(sharedFolderPath) + fileName,
 						file.path
 					);
 					resolve(uploaded);

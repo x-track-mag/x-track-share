@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Center, Container } from "@chakra-ui/react";
 import prettyBytes from "pretty-bytes";
@@ -21,12 +21,13 @@ import FileUploadProgress from "./FileUploadProgress";
 const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 	let formData = new FormData();
 	formData.append("file", file);
-	console.log(`Uploading ${file.name}`);
+	const folderPath = file.path.substr(1, file.path.lastIndexOf("/"));
+	console.log(`Uploading ${file.name} to ${folderPath}`);
 	file.progress = undefined; // We will use the undefined state when upload actually begins
 	updateProgress(file, i);
 
 	try {
-		await fetch(uploadUrl, {
+		await fetch(`${uploadUrl}${folderPath}`, {
 			method: "POST",
 			body: formData
 		});

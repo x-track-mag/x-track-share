@@ -24,11 +24,6 @@ const PlaylistHeaders = {
 			/>
 		)
 	},
-	title: {
-		Header: "Titre",
-		accessor: (row) => row.title || row.filename,
-		minWidth: 50
-	},
 	artist: {
 		Header: "Artiste",
 		accessor: "artist",
@@ -36,8 +31,8 @@ const PlaylistHeaders = {
 	},
 	title: {
 		Header: "Titre",
-		accessor: "title",
-		minWidth: "25%"
+		accessor: (row) => row.title || row.filename,
+		minWidth: 50
 	},
 	download_form: {
 		Header: "Ajouter à ma sélection",

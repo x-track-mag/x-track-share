@@ -12,15 +12,19 @@ export const convertToStartCase = startCase;
  * @returns {Array}
  */
 export const convertOptions = (o) => {
-	if (typeof o === "object") {
+	if (Array.isArray(o)) {
+		console.log("Convert options Array", o);
+		return o.map((option) =>
+			option.code ? option : { code: option, label: startCase(option) }
+		);
+	} else if (typeof o === "object") {
+		console.log("Convert options Object", o);
 		return Object.keys(o).reduce((options, key) => {
 			options.push({ code: key, label: o[key] });
 			return options;
 		}, []);
-	} else if (Array.isArray(o)) {
-		return o.map((option) =>
-			option.code ? option : { code: option, label: startCase(option) }
-		);
+	} else {
+		return o;
 	}
 };
 

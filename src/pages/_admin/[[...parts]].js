@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
-import { Bin, PlusIcon } from "../../components/icons";
+import SvgBin from "../../components/icons/SvgBin.js";
+import SvgPlus from "../../components/icons/SvgPlus";
+import SvgLink from "../../components/icons/SvgLink.js";
+
 import MiniPlayer from "../../components/player/MiniPlayer.js";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import SharedSettings from "../../components/SharedSettings.js";
@@ -26,7 +29,14 @@ export const getServerSideProps = async ({ params }) => {
 	};
 };
 
-const deleteIcon = (action) => <Bin size="1rem" onClick={action} />;
+const linkIcon = (path) => (props) => (
+	<a href={`/share/${path}`} target="_blank" onClick={(evt) => evt.stopPropagation()}>
+		<SvgLink size="1.5rem" {...props} />
+	</a>
+);
+const deleteIcon = (action) => (props) => (
+	<SvgBin size="1.5rem" onClick={action} {...props} />
+);
 
 /**
  * Display the admin view of a shared folder
@@ -74,14 +84,14 @@ const AdminPage = ({ path, subfolders = [], tracks = [], settings = {} }) => {
 				p={5}
 			>
 				<Folder key="upload" path={uploadPath}>
-					<PlusIcon />
+					<SvgPlus />
 				</Folder>
 				{vFolders &&
 					vFolders.map(({ name, path }) => (
 						<Folder
 							key={name}
 							path={`/_admin/${path}`}
-							icons={[deleteIcon(deleteFolder(path))]}
+							icons={[linkIcon(path), deleteIcon(deleteFolder(path))]}
 						/>
 					))}
 			</Grid>

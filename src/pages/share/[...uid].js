@@ -47,7 +47,7 @@ const SharedFolderPage = () => {
 	const { path, subfolders, audios, videos, settings } = folder;
 
 	useEffect(() => {
-		console.log(`Exploring ${current}`, folder);
+		console.log(`Exploring ${current}`, folder, settings);
 	}, [current]);
 
 	return (

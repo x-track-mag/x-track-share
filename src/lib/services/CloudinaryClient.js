@@ -144,7 +144,7 @@ export const getFlatContent = async (folderPath) => {
 		const { settings, tracks } = await resources.reduce(
 			async (folderPromise, file) => {
 				const folder = await folderPromise;
-				const rscType = getResourceType(file);
+				const rscType = file.resource_type;
 
 				if (rscType === "video") {
 					folder.tracks.push(getResourceInfos(file));

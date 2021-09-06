@@ -18,7 +18,7 @@ const Email = ({ validation = {}, errorMessage = "Email invalide", ...props }) =
 			message: errorMessage
 		}
 	};
-	return <Text validation={emailValidation} autoComplete={true} {...props} />;
+	return <Text validation={emailValidation} autoComplete="on" {...props} />;
 };
 
 export default Email;

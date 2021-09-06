@@ -16,13 +16,11 @@ const SvgLink = ({ color = "currentColor", size = "18px", ...props }) => (
 			style={{
 				fill: "none",
 				stroke: color,
-				strokeWidth: 2.5,
-				strokeLineJoin: "round",
-				strokeMitterLimit: 4
+				strokeWidth: 2.5
 			}}
 		>
-			<rect x="2" y="12" ry="4" height="8" width="16" />
-			<rect x="14.5" y="12" ry="4" height="8" width="16" />
+			<rect x="2" y="12" height="8" width="16" ry="5" />
+			<rect x="14.5" y="12" height="8" width="16" ry="5" />
 		</g>
 	</Icon>
 );

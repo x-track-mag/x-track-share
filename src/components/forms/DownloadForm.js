@@ -31,8 +31,18 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 						Partagez quelques informations sur votre projet (si vous le
 						désirez), choisissez le format adéquat et cliquez sur 'Générer'.
 					</Info>
-					<Text name="fullName" label="Votre nom" required={true} />
-					<Email name="email" label="Votre email" required={true} />
+					<Text
+						name="fullName"
+						label="Votre nom"
+						required={true}
+						autoComplete="name"
+					/>
+					<Email
+						name="email"
+						label="Votre email"
+						required={true}
+						autoComplete="email"
+					/>
 					<Text name="message" label="Votre projet" rows={5} />
 					<SelectBox
 						name="format"

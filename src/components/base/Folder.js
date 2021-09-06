@@ -26,7 +26,9 @@ const Folder = ({ path, children, navigate, icons = [] }) => {
 								bottom={1}
 								right={2}
 							>
-								{icons}
+								{icons.map((Icon, i) => (
+									<Icon key={`icon-${i}`} pl={2} />
+								))}
 							</Box>
 						</Box>
 					)}

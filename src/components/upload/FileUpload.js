@@ -6,6 +6,7 @@ import { UploadIcon } from "../icons";
 import { Info } from "../base/Typography";
 import pLimit from "@lib/utils/p-limit.js";
 import FileUploadProgress from "./FileUploadProgress";
+import Button from "../forms/inputs/Button";
 
 /**
  * @typedef FileUploadProps
@@ -33,16 +34,17 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 		});
 		file.progress = 100;
 		updateProgress(file, i);
+		return true; //
 	} catch (err) {
 		file.error = err.message;
 		updateProgress(file, i);
+		return false;
 	}
-	return true; //
 };
 
 const FileUploadReport = ({ files }) => {
 	return (
-		<Box className="upload-report">
+		<Box className="upload-report" pl={8} pr={8}>
 			{files.map((file, i) => (
 				<FileUploadProgress
 					key={`file-${i}`}
@@ -69,19 +71,33 @@ const FileUpload = ({
 	callback = noop
 }) => {
 	const [files, setFiles] = useState([]);
+	const [pending, setPending] = useState(true);
 	const limit = pLimit(concurrency);
 
 	// Call this to re-display the list of uploaded files
 	const updateProgress = ({ name, size, progress, error }, i) => {
 		const f = (files[i] = { name, size, progress, error }); // new instance
 		setFiles([...files]); // duplicate the array of files to re-render
-		console.log(`File ${f.name} (#${i}) has been updated :`, f);
+		if (error || progress === 100) {
+			const remaining = files.reduce(
+				(remaining, file) =>
+					file.progress === 100 || file.error ? remaining - 1 : remaining,
+				files.length
+			);
+
+			console.log(
+				`File progress ${name} updated (${
+					error || progress
+				}). Pending : ${remaining}`
+			);
+			setPending(remaining);
+		}
 	};
 
 	// React Drop zone
-	const onDrop = useCallback((acceptedFiles) => {
+	const onDrop = useCallback(async (acceptedFiles) => {
 		// Map the files to display only upload tracking infos
-		console.log("Received some files", acceptedFiles);
+		console.log(`Received #${acceptedFiles.length} files`, acceptedFiles);
 
 		setFiles(
 			acceptedFiles.map((f) => ({
@@ -91,16 +107,13 @@ const FileUpload = ({
 			}))
 		);
 
-		Promise.allSettled(
+		setPending(acceptedFiles.length);
+
+		await Promise.allSettled(
 			acceptedFiles.map((f, i) => {
-				limit(sendFile(upload_url, updateProgress), f, i);
+				limit(sendFile(upload_url, updateProgress), f, i, pending);
 			})
-		)
-			.then((uploadStatus) => {
-				console.log("All files have been uploaded");
-				// callback(status);
-			})
-			.catch(console.error);
+		);
 	}, []);
 
 	// @see
@@ -136,6 +149,13 @@ const FileUpload = ({
 				</Box>
 			</Center>
 			<FileUploadReport files={files} />
+			<Center>
+				{pending === 0 && (
+					<Button onClick={callback} mt={4}>
+						RETOUR
+					</Button>
+				)}
+			</Center>
 		</Container>
 	);
 };

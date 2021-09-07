@@ -78,6 +78,10 @@ const FileUpload = ({
 	const updateProgress = ({ name, size, progress, error }, i) => {
 		const f = (files[i] = { name, size, progress, error }); // new instance
 		setFiles([...files]); // duplicate the array of files to re-render
+
+		// Update the remaining files count.
+		// NOTE : We can not use directly the `pending` variable here because it's in a closure
+		// And doesn't reflect its updated state
 		if (error || progress === 100) {
 			const remaining = files.reduce(
 				(remaining, file) =>
@@ -85,11 +89,6 @@ const FileUpload = ({
 				files.length
 			);
 
-			console.log(
-				`File progress ${name} updated (${
-					error || progress
-				}). Pending : ${remaining}`
-			);
 			setPending(remaining);
 		}
 	};

@@ -23,33 +23,31 @@ const SHARE_OPTIONS = {
 /**
  * Display the mini settings form for a shared folder
  */
-const SharedSettings = ({ folderPath, settings = SHARED_SETTINGS_DEFAULTS }) => {
-	const [sharedSettings, setSharedSettings] = useState(SHARED_SETTINGS_DEFAULTS);
-
+const SharedSettings = ({
+	folderPath,
+	settings = SHARED_SETTINGS_DEFAULTS,
+	updateSettings
+}) => {
 	const toggle = (code) => (evt) => {
-		sharedSettings[code] = !sharedSettings[code];
+		settings[code] = !settings[code];
 
 		// Some options are in fact exclusives from each other
-		if (sharedSettings[code] === true) {
+		if (settings[code] === true) {
 			switch (code) {
 				case "download_links":
 				case "download_zip":
-					sharedSettings.download_form = false;
+					settings.download_form = false;
 					break;
 				case "download_form":
-					sharedSettings.download_links = sharedSettings.download_zip = false;
+					settings.download_links = settings.download_zip = false;
 			}
 		}
-		setSharedSettings({
-			...sharedSettings // create a new instance to re-render
-		});
-		console.log("Post new settings", sharedSettings);
-		APIClient.post("/api/settings/" + folderPath, { settings: sharedSettings });
+
+		updateSettings(settings);
 	};
 
 	useEffect(() => {
-		setSharedSettings(settings);
-		console.log("Re-rendering setting choices", sharedSettings);
+		console.log("Re-rendering setting choices", settings);
 	}, [settings]);
 
 	return (
@@ -60,7 +58,7 @@ const SharedSettings = ({ folderPath, settings = SHARED_SETTINGS_DEFAULTS }) => 
 					name={code}
 					key={code}
 					value={code}
-					isChecked={Boolean(sharedSettings[code])}
+					isChecked={Boolean(settings[code])}
 					onChange={toggle(code)}
 				>
 					{SHARE_OPTIONS[code]}

@@ -38,7 +38,7 @@ export const getResourceInfos = ({
 }) => {
 	return {
 		public_id,
-		folder,
+		filename: filename + "." + format,
 		sharedFolder: folder.replace(/^share\//, ""), // remove the 'share/' from the folder path
 		format,
 		duration,
@@ -82,7 +82,6 @@ const getResourceType = (format) => {
  * @returns
  */
 export const getRawResourceContent = async (rsc) => {
-	console.log("Loading special content for ", rsc);
 	if (rsc.filename === "settings.json") {
 		return await APIClient.get(rsc.url); // { "settings": {...} }
 	} else if (rsc.filename === "playlist.m3u") {
@@ -122,7 +121,7 @@ export const extractTrackInfos = (filename) => {
 			title
 		};
 	} else {
-		return { filename };
+		return { title: filename };
 	}
 };
 
@@ -150,6 +149,7 @@ export const getFlatContent = async (folderPath) => {
 					folder.tracks.push(getResourceInfos(file));
 				} else if (rscType === "raw") {
 					const specialContent = await getRawResourceContent(file);
+					console.log("Merged ", specialContent, " into ", folder.path);
 					merge(folder, specialContent);
 				}
 				return folder;
@@ -203,6 +203,7 @@ export const getDeepContent = async (root) => {
 				secure_url
 			}) => ({
 				public_id,
+				filename: resource_type !== "raw" ? filename + "." + format : filename, // raw resources have preserved their extension
 				folder: folder.substr(6), // remove the 'share/' from the folder path
 				format,
 				type: resource_type,

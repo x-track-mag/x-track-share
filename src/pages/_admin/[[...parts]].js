@@ -11,6 +11,7 @@ import MiniPlayer from "../../components/player/MiniPlayer.js";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import SharedSettings from "../../components/SharedSettings.js";
 import APIClient from "../../lib/services/APIClient.js";
+import ArrayExtensions from "../../lib/utils/Arrays.js";
 
 /**
  * Retrieves the subfolders and playlist linked to this shared folder
@@ -22,7 +23,7 @@ export const getServerSideProps = async ({ params }) => {
 	const folderPath = parts.join("/");
 
 	const props = await APIClient.get(`/api/folders/${folderPath}`);
-	console.log(`getServerSideProps(${folderPath}) returned`, props);
+	console.log(`getServerSideProps(${folderPath}) :`, props);
 
 	return {
 		props
@@ -41,29 +42,31 @@ const deleteIcon = (action) => (props) => (
 /**
  * Display the admin view of a shared folder
  */
-const AdminPage = ({
-	path,
-	subfolders = [],
-	tracks = [],
-	settings = SHARED_SETTINGS_DEFAULTS
-}) => {
+const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAULTS }) => {
 	const uploadPath = `/_admin/upload/${path}`;
-	const [vFolders, setVFolders] = useState();
-	const [sharedSettings, setSharedSettings] = useState();
+	// const [vFolders, setVFolders] = useState();
+	const [sharedSettings, setSharedSettings] = useState(settings);
+	const [orderedTracks, setOrderedTracks] = useState();
+
 	const { confirm } = useDialogContext();
+	// const orderedTracks = tracks.reorderFrom(sharedSettings.playlist, "filename");
 
 	useEffect(() => {
 		// Replace the real subfolder list by the virtual one
-		setVFolders(subfolders);
-		setSharedSettings(settings);
-	}, [subfolders]);
+		const orderedTracks = tracks.reorderFrom(settings.playlist, "filename");
+		console.log("Rendering page with tracks", orderedTracks);
+		setOrderedTracks(orderedTracks);
+		// setSharedSettings(settings);
+		// setVFolders(subfolders);
+	}, [path]);
 
 	const updateSettings = (newSettings) => {
 		setSharedSettings({ ...newSettings });
 		APIClient.post("/api/settings/" + path, { settings: newSettings });
 	};
 	const updatePlaylist = (playlist) => {
-		updateSettings({ ...settings, playlist });
+		setOrderedTracks(orderedTracks.reorderFrom(playlist, "filename"));
+		updateSettings({ ...sharedSettings, playlist });
 	};
 
 	const deleteFolder = (folderPath) => async (evt) => {
@@ -101,25 +104,30 @@ const AdminPage = ({
 				<Folder key="upload" path={uploadPath}>
 					<SvgPlus />
 				</Folder>
-				{vFolders &&
-					vFolders.map(({ name, path }) => (
-						<Folder
-							key={name}
-							path={`/_admin/${path}`}
-							icons={[linkIcon(path), deleteIcon(deleteFolder(path))]}
-						/>
-					))}
-			</Grid>
-			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
-				<MiniPlaylist tracks={tracks} updatePlaylist={updatePlaylist} />
-				<Center>
-					<SharedSettings
-						folderPath={path}
-						settings={sharedSettings}
-						updateSettings={updateSettings}
+				{subfolders.map(({ name, path }) => (
+					<Folder
+						key={name}
+						path={`/_admin/${path}`}
+						icons={[linkIcon(path), deleteIcon(deleteFolder(path))]}
 					/>
-				</Center>
+				))}
 			</Grid>
+			{orderedTracks && orderedTracks.length > 0 && (
+				<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
+					<MiniPlaylist
+						folderPath={path}
+						tracks={orderedTracks}
+						updatePlaylist={updatePlaylist}
+					/>
+					<Center>
+						<SharedSettings
+							folderPath={path}
+							settings={settings}
+							updateSettings={updateSettings}
+						/>
+					</Center>
+				</Grid>
+			)}
 		</Stack>
 	);
 };

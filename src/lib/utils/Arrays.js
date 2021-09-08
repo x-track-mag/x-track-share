@@ -42,6 +42,23 @@ const ArrayExtensions = {
 			arr.splice(endIndex, 0, item);
 		}
 		return arr;
+	},
+	/**
+	 * Re-order this array following the order given by the list and the key
+	 *
+	 * @param {Array<String>} list
+	 * @param {String} key
+	 * @returns {Array}
+	 */
+	reorderFrom: function (list, key) {
+		const arr = this;
+		if (!Array.isArray(list)) {
+			return arr; // We can't do this
+		}
+		const reordered = Array.from(list)
+			.map((source) => arr.find((elt) => elt[key] === source))
+			.filter((o) => Boolean(o));
+		return reordered;
 	}
 };
 

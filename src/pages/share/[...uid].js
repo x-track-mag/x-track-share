@@ -9,6 +9,7 @@ import {
 } from "../../components/SharedFolderContext.js";
 import SharedFolderNavigation from "../../components/SharedFolderNavigation.js";
 import APIClient from "../../lib/services/APIClient.js";
+import ArrayExtensions from "../../lib/utils/Arrays.js"; // This will effectively extends Array.prototype
 
 /**
  * Retrieve the folder content /share/${uid}
@@ -71,7 +72,7 @@ const SharedFolderPage = () => {
 				<AudioPlaylistPlayer
 					type="audio"
 					playerId="audio-player"
-					playlist={audios}
+					playlist={audios.reorderFrom(settings.playlist, "filename")}
 					settings={settings}
 					timestamp={timestamp}
 				/>

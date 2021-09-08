@@ -41,15 +41,30 @@ const deleteIcon = (action) => (props) => (
 /**
  * Display the admin view of a shared folder
  */
-const AdminPage = ({ path, subfolders = [], tracks = [], settings = {} }) => {
+const AdminPage = ({
+	path,
+	subfolders = [],
+	tracks = [],
+	settings = SHARED_SETTINGS_DEFAULTS
+}) => {
 	const uploadPath = `/_admin/upload/${path}`;
 	const [vFolders, setVFolders] = useState();
+	const [sharedSettings, setSharedSettings] = useState();
 	const { confirm } = useDialogContext();
 
 	useEffect(() => {
 		// Replace the real subfolder list by the virtual one
 		setVFolders(subfolders);
+		setSharedSettings(settings);
 	}, [subfolders]);
+
+	const updateSettings = (newSettings) => {
+		setSharedSettings({ ...newSettings });
+		APIClient.post("/api/settings/" + path, { settings: newSettings });
+	};
+	const updatePlaylist = (playlist) => {
+		updateSettings({ ...settings, playlist });
+	};
 
 	const deleteFolder = (folderPath) => async (evt) => {
 		evt.stopPropagation();
@@ -96,9 +111,13 @@ const AdminPage = ({ path, subfolders = [], tracks = [], settings = {} }) => {
 					))}
 			</Grid>
 			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
-				<MiniPlaylist tracks={tracks} />
+				<MiniPlaylist tracks={tracks} updatePlaylist={updatePlaylist} />
 				<Center>
-					<SharedSettings settings={settings} folderPath={path} />
+					<SharedSettings
+						folderPath={path}
+						settings={sharedSettings}
+						updateSettings={updateSettings}
+					/>
 				</Center>
 			</Grid>
 		</Stack>

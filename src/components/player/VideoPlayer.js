@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { AspectRatio } from "@chakra-ui/layout";
 import { useEffect } from "react";
 import { useEventBus } from "../EventBusProvider";
 import { usePlayerState } from "./PlayerStateProvider";
@@ -13,9 +13,6 @@ import "cloudinary-video-player/dist/cld-video-player.light.min.css";
  */
 const createPlayer = (id, playlist) => {
 	try {
-		console.log(
-			`Creating player for ${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}`
-		);
 		const cloudinary = new Cloudinary({
 			cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
 			secure: true
@@ -46,7 +43,8 @@ const createPlayer = (id, playlist) => {
 		});
 
 		if (playlist && playlist.length) {
-			player.playlist(playlist);
+			// @see https://cloudinary.com/documentation/video_player_api_reference#playlist
+			player.playlist(playlist.map((rsc) => rsc.url)); // or public_id (which is best ?)
 		}
 
 		return (window.player = player); // Make the player available globally
@@ -115,14 +113,15 @@ const VideoPlayer = ({ id, playlist, withPlaylistEvents = false }) => {
 	}, [id]);
 
 	return (
-		<Box
+		<AspectRatio
 			className="video-container"
-			width="100%"
+			ratio={16 / 9}
+			maxH="50vh"
 			position="relative"
 			overflow="hidden"
 		>
 			<video controls className="video-player" id={id} height="100%" width="100%" />
-		</Box>
+		</AspectRatio>
 	);
 };
 

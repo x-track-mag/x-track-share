@@ -64,9 +64,12 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 		setSharedSettings({ ...newSettings });
 		APIClient.post("/api/settings/" + path, { settings: newSettings });
 	};
-	const updatePlaylist = (playlist) => {
-		setOrderedTracks(orderedTracks.reorderFrom(playlist, "filename"));
-		updateSettings({ ...sharedSettings, playlist });
+	const updatePlaylist = (updatedTracks) => {
+		setOrderedTracks(updatedTracks);
+		updateSettings({
+			...sharedSettings,
+			playlist: updatedTracks.map((track) => track.filename)
+		});
 	};
 
 	const deleteFolder = (folderPath) => async (evt) => {

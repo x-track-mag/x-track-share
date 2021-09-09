@@ -59,7 +59,7 @@ Il faut le supprimer totalement dans Cloudinary`
 		eb.emit("play:track", track);
 	};
 	const reorderTracks = (tracks) => {
-		updatePlaylist(tracks.map((track) => track.filename));
+		updatePlaylist(tracks);
 		setOrderedTracks(tracks);
 	};
 

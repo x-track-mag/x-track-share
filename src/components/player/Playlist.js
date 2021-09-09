@@ -52,12 +52,7 @@ const PlaylistHeaders = {
 	},
 	download_links: {
 		Header: "Télécharger",
-		accessor: (row) => (
-			<SelectDownloadFormat
-				path={row.url.split("upload/")[1]}
-				filename={`${row.artist} - ${row.title}`}
-			/>
-		),
+		accessor: (file) => <SelectDownloadFormat file={file} />,
 		disableSortBy: true,
 		maxWidth: "10rem",
 		isNumeric: true

@@ -6,16 +6,20 @@ import { useState } from "react";
 const _MUSIC_FORMAT_OPTIONS = ["wav", "mp3", "m4a", "ogg"];
 
 const SelectDownloadFormat = ({
-	path,
-	filename,
+	file,
 	formatsOptions = _MUSIC_FORMAT_OPTIONS,
 	...props
 }) => {
 	const [format, setFormat] = useState(formatsOptions[0]);
+	// Create the download URL (without the format)
+	const rawPath = "/download/" + file.url.split("upload/")[1].replace(/\.\w+$/i, "");
+	const niceFileName = file.artist
+		? `${file.artist} - ${file.title}.${format}`
+		: file.filename.replace(/\.\w+$/i, format);
 
 	return (
 		<Box onClick={(evt) => evt.stopPropagation()} w="100%" h="100%">
-			<Link href={`/download/${path}.${format}`} download={`${filename}.${format}`}>
+			<Link href={`${rawPath}.${format}`} download={niceFileName}>
 				Télécharger
 			</Link>
 			&nbsp;

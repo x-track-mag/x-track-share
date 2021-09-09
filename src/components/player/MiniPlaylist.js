@@ -1,10 +1,14 @@
 import { Box, Grid, GridItem, Stack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 import APIClient from "../../lib/services/APIClient";
 import { useDialogContext } from "../base/Dialog";
 import { useEventBus } from "../EventBusProvider";
 import SvgBin from "../icons/SvgBin";
+
+const compareTracklists = (l1, l2) =>
+	JSON.stringify(l1.map((t) => t.filename)) ===
+	JSON.stringify(l2.map((t) => t.filename));
 
 const TrackEntry = ({ index, title, artist, onDeleteAction }) => (
 	<Grid
@@ -28,14 +32,15 @@ const TrackEntry = ({ index, title, artist, onDeleteAction }) => (
 	</Grid>
 );
 
-const MiniPlaylist = ({ path, tracks = [], updatePlaylist }) => {
+/**
+ * Render a simple, editable list of tracks (sort, delete)
+ * @param {MiniPlaylistProps} props
+ * @returns
+ */
+const MiniPlaylist = ({ tracks = [], updatePlaylist }) => {
 	const { confirm } = useDialogContext();
 	const eb = useEventBus();
 	const [orderedTracks, setOrderedTracks] = useState(tracks);
-
-	useEffect(() => {
-		console.log(`MiniPlaylist rendering the tracks for ${path}`, tracks);
-	}, [path, tracks]);
 
 	// Define the actions associated with each button
 	const deleteTrack = ({ title, public_id }) => async (evt) => {
@@ -59,7 +64,9 @@ Il faut le supprimer totalement dans Cloudinary`
 		eb.emit("play:track", track);
 	};
 	const reorderTracks = (tracks) => {
-		updatePlaylist(tracks);
+		if (compareTracklists(orderedTracks, tracks) === false) {
+			updatePlaylist(tracks);
+		}
 		setOrderedTracks(tracks);
 	};
 

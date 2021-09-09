@@ -191,7 +191,7 @@ export const getDeepContent = async (root) => {
 	try {
 		let { resources } = await cloudinary.search
 			.expression(`folder=share/${root}/*`)
-			.sort_by("public_id", "desc")
+			.sort_by("public_id", "asc")
 			.max_results(500)
 			.execute();
 

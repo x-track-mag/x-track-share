@@ -44,20 +44,15 @@ const deleteIcon = (action) => (props) => (
  */
 const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAULTS }) => {
 	const uploadPath = `/_admin/upload/${path}`;
-	// const [vFolders, setVFolders] = useState();
 	const [sharedSettings, setSharedSettings] = useState(settings);
 	const [orderedTracks, setOrderedTracks] = useState();
 
 	const { confirm } = useDialogContext();
-	// const orderedTracks = tracks.reorderFrom(sharedSettings.playlist, "filename");
 
 	useEffect(() => {
-		// Replace the real subfolder list by the virtual one
+		// Still don't know why i need to do that in a hook to force the tracks to be re-rendered on each pages..
 		const orderedTracks = tracks.reorderFrom(settings.playlist, "filename");
-		console.log("Rendering page with tracks", orderedTracks);
 		setOrderedTracks(orderedTracks);
-		// setSharedSettings(settings);
-		// setVFolders(subfolders);
 	}, [path]);
 
 	const updateSettings = (newSettings) => {
@@ -65,7 +60,6 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 		APIClient.post("/api/settings/" + path, { settings: newSettings });
 	};
 	const updatePlaylist = (updatedTracks) => {
-		setOrderedTracks(updatedTracks);
 		updateSettings({
 			...sharedSettings,
 			playlist: updatedTracks.map((track) => track.filename)

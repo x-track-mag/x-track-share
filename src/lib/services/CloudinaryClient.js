@@ -83,8 +83,10 @@ const getResourceType = (format) => {
  */
 export const getRawResourceContent = async (rsc) => {
 	if (rsc.filename === "settings.json") {
+		console.log("Reading settings.json");
 		return await APIClient.get(rsc.url); // { "settings": {...} }
 	} else if (rsc.filename === "playlist.m3u") {
+		console.log("Reading playlist.m3u");
 		const playListContent = await APIClient.getText(rsc.url);
 		return {
 			settings: {
@@ -134,6 +136,7 @@ export const getFlatContent = async (folderPath) => {
 		const [{ resources }, { folders }] = await Promise.all([
 			cloudinary.search
 				.expression(`folder=${folderPath}`)
+				.sort_by("public_id", "desc") // To ensure that we read settings.json BEFORE playlist.m3u
 				.max_results(500)
 				.execute(),
 			cloudinary.api.sub_folders(folderPath)
@@ -148,9 +151,14 @@ export const getFlatContent = async (folderPath) => {
 				if (rscType === "video") {
 					folder.tracks.push(getResourceInfos(file));
 				} else if (rscType === "raw") {
-					const specialContent = await getRawResourceContent(file);
-					console.log("Merged ", specialContent, " into ", folder.path);
-					merge(folder, specialContent);
+					const { settings } = await getRawResourceContent(file);
+					if (file.filename === "settings.json") {
+						console.log("Merging settings.json ");
+						merge(folder, { settings });
+					} else if (!folder.settings) {
+						console.log("Merging playlist.m3u");
+						merge(folder, { settings });
+					}
 				}
 				return folder;
 			},

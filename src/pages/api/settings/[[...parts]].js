@@ -21,6 +21,7 @@ export default async (req, resp) => {
 			case "POST":
 				// Parse the settings passed inside the JSON body
 				const { settings } = req.body;
+				console.log(`Updating settings for ${sharedFolderPath}`, settings);
 
 				const uploadSuccess = await CloudinaryClient.uploadData(
 					sharedFolderPath + "/settings.json",

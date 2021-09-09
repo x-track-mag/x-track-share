@@ -57,7 +57,7 @@ const ArrayExtensions = {
 		}
 		const reordered = Array.from(list)
 			.map((source) => arr.find((elt) => elt[key] === source))
-			.filter((o) => Boolean(o));
+			.filter((o) => Boolean(o)); // remove undefined values
 		return reordered;
 	}
 };

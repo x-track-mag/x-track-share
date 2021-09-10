@@ -86,4 +86,8 @@ EP.emit = function (name, var_args) {
 };
 EP.send = EP.emit;
 
+EP.clearEvents = function () {
+	this.__events = {};
+};
+
 export default EventEmitter;

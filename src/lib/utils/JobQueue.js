@@ -1,5 +1,18 @@
 import EventEmitter from "./EventEmitter";
 
+/**
+ * @typedef JobQueue
+ * @property {Function} addBatch
+ * @property {Function} on
+ * @property {Function} clear
+ */
+
+/**
+ * JobQueue instanciation
+ * @typedef {QueueProps} props
+ * @returns {JobQueue}
+ */
+
 function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 	const pending = [];
 	const active = new Set();

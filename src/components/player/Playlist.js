@@ -31,7 +31,7 @@ const PlaylistHeaders = {
 	},
 	title: {
 		Header: "Titre",
-		accessor: (row) => row.title || row.filename,
+		accessor: "title",
 		minWidth: 50
 	},
 	download_form: {

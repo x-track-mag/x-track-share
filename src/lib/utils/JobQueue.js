@@ -16,8 +16,10 @@ import EventEmitter from "./EventEmitter";
 function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 	const pending = [];
 	const active = new Set();
-	const running = false;
-	const { emit, off, on, clearEvents } = new EventEmitter();
+	let running = false;
+	const jobEvents = new EventEmitter();
+	const emit = jobEvents.emit.bind(jobEvents);
+	const on = jobEvents.on.bind(jobEvents);
 
 	const consume = async () => {
 		if (pending.length === 0) {
@@ -33,53 +35,60 @@ function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 			active.add(current);
 			running = true;
 
-			worker(current.payload)
+			console.log("Staring Job", current);
+			worker(current.payload, current.batchIndex)
 				.then((result) => {
 					current.result = result;
 					emit("success", current);
 					active.delete(current);
-					consume();
 				})
 				.catch((err) => {
+					console.log("Job failed", current);
+					console.error(err);
 					if (current.retries > 0) {
 						current.retries--;
 						emit("retrying", current, err);
 						active.delete(current);
 						pending.push(current);
-						consume();
+						// consume();
 					} else {
 						current.failure = err;
 						emit("failure", current, err);
 						active.delete(current);
-						consume();
+						// consume();
 					}
 				});
+			consume();
 		}
 	};
 
 	// Pushing new jobs can be done even when the queue is running
-	const push = (...jobs) => {
-		if (jobs.length === 0) {
-			return;
-		}
-		pending.push(jobs.map((job) => ({ payload: job, retries: retries })));
+	const push = (jobs) => {
+		pending.push(
+			...jobs.map((job, i) => ({ payload: job, batchIndex: i, retries: retries }))
+		);
+		console.log(`Added ${jobs.length} to the queue`, pending);
 		consume();
 	};
 
 	/**
 	 *
-	 * @param  {...any} jobs
+	 * @param  {Array<Any>} jobs
 	 * @returns {Promise}
 	 */
-	const runBatch = (...jobs) => {
+	const runBatch = (jobs) => {
+		if (!Array.isArray(jobs)) {
+			throw new TypeError("runBatch() must be providden an array of jobs payload");
+		}
+		console.log(`runBatch()`, jobs);
 		const allJobs = [...jobs]; // Make a copy of all the jobs
 		return new Promise((resolve) => {
 			const completed = () => {
 				resolve(allJobs);
-				off("completed", completed); // UN-REGISTER OUR EVENT HANDLER
+				jobEvents.off("completed", completed); // UN-REGISTER OUR EVENT HANDLER
 			};
-			on("complete", completed);
-			push(...jobs);
+			jobEvents.on("complete", completed);
+			push(jobs);
 		});
 	};
 
@@ -87,7 +96,7 @@ function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 		running = false;
 		pending = [];
 		active.clear();
-		clearEvents();
+		jobEvents.clearEvents();
 	};
 
 	return {

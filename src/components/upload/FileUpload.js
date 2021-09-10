@@ -4,9 +4,10 @@ import { Box, Center, Container } from "@chakra-ui/react";
 import prettyBytes from "pretty-bytes";
 import { UploadIcon } from "../icons";
 import { Info } from "../base/Typography";
-import pLimit from "@lib/utils/p-limit.js";
+// import pLimit from "@lib/utils/p-limit.js";
 import FileUploadProgress from "./FileUploadProgress";
 import Button from "../forms/inputs/Button";
+import JobQueue from "../../lib/utils/JobQueue";
 
 /**
  * @typedef FileUploadProps
@@ -25,19 +26,17 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 	const folderPath = file.path.substr(1, file.path.lastIndexOf("/"));
 	console.log(`Uploading ${file.name} to ${folderPath}`);
 	file.progress = undefined; // We will use the undefined state when upload actually begins
-	updateProgress(file, i);
+	updateProgress({ progress: undefined }, i);
 
 	try {
 		await fetch(`${uploadUrl}${folderPath}`, {
 			method: "POST",
 			body: formData
 		});
-		file.progress = 100;
-		updateProgress(file, i);
+		updateProgress({ progress: 100 }, i);
 		return true; //
 	} catch (err) {
-		file.error = err.message;
-		updateProgress(file, i);
+		updateProgress({ error: err.message }, i);
 		return false;
 	}
 };
@@ -72,12 +71,11 @@ const FileUpload = ({
 }) => {
 	const [files, setFiles] = useState([]);
 	const [pending, setPending] = useState(true);
-	const limit = pLimit(concurrency);
+	// const limit = pLimit(concurrency);
 
 	// Call this to re-display the list of uploaded files
-	const updateProgress = ({ name, size, progress, error }, i) => {
-		const f = (files[i] = { name, size, progress, error }); // new instance
-		setFiles([...files]); // duplicate the array of files to re-render
+	const updateProgress = ({ ...progressInfo }, i) => {
+		const { error, progress } = (files[i] = { ...files[i], ...progressInfo }); // new instance
 
 		// Update the remaining files count.
 		// NOTE : We can not use directly the `pending` variable here because it's in a closure
@@ -91,6 +89,8 @@ const FileUpload = ({
 
 			setPending(remaining);
 		}
+
+		setFiles([...files]); // duplicate the array of files to re-render
 	};
 
 	// React Drop zone
@@ -98,21 +98,25 @@ const FileUpload = ({
 		// Map the files to display only upload tracking infos
 		console.log(`Received #${acceptedFiles.length} files`, acceptedFiles);
 
-		setFiles(
-			acceptedFiles.map((f) => ({
-				name: `${f.name} (${prettyBytes(f.size)})`,
-				progress: 0,
-				error: false
-			}))
-		);
+		const uploadProgress = acceptedFiles.map((f, i) => ({
+			fileName: `${f.name} (${prettyBytes(f.size)})`,
+			progress: 0,
+			error: false
+		}));
 
-		setPending(acceptedFiles.length);
+		setFiles(uploadProgress); // for the progress report
+		setPending(uploadProgress.length);
 
-		await Promise.allSettled(
-			acceptedFiles.map((f, i) => {
-				limit(sendFile(upload_url, updateProgress), f, i, pending);
-			})
-		);
+		const jobQueue = JobQueue({ worker: sendFile(upload_url, updateProgress) });
+		await jobQueue.runBatch(acceptedFiles);
+
+		alert();
+
+		// await Promise.allSettled(
+		// 	acceptedFiles.map((f, i) => {
+		// 		limit(sendFile(upload_url, updateProgress), f, i, pending);
+		// 	})
+		// );
 	}, []);
 
 	// @see

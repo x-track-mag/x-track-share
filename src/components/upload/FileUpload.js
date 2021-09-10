@@ -4,7 +4,6 @@ import { Box, Center, Container } from "@chakra-ui/react";
 import prettyBytes from "pretty-bytes";
 import { UploadIcon } from "../icons";
 import { Info } from "../base/Typography";
-// import pLimit from "@lib/utils/p-limit.js";
 import FileUploadProgress from "./FileUploadProgress";
 import Button from "../forms/inputs/Button";
 import JobQueue from "../../lib/utils/JobQueue";
@@ -24,9 +23,7 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 	let formData = new FormData();
 	formData.append("file", file);
 	const folderPath = file.path.substr(1, file.path.lastIndexOf("/"));
-	console.log(`Uploading ${file.name} to ${folderPath}`);
-	file.progress = undefined; // We will use the undefined state when upload actually begins
-	updateProgress({ progress: undefined }, i);
+	updateProgress({ progress: undefined }, i); // We will use the undefined state before the upload actually begins
 
 	try {
 		await fetch(`${uploadUrl}${folderPath}`, {
@@ -44,13 +41,13 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 const FileUploadReport = ({ files }) => {
 	return (
 		<Box className="upload-report" pl={8} pr={8}>
-			{files.map((file, i) => (
+			{files.map(({ fileName, progress, error }, i) => (
 				<FileUploadProgress
 					key={`file-${i}`}
-					fileName={file.name}
-					progress={file.progress}
+					fileName={fileName}
+					progress={progress}
 					color="blue"
-					error={file.error}
+					error={error}
 				/>
 			))}
 		</Box>
@@ -71,16 +68,16 @@ const FileUpload = ({
 }) => {
 	const [files, setFiles] = useState([]);
 	const [pending, setPending] = useState(true);
-	// const limit = pLimit(concurrency);
 
 	// Call this to re-display the list of uploaded files
-	const updateProgress = ({ ...progressInfo }, i) => {
-		const { error, progress } = (files[i] = { ...files[i], ...progressInfo }); // new instance
+	const updateProgress = (files) => (progressInfo, i) => {
+		const f = files[i];
+		Object.assign(f, progressInfo);
 
 		// Update the remaining files count.
 		// NOTE : We can not use directly the `pending` variable here because it's in a closure
-		// And doesn't reflect its updated state
-		if (error || progress === 100) {
+		// It doesn't reflect its updated state
+		if (f.error || f.progress === 100) {
 			const remaining = files.reduce(
 				(remaining, file) =>
 					file.progress === 100 || file.error ? remaining - 1 : remaining,
@@ -90,33 +87,33 @@ const FileUpload = ({
 			setPending(remaining);
 		}
 
-		setFiles([...files]); // duplicate the array of files to re-render
+		setFiles([...files]); // duplicate the array of files to re-render everything
 	};
 
 	// React Drop zone
 	const onDrop = useCallback(async (acceptedFiles) => {
-		// Map the files to display only upload tracking infos
-		console.log(`Received #${acceptedFiles.length} files`, acceptedFiles);
-
-		const uploadProgress = acceptedFiles.map((f, i) => ({
+		// Create a new array to map only the file progression
+		const filesProgression = acceptedFiles.map((f, i) => ({
 			fileName: `${f.name} (${prettyBytes(f.size)})`,
 			progress: 0,
 			error: false
 		}));
+		console.log(`Received #${filesProgression.length} files to upload`);
 
-		setFiles(uploadProgress); // for the progress report
-		setPending(uploadProgress.length);
+		setPending(filesProgression.length);
+		setFiles(filesProgression); // for the progress report
 
-		const jobQueue = JobQueue({ worker: sendFile(upload_url, updateProgress) });
-		await jobQueue.runBatch(acceptedFiles);
-
-		alert();
-
-		// await Promise.allSettled(
-		// 	acceptedFiles.map((f, i) => {
-		// 		limit(sendFile(upload_url, updateProgress), f, i, pending);
-		// 	})
-		// );
+		const start = Date.now();
+		const jobQueue = JobQueue({
+			worker: sendFile(upload_url, updateProgress(filesProgression)),
+			concurrency: 8
+		});
+		const result = await jobQueue.runBatch(acceptedFiles);
+		setPending(0);
+		console.log(
+			`${filesProgression.length} uploaded in ${(Date.now() - start) / 1000}secs`,
+			result
+		);
 	}, []);
 
 	// @see

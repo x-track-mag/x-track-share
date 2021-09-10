@@ -110,7 +110,7 @@ export const get = (APIClient.get = async (apiEntryPoint, apiParams) => {
 		const errorCode = err.code || resp?.status || 500;
 		throw new ApiError(
 			errorCode,
-			`Call to ${apiEntryPoint} failed : ${err.message} (${errorCode})`
+			`GET ${apiEntryPoint} returned : ${err.message} (${errorCode})`
 		);
 	}
 });

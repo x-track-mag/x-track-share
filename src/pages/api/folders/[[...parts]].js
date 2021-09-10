@@ -30,6 +30,7 @@ export default async (req, resp) => {
 			...msg
 		});
 	} catch (err) {
+		console.error("API CALLED FAILED", err);
 		resp.status(err.code || 500).json({
 			success: false,
 			path,

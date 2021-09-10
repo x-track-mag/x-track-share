@@ -2,14 +2,14 @@ import EventEmitter from "./EventEmitter";
 
 /**
  * @typedef JobQueue
- * @property {Function} addBatch
- * @property {Function} on
- * @property {Function} clear
+ * @property {Function<String, cb>} on Register event callbacks
+ * @property {Function} clear Clear the job queues and unregister all event handlers
+ * @property {Function} runBatch Add a new batch of jobs and return a Promise like allSettled
  */
 
 /**
  * @typedef QueueProps
- * @property {Function} worker
+ * @property {Function} worker Async function that accepts a payload and the batch index of the job
  * @property {Number} [concurrency=10] Maximum number of allowed concurrent jobs
  * @property {Function} [retries=3] How many times should we retry if a job fails ?
  */
@@ -20,9 +20,9 @@ import EventEmitter from "./EventEmitter";
  * @returns {JobQueue}
  */
 function JobQueue({ worker, concurrency = 8, retries = 3 }) {
-	const pending = [];
-	const active = new Set();
+	let pending = [];
 	let running = false;
+	const active = new Set();
 	const jobEvents = new EventEmitter();
 	const emit = jobEvents.emit.bind(jobEvents);
 	const on = jobEvents.on.bind(jobEvents);
@@ -41,7 +41,6 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 			active.add(current);
 			running = true;
 
-			console.log("Staring Job", current);
 			worker(current.payload, current.batchIndex)
 				.then((result) => {
 					current.success = result;
@@ -50,8 +49,7 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 					consume();
 				})
 				.catch((err) => {
-					console.log("Job failed", current);
-					console.error(err);
+					console.error("Job failed", current, err);
 					if (current.retries > 0) {
 						current.retries--;
 						emit("retrying", current, err);
@@ -83,7 +81,7 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	 */
 	const runBatch = (jobs) => {
 		if (!Array.isArray(jobs)) {
-			throw new TypeError("runBatch() must be providden an array of jobs payload");
+			throw new TypeError("runBatch() must be providen an array of jobs payload");
 		}
 		console.log(`runBatch()`, jobs);
 		// Wrap all these jobs inside a container to keep track of their failure or success
@@ -110,9 +108,10 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	};
 
 	return {
-		push,
-		runBatch,
-		on
+		// Expose a very simple API
+		on,
+		clear,
+		runBatch
 	};
 }
 

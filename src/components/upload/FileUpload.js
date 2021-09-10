@@ -110,6 +110,7 @@ const FileUpload = ({
 		});
 		const result = await jobQueue.runBatch(acceptedFiles);
 		setPending(0);
+		jobQueue.clear(); // Why not ?
 		console.log(
 			`${filesProgression.length} uploaded in ${(Date.now() - start) / 1000}secs`,
 			result

@@ -20,12 +20,6 @@ const FileUploadProgress = ({
 	error = false,
 	...props
 }) => {
-	useEffect(() => {
-		console.log(
-			`Re-rendering file ${fileName} : progress=${progress}, error=${error}`
-		);
-	}, []);
-
 	return (
 		<Box w="100%" {...props}>
 			<em>{fileName}</em>

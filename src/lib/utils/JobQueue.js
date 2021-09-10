@@ -8,12 +8,18 @@ import EventEmitter from "./EventEmitter";
  */
 
 /**
+ * @typedef QueueProps
+ * @property {Function} worker
+ * @property {Number} [concurrency=10] Maximum number of allowed concurrent jobs
+ * @property {Function} [retries=3] How many times should we retry if a job fails ?
+ */
+
+/**
  * JobQueue instanciation
  * @typedef {QueueProps} props
  * @returns {JobQueue}
  */
-
-function JobQueue({ worker, concurrency = 3, retries = 3 }) {
+function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	const pending = [];
 	const active = new Set();
 	let running = false;
@@ -38,9 +44,10 @@ function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 			console.log("Staring Job", current);
 			worker(current.payload, current.batchIndex)
 				.then((result) => {
-					current.result = result;
+					current.success = result;
 					emit("success", current);
 					active.delete(current);
+					consume();
 				})
 				.catch((err) => {
 					console.log("Job failed", current);
@@ -50,13 +57,13 @@ function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 						emit("retrying", current, err);
 						active.delete(current);
 						pending.push(current);
-						// consume();
 					} else {
-						current.failure = err;
+						current.success = false;
+						current.error = err.message;
 						emit("failure", current, err);
 						active.delete(current);
-						// consume();
 					}
+					consume();
 				});
 			consume();
 		}
@@ -64,9 +71,7 @@ function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 
 	// Pushing new jobs can be done even when the queue is running
 	const push = (jobs) => {
-		pending.push(
-			...jobs.map((job, i) => ({ payload: job, batchIndex: i, retries: retries }))
-		);
+		pending.push(...jobs);
 		console.log(`Added ${jobs.length} to the queue`, pending);
 		consume();
 	};
@@ -81,14 +86,19 @@ function JobQueue({ worker, concurrency = 3, retries = 3 }) {
 			throw new TypeError("runBatch() must be providden an array of jobs payload");
 		}
 		console.log(`runBatch()`, jobs);
-		const allJobs = [...jobs]; // Make a copy of all the jobs
+		// Wrap all these jobs inside a container to keep track of their failure or success
+		const batch = jobs.map((job, i) => ({
+			payload: job,
+			batchIndex: i,
+			retries: retries
+		}));
 		return new Promise((resolve) => {
 			const completed = () => {
-				resolve(allJobs);
+				resolve(batch);
 				jobEvents.off("completed", completed); // UN-REGISTER OUR EVENT HANDLER
 			};
 			jobEvents.on("complete", completed);
-			push(jobs);
+			push(batch);
 		});
 	};
 

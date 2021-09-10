@@ -94,7 +94,7 @@ export const getRawResourceContent = async (rsc) => {
 			}
 		};
 	} else {
-		return null;
+		return {};
 	}
 };
 

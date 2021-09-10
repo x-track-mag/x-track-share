@@ -45,11 +45,13 @@ const deleteIcon = (action) => (props) => (
 const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAULTS }) => {
 	const uploadPath = `/_admin/upload/${path}`;
 	const [sharedSettings, setSharedSettings] = useState(settings);
+	const [vFolders, setVFolders] = useState(); // Use a virtual list of folders to allow for fast suppression
 	const [orderedTracks, setOrderedTracks] = useState();
 
 	const { confirm } = useDialogContext();
 
 	useEffect(() => {
+		setVFolders(subfolders);
 		// Still don't know why i need to do that in a hook to force the tracks to be re-rendered on each pages..
 		const orderedTracks = tracks.reorderFrom(settings.playlist, "filename");
 		setOrderedTracks(orderedTracks);
@@ -101,13 +103,14 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 				<Folder key="upload" path={uploadPath}>
 					<SvgPlus />
 				</Folder>
-				{subfolders.map(({ name, path }) => (
-					<Folder
-						key={name}
-						path={`/_admin/${path}`}
-						icons={[linkIcon(path), deleteIcon(deleteFolder(path))]}
-					/>
-				))}
+				{vFolders &&
+					vFolders.map(({ name, path }) => (
+						<Folder
+							key={name}
+							path={`/_admin/${path}`}
+							icons={[linkIcon(path), deleteIcon(deleteFolder(path))]}
+						/>
+					))}
 			</Grid>
 			{orderedTracks && orderedTracks.length > 0 && (
 				<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">

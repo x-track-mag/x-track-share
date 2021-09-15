@@ -1,14 +1,36 @@
-import { SHARED_SETTINGS_DEFAULTS } from "../../components/SharedSettings.js";
 import ArrayExtensions from "../utils/Arrays.js";
+ArrayExtensions();
 
-const audio_formats = ["wav", "mp3", "aac", "ogg"];
-const video_formats = ["mp4", "mpg", "mpeg", "avi", "mov", "mkv", "qt", "wmv", "asf"];
+export const SHARED_SETTINGS_DEFAULTS = {
+	download_links: false,
+	download_zip: false,
+	download_form: false
+};
+
+// These are the formats that are accepted by Cloudinary as upload
+const UPLOAD_AUDIO_FORMATS = ["wav", "mp3", "m4a", "ogg"];
+const UPLOAD_VIDEO_FORMATS = [
+	"mp4",
+	"mpg",
+	"mpeg",
+	"avi",
+	"mov",
+	"mkv",
+	"qt",
+	"wmv",
+	"asf"
+];
+
+// Exported audio formats are the same
+export const DOWNLOAD_AUDIO_FORMATS = UPLOAD_AUDIO_FORMATS;
+// But we only allow mp4 video download
+export const DOWNLOAD_VIDEO_FORMATS = ["mp4"];
 
 function isVideo(media) {
-	return video_formats.includes(media.format);
+	return UPLOAD_VIDEO_FORMATS.includes(media.format);
 }
 function isAudio(media) {
-	return audio_formats.includes(media.format);
+	return UPLOAD_AUDIO_FORMATS.includes(media.format);
 }
 
 /**

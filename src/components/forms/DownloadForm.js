@@ -10,8 +10,8 @@ import Text from "./inputs/Text.js";
 
 const DownloadForm = ({ selectedTracks, ...props }) => {
 	const [downloadUrl, setDownloadUrl] = useState();
-
 	const onSuccess = ({ downloadUrl }) => setDownloadUrl(downloadUrl);
+
 	const options = ["wav", "mp3", "m4a", "ogg"].map((code) => ({
 		code,
 		label: code.toUpperCase()

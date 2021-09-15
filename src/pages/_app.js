@@ -5,6 +5,7 @@ import EventBusProvider from "../components/EventBusProvider.js";
 import PageLayout from "../components/layout/PageLayout.js";
 import "../styles/x-track-theme.css";
 import theme from "../theme.js";
+import safePromises from "make-promises-safe";
 
 function MyApp({ Component, pageProps }) {
 	return (

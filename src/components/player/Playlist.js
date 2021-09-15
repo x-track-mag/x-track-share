@@ -1,16 +1,19 @@
-import { useEventBus } from "../EventBusProvider.js";
-import { usePlayerState } from "./PlayerStateProvider.js";
-import PlayPauseIcon from "./PlayPauseIcon.js";
-import styles from "./Playlist.module.scss";
 import { Checkbox } from "@chakra-ui/checkbox";
-import { DataTable } from "../base/DataTable.js";
 import { useMemo } from "react";
-import SelectDownloadFormat from "./DownloadSelect.js";
+import { DataTable } from "../base/DataTable.js";
+import { useEventBus } from "../EventBusProvider.js";
 import { useSharedFolderContext } from "../SharedFolderContext.js";
+import { usePlayerState } from "./PlayerStateProvider.js";
+import styles from "./Playlist.module.scss";
+import PlayPauseIcon from "./PlayPauseIcon.js";
+import SelectDownloadFileFormat from "./SelectDownloadFileFormat.js";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
 
+/**
+ * Define the available table headers
+ */
 const PlaylistHeaders = {
 	play: {
 		Header: "",
@@ -52,7 +55,7 @@ const PlaylistHeaders = {
 	},
 	download_links: {
 		Header: "Télécharger",
-		accessor: (file) => <SelectDownloadFormat file={file} />,
+		accessor: (file) => <SelectDownloadFileFormat file={file} />,
 		disableSortBy: true,
 		maxWidth: "10rem",
 		isNumeric: true
@@ -90,7 +93,6 @@ const makeColumns = (ids) =>
 /**
  * An entry inside the playlist, representing an audio or video asset to play
  * @param {PlaylistEntryProps} props
- * @returns
  */
 function PlaylistEntry(props, player, selectedTracks, eb) {
 	Object.assign(this, props);
@@ -142,6 +144,17 @@ const playlistStyles = {
 	}
 };
 
+/**
+ * @typedef PlaylistProps
+ * @property {String} playerId Unique identifiant (for the event bus)
+ * @property {Array<Object>} [playlist=[]] Array of track informations (title, artist, duration)
+ * @property {Array<String>} [columns= ["play", "title", "duration"]] Name of the columns to display
+ */
+
+/**
+ *
+ * @param {PlaylistProps} props
+ */
 const Playlist = ({
 	playerId,
 	playlist = [],

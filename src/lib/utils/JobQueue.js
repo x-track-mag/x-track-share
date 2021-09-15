@@ -27,6 +27,10 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	const emit = jobEvents.emit.bind(jobEvents);
 	const on = jobEvents.on.bind(jobEvents);
 
+	/**
+	 * See if there is more jobs in the waiting list and add them
+	 * or pause the JobQueue
+	 */
 	const consume = async () => {
 		if (pending.length === 0) {
 			running = false;

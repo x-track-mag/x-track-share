@@ -4,14 +4,14 @@ import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
 import SvgBin from "../../components/icons/SvgBin.js";
-import SvgPlus from "../../components/icons/SvgPlus";
 import SvgLink from "../../components/icons/SvgLink.js";
-
-import MiniPlayer from "../../components/player/MiniPlayer.js";
+import SvgPlus from "../../components/icons/SvgPlus";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import SharedSettings from "../../components/SharedSettings.js";
 import APIClient from "../../lib/services/APIClient.js";
 import ArrayExtensions from "../../lib/utils/Arrays.js";
+
+ArrayExtensions();
 
 /**
  * Retrieves the subfolders and playlist linked to this shared folder

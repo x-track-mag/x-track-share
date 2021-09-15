@@ -1,4 +1,5 @@
 import ArrayExtensions from "../utils/Arrays.js";
+ArrayExtensions();
 
 const audio_formats = ["wav", "mp3", "aac", "ogg"];
 const video_formats = ["mp4", "mpg", "mpeg", "avi", "mov", "mkv", "qt", "wmv", "asf"];

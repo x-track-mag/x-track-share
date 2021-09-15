@@ -1,7 +1,7 @@
 // It's usually a big idea to extend native prototypes but..
 // it can be damn useful too to chain array manipulations
 
-const ArrayExtensions = {
+const _ARRAY_EXTENSIONS = {
 	last: function () {
 		return this[this.length - 1];
 	},
@@ -63,10 +63,11 @@ const ArrayExtensions = {
 };
 
 export const extendsPrototype = (proto) => {
-	Object.keys(ArrayExtensions).forEach((methodName) => {
-		if (!proto[methodName]) proto[methodName] = ArrayExtensions[methodName];
+	Object.keys(_ARRAY_EXTENSIONS).forEach((methodName) => {
+		if (!proto[methodName]) proto[methodName] = _ARRAY_EXTENSIONS[methodName];
 	});
 	return proto;
 };
 
-export default extendsPrototype(Array.prototype);
+const extendArrays = () => extendsPrototype(Array.prototype);
+export default extendArrays;

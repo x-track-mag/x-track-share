@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { useSharedFolderContext } from "../SharedFolderContext.js";
 import PlayerStateProvider from "./PlayerStateProvider.js";
 import Playlist from "./Playlist.js";
 
@@ -23,10 +22,13 @@ const AudioPlaylistPlayer = ({ playerId, playlist = [], settings = {} }) => {
 
 	// Build the list of columns to add to the DataTable
 	const columnsToDisplay = ["play"];
+
+	if (playlist[0] && playlist[0].artist) {
+		columnsToDisplay.push("artist");
+	}
+	columnsToDisplay.push("title");
 	if (download_form) {
-		columnsToDisplay.push("artist", "title", "download_form");
-	} else {
-		columnsToDisplay.push("title");
+		columnsToDisplay.push("download_form");
 	}
 	if (download_links) {
 		columnsToDisplay.push("download_links");

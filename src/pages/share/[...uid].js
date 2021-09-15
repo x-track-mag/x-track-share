@@ -1,7 +1,8 @@
-import { Grid, Stack } from "@chakra-ui/react";
+import { Box, Grid, Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import Folder from "../../components/base/Folder.js";
 import AudioPlaylistPlayer from "../../components/player/AudioPlaylistPlayer.js";
+import SelectDownloadArchiveFormat from "../../components/player/SelectDownloadArchiveFormat.js";
 import VideoPlaylistPlayer from "../../components/player/VideoPlaylistPlayer.js";
 import {
 	useSharedFolderContext,
@@ -9,7 +10,6 @@ import {
 } from "../../components/SharedFolderContext.js";
 import SharedFolderNavigation from "../../components/SharedFolderNavigation.js";
 import APIClient from "../../lib/services/APIClient.js";
-import ArrayExtensions from "../../lib/utils/Arrays.js"; // This will effectively extends Array.prototype
 
 /**
  * Retrieve the folder content /share/${uid}
@@ -45,7 +45,7 @@ const SharedFolderPage = () => {
 
 	if (!folder) return null;
 
-	const { path, subfolders, audios, videos, settings } = folder;
+	const { path, subfolders, audios, videos, settings, download_audio_links } = folder;
 
 	useEffect(() => {
 		console.log(`Exploring ${current}`, folder, settings);
@@ -69,13 +69,23 @@ const SharedFolderPage = () => {
 			)}
 
 			{audios.length && (
-				<AudioPlaylistPlayer
-					type="audio"
-					playerId="audio-player"
-					playlist={audios.reorderFrom(settings.playlist, "filename")}
-					settings={settings}
-					timestamp={timestamp}
-				/>
+				<Box position="relative">
+					<AudioPlaylistPlayer
+						type="audio"
+						playerId="audio-player"
+						playlist={audios.reorderFrom(settings.playlist, "filename")}
+						settings={settings}
+						timestamp={timestamp}
+					/>
+					{settings.download_zip && (
+						<SelectDownloadArchiveFormat
+							playlist_name={current.replace("/", "-")}
+							download_archive_links={download_audio_links}
+						>
+							Download zip
+						</SelectDownloadArchiveFormat>
+					)}
+				</Box>
 			)}
 
 			{videos.length && (

@@ -1,13 +1,7 @@
 import { Checkbox } from "@chakra-ui/checkbox";
 import { Stack } from "@chakra-ui/layout";
-import { useEffect, useState } from "react";
-import APIClient from "../lib/services/APIClient";
-
-export const SHARED_SETTINGS_DEFAULTS = {
-	download_links: false,
-	download_zip: false,
-	download_form: false
-};
+import { useEffect } from "react";
+import { SHARED_SETTINGS_DEFAULTS } from "../lib/cloudinary/SharedFolder";
 
 const SHARE_OPTIONS = {
 	download_links: "Téléchargement Individuel",
@@ -17,17 +11,14 @@ const SHARE_OPTIONS = {
 
 /**
  * @typedef SharedSettingsProps
- * @property {String} folderPath The path to the folder
  * @property {Object} settings Current share settings
+ * @property {Function} updateSettings callback
  */
 /**
  * Display the mini settings form for a shared folder
+ * @param {SharedSettingsProps} props
  */
-const SharedSettings = ({
-	folderPath,
-	settings = SHARED_SETTINGS_DEFAULTS,
-	updateSettings
-}) => {
+const SharedSettings = ({ settings = SHARED_SETTINGS_DEFAULTS, updateSettings }) => {
 	const toggle = (code) => (evt) => {
 		settings[code] = !settings[code];
 

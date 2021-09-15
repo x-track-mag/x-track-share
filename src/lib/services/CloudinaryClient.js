@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
 import ApiError from "../ApiError.js";
-import SharedFolder from "../cloudinary/SharedFolder.js";
+import SharedFolder, { DOWNLOAD_AUDIO_FORMATS } from "../cloudinary/SharedFolder.js";
 import { merge } from "../utils/deepMerge.js";
 import { loadEnv } from "../utils/Env.js";
 import APIClient from "./APIClient.js";
@@ -79,7 +79,7 @@ const getResourceType = (format) => {
 /**
  * Some resource like settings.json and playlist.m3u have text content that we must parse
  * @param {*} rsc
- * @returns
+ * @returns {Promise<String>}
  */
 export const getRawResourceContent = async (rsc) => {
 	if (rsc.filename === "settings.json") {
@@ -248,6 +248,27 @@ export const getDeepContent = async (root) => {
 
 		await Promise.allSettled(resources.map(updateFolders));
 
+		// Now we need to prepare the download_archive links
+		Object.keys(folders).map((folderPath) => {
+			const folder = folders[folderPath];
+			const { audios, videos, settings } = folder;
+			if (settings.download_zip) {
+				// We have to prepare the download links for all the public_ids
+				if (audios.length > 0) {
+					folder.download_audio_links = DOWNLOAD_AUDIO_FORMATS.reduce(
+						(links, format) => {
+							links[format] = getZipDownloadUrl(
+								audios.map((audio) => audio.public_id),
+								format
+							);
+							return links;
+						},
+						{}
+					);
+				}
+			}
+		});
+
 		console.log(`Loaded shared folders`, folders);
 		return { folders };
 	} catch (err) {
@@ -263,7 +284,7 @@ export const getDeepContent = async (root) => {
  * @param {String} format to convert each asset
  * @returns {String}
  */
-export const getZipDownloadUrl = (public_ids, format = "wav") => {
+export const getZipDownloadUrl = (public_ids, format = "wav", download_as) => {
 	try {
 		// Add the request format to the end of the public_id
 		// public_ids = public_ids.map((id) => `${id}.${format}`).join(",");
@@ -271,16 +292,14 @@ export const getZipDownloadUrl = (public_ids, format = "wav") => {
 			public_ids,
 			resource_type: "video",
 			use_original_filename: true,
-			target_public_id: `x-track-share-${new Date()
-				.toISOString()
-				.substr(0, 19)
-				.replace(/[^0-9]/g, "-")}`,
+			target_public_id:
+				download_as ||
+				`x-track-share-${new Date()
+					.toISOString()
+					.substr(0, 19)
+					.replace(/[^0-9]/g, "-")}`,
 			transformations: `f_${format}`
 		});
-		console.log(`Generate Zip download URL for ${JSON.stringify(
-			public_ids
-		)} in ${format} format :
-${downloadUrl}`);
 		return downloadUrl;
 	} catch (err) {
 		console.error(err);

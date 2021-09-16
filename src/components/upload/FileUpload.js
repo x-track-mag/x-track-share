@@ -1,12 +1,12 @@
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { Box, Center, Container } from "@chakra-ui/react";
 import prettyBytes from "pretty-bytes";
-import { UploadIcon } from "../icons";
-import { Info } from "../base/Typography";
-import FileUploadProgress from "./FileUploadProgress";
-import Button from "../forms/inputs/Button";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import JobQueue from "../../lib/utils/JobQueue";
+import { Info } from "../base/Typography";
+import Button from "../forms/inputs/Button";
+import { UploadIcon } from "../icons";
+import FileUploadProgress from "./FileUploadProgress";
 
 /**
  * @typedef FileUploadProps
@@ -26,15 +26,20 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 	updateProgress({ progress: undefined }, i); // We will use the undefined state before the upload actually begins
 
 	try {
-		await fetch(`${uploadUrl}${folderPath}`, {
+		const resp = await fetch(`${uploadUrl}${folderPath}`, {
 			method: "POST",
 			body: formData
 		});
-		updateProgress({ progress: 100 }, i);
-		return true; //
+		const { success, error } = await resp.json();
+		if (success) {
+			updateProgress({ progress: 100 }, i);
+		} else {
+			updateProgress({ error }, i);
+			throw new Error(error);
+		}
 	} catch (err) {
 		updateProgress({ error: err.message }, i);
-		return false;
+		throw new Error(err.message);
 	}
 };
 
@@ -63,7 +68,7 @@ const noop = () => {};
 const FileUpload = ({
 	label = "Drag files or folder here...",
 	upload_url,
-	concurrency = 3,
+	concurrency = 8,
 	callback = noop
 }) => {
 	const [files, setFiles] = useState([]);
@@ -71,6 +76,7 @@ const FileUpload = ({
 
 	// Call this to re-display the list of uploaded files
 	const updateProgress = (files) => (progressInfo, i) => {
+		console.log("updateProgress", progressInfo, i);
 		const f = files[i];
 		Object.assign(f, progressInfo);
 
@@ -112,7 +118,9 @@ const FileUpload = ({
 		setPending(0);
 		jobQueue.clear(); // Why not ?
 		console.log(
-			`${filesProgression.length} uploaded in ${(Date.now() - start) / 1000}secs`,
+			`${filesProgression.length} files upload process complete in ${
+				(Date.now() - start) / 1000
+			}secs`,
 			result
 		);
 	}, []);

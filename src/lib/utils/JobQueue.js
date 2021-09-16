@@ -53,7 +53,9 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 					consume();
 				})
 				.catch((err) => {
-					console.error("Job failed", current, err);
+					console.error(
+						`Job #${current.batchIndex} failed : ${err.message} (${current.retries} retries remaining)`
+					);
 					if (current.retries > 0) {
 						current.retries--;
 						emit("retrying", current, err);

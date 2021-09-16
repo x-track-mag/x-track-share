@@ -316,17 +316,11 @@ export const getZipDownloadUrl = (public_ids, format = "wav", download_as) => {
 export const uploadToPath = async (destPath, localPath) => {
 	const uploadOptions = {
 		overwrite: true,
-		public_id: destPath.replace(/\.(\w)+$/i, ""), // remove extension from path
+		public_id: destPath.replace(/\.(\w)+$/i, "").slugify(), // remove extension from path
 		resource_type: getResourceType(localPath)
 	};
-	return new Promise((resolve, reject) => {
-		cloudinary.uploader.upload(localPath, uploadOptions, (error, result) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(result);
-			}
-		});
+	return cloudinary.uploader.upload(localPath, uploadOptions).catch((err) => {
+		throw new ApiError(400, err.message);
 	});
 };
 

@@ -1,6 +1,5 @@
 import { Checkbox } from "@chakra-ui/checkbox";
 import { Stack } from "@chakra-ui/layout";
-import { useEffect } from "react";
 import { SHARED_SETTINGS_DEFAULTS } from "../lib/cloudinary/SharedFolder";
 
 const SHARE_OPTIONS = {
@@ -36,10 +35,6 @@ const SharedSettings = ({ settings = SHARED_SETTINGS_DEFAULTS, updateSettings })
 
 		updateSettings(settings);
 	};
-
-	useEffect(() => {
-		console.log("Re-rendering setting choices", settings);
-	}, [settings]);
 
 	return (
 		<Stack>

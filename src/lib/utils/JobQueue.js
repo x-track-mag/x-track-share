@@ -32,7 +32,7 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	 * or pause the JobQueue
 	 */
 	const consume = async () => {
-		if (pending.length === 0) {
+		if (pending.length + active.size === 0) {
 			running = false;
 			emit("complete");
 			return;
@@ -42,10 +42,12 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 			return;
 		} else {
 			const current = pending.shift();
+
+			if (!current) return;
 			active.add(current);
 			running = true;
 
-			worker(current.payload, current.batchIndex)
+			worker(current.payload, current.batchIndex, current.retries)
 				.then((result) => {
 					current.success = result;
 					emit("success", current);

@@ -169,11 +169,10 @@ export const post = (APIClient.post = async (apiEntryPoint, postBody = {}) => {
 
 		return respBody;
 	} catch (err) {
-		console.error(`POST to ${apiEntryPoint} raised an API error response`, err);
-		throw new ApiError(
-			err.code || 500,
-			`Call to ${apiEntryPoint} failed : ${err.message}`
+		console.error(
+			`POST to ${apiEntryPoint} returned an error ${err.code} : ${err.message}`
 		);
+		throw new ApiError(err.code || 500, err.message);
 	}
 });
 

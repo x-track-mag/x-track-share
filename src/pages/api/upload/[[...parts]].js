@@ -1,8 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable-serverless";
-import StringExtensions from "../../../lib/utils/Strings";
-import CloudinaryClient from "../../../lib/services/CloudinaryClient";
 import fs from "fs-extra";
+import { NextApiRequest, NextApiResponse } from "next";
+import CloudinaryClient from "../../../lib/services/CloudinaryClient";
 
 /**
  * Convert all parts of the path in lowercase and URL-safe characters
@@ -38,6 +37,9 @@ export default async (req, resp) => {
 					`API Upload received file ${fileName} (${file.size}bytes) to store in ${sharedFolderPath} and saved it ${file.path}`
 				);
 				try {
+					// Once in a while throw an exception
+					// if (Date.now().toString().substr(11) >= "80")
+					// 	throw new ApiError(400, "Too Bad.. On Your Birthday");
 					const uploaded = await CloudinaryClient.uploadToPath(
 						normalizePath(sharedFolderPath) + fileName,
 						file.path
@@ -62,8 +64,8 @@ export default async (req, resp) => {
 			content: file.path
 		});
 	} catch (err) {
-		console.error(JSON.stringify(err, null, "\t"));
-		return resp.status(err.code || 500).json({
+		console.error("/api/upload/[[...parts]]", err.message);
+		return resp.status(err.code || 400).json({
 			success: false,
 			error: err.message,
 			...err.body

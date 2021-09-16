@@ -1,3 +1,5 @@
+const unhandledRejectionEvent = "unhandledRejection";
+
 /**
  * Build a promise that resolve in `ms` milliseconds with the response provided
  * NOTE: response may be a function, whose evaluation would be delayed by ms
@@ -12,3 +14,16 @@ export const delay = (ms, response) =>
 			ms
 		)
 	);
+
+/**
+ * Unhandled Promises rejections will stop the current process in future nodeJS releases
+ * => Do it now to detect all these dangerous promises rejections holes
+ * @see https://github.com/mcollina/make-promises-safe#readme
+ */
+export const exitOnRejections = () => {
+	process.on(unhandledRejectionEvent, (err) => {
+		console.error(err);
+		console.trace("Unhandled Promise stack");
+		process.exit(1);
+	});
+};

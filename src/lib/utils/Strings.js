@@ -112,10 +112,11 @@ export const StringExtensions = {
 	}
 };
 
-export const applyTo = (target) => {
+export const extendsTarget = (target) => {
 	Object.keys(StringExtensions).forEach((methodName) => {
 		if (!target[methodName]) target[methodName] = StringExtensions[methodName];
 	});
 };
 
-export default applyTo(String.prototype);
+const extendStrings = () => extendsTarget(String.prototype);
+export default extendStrings;

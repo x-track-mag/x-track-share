@@ -19,11 +19,11 @@ import FileUploadProgress from "./FileUploadProgress";
  * @param {String} uploadUrl
  * @returns {Function}
  */
-const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
+const sendFile = (uploadUrl, updateProgress) => async (file, i, retries) => {
 	let formData = new FormData();
 	formData.append("file", file);
 	const folderPath = file.path.substr(1, file.path.lastIndexOf("/"));
-	updateProgress({ progress: undefined }, i); // We will use the undefined state before the upload actually begins
+	updateProgress({ progress: 40 - 10 * retries }, i); // We will use the undefined state before the upload actually begins
 
 	try {
 		const resp = await fetch(`${uploadUrl}${folderPath}`, {
@@ -32,7 +32,7 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 		});
 		const { success, error } = await resp.json();
 		if (success) {
-			updateProgress({ progress: 100 }, i);
+			updateProgress({ progress: 100, error: false }, i);
 		} else {
 			updateProgress({ error }, i);
 			throw new Error(error);
@@ -46,7 +46,7 @@ const sendFile = (uploadUrl, updateProgress) => async (file, i) => {
 const FileUploadReport = ({ files }) => {
 	return (
 		<Box className="upload-report" pl={8} pr={8}>
-			{files.map(({ fileName, progress, error }, i) => (
+			{files.map(({ fileName, progress = 0, error }, i) => (
 				<FileUploadProgress
 					key={`file-${i}`}
 					fileName={fileName}

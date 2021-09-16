@@ -2,6 +2,8 @@ import formidable from "formidable-serverless";
 import fs from "fs-extra";
 import { NextApiRequest, NextApiResponse } from "next";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient";
+import extendStrings from "../../../lib/utils/Strings";
+extendStrings();
 
 /**
  * Convert all parts of the path in lowercase and URL-safe characters
@@ -30,16 +32,13 @@ export default async (req, resp) => {
 			keepExtensions: true
 		});
 
-		const uploadSuccess = new Promise((resolve, reject) => {
+		const uploadFile = new Promise((resolve, reject) => {
 			form.on("file", async (name, file) => {
 				const fileName = file.name.split("/").pop(); // Firefox send the full path instead of the file name
 				console.log(
 					`API Upload received file ${fileName} (${file.size}bytes) to store in ${sharedFolderPath} and saved it ${file.path}`
 				);
 				try {
-					// Once in a while throw an exception
-					// if (Date.now().toString().substr(11) >= "80")
-					// 	throw new ApiError(400, "Too Bad.. On Your Birthday");
 					const uploaded = await CloudinaryClient.uploadToPath(
 						normalizePath(sharedFolderPath) + fileName,
 						file.path
@@ -57,7 +56,7 @@ export default async (req, resp) => {
 
 		form.parse(req);
 
-		const file = await uploadSuccess;
+		const file = await uploadFile;
 		return resp.json({
 			success: true,
 			filename: file.name,

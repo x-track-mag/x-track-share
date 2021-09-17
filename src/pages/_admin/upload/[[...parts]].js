@@ -1,8 +1,7 @@
-import withAuth from "../../../components/auth/withAuth.js";
-import Breadcrumbs from "../../../components/Breadcrumbs.js";
 import { Box, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import FileUpload from "../../../components/upload/FileUpload.js";
+import Breadcrumbs from "../../../components/Breadcrumbs.js";
+import CloudinaryFileUpload from "../../../components/upload/CloudinaryFileUpload.js";
 
 /**
  * Join every parts of the dynamic path
@@ -38,7 +37,7 @@ const UploadPage = ({ folderPath }) => {
 					Upload&nbsp;to&nbsp;
 				</Breadcrumbs>
 			</Box>
-			<FileUpload upload_url={`/api/upload/${folderPath}`} callback={comeBack} />
+			<CloudinaryFileUpload uploadPath={folderPath} callback={comeBack} />
 		</VStack>
 	);
 };

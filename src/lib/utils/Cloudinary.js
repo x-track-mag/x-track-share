@@ -57,6 +57,11 @@ export const extractTrackInfos = (filename) => {
 	}
 };
 
+/**
+ * Take a file path from the local file system and create a friendly public_id (Cloudinary URL)
+ * @param {String} filePath
+ * @returns {String}
+ */
 export const createPublicId = (filePath) => {
 	const dirParts = filePath.split("/").filter((dir) => Boolean(dir));
 	let fileName = dirParts.pop();

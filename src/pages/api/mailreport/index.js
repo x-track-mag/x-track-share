@@ -1,7 +1,7 @@
 import MailService from "@sendgrid/mail";
 import { NextApiRequest, NextApiResponse } from "next";
-import { extractTrackInfos } from "../../../lib/services/CloudinaryClient.js";
 import withCORS from "../../../lib/services/withCORS.js";
+import { extractTrackInfos } from "../../../lib/utils/Cloudinary.js";
 
 const enhanceData = (data) => {
 	data.tracks = data.public_ids.map(extractTrackInfos);

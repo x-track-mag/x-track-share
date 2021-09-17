@@ -1,7 +1,14 @@
+/**
+ * CLOUDINARY CLIENT UTILS
+ * NOTE : SOME OF THESE METHODS CAN BE USED BOTH ON THE CLIENT (REACT) AND SERVER (API METHODS)
+ * WHILE SOME OTHERS CAN ONLY BE USED ON THE SERVER SIDE
+ * TO PRESERVE THE API SECRETS AND CLOUDINARY CREDENTIALS
+ */
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
 import ApiError from "../ApiError.js";
 import SharedFolder, { DOWNLOAD_AUDIO_FORMATS } from "../cloudinary/SharedFolder.js";
+import { extractTrackInfos, getResourceInfos } from "../utils/Cloudinary.js";
 import { merge } from "../utils/deepMerge.js";
 import { loadEnv } from "../utils/Env.js";
 import APIClient from "./APIClient.js";
@@ -26,54 +33,13 @@ export const getResource = async (resource_id) => {
 };
 
 /**
- * @returns {ResourceDef}
+ * Browser request needs to be signed
+ * @see
+ * @param {Object} params
+ * @returns Object {signature, api_key}
  */
-export const getResourceInfos = ({
-	public_id,
-	filename,
-	folder,
-	format,
-	duration,
-	secure_url
-}) => {
-	return {
-		public_id,
-		filename: filename + "." + format,
-		sharedFolder: folder.replace(/^share\//, ""), // remove the 'share/' from the folder path
-		format,
-		duration,
-		url: secure_url, // remove the extension
-		...extractTrackInfos(filename)
-	};
-};
-
-const getResourceType = (format) => {
-	if (format.indexOf(".") > 0) {
-		// It may be the file name
-		format = format.split(".").pop().toLowerCase();
-	}
-
-	// Note : the switch order is defined by our most common use cases
-	switch (format) {
-		case "mp3":
-		case "wav":
-		case "mp4":
-		case "mov":
-		case "mpeg":
-		case "webm":
-		case "aac":
-		case "ogg":
-			return "video";
-
-		case "jpg":
-		case "png":
-		case "svg":
-		case "webp":
-			return "image";
-
-		default:
-			return "raw";
-	}
+export const signRequest = (params) => {
+	return cloudinary.utils.sign_request(params);
 };
 
 /**
@@ -95,35 +61,6 @@ export const getRawResourceContent = async (rsc) => {
 		};
 	} else {
 		return {};
-	}
-};
-
-/**
- * Extract $artist - $title from a track filename
- * @param {String} filename
- * @returns {Object}
- */
-export const extractTrackInfos = (filename) => {
-	// Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
-	// Lest's remove them
-	if (filename.indexOf("/") > 0) {
-		// It's a full path : keep only the filename
-		filename = filename.split("/").pop();
-	}
-	filename = filename
-		.replace(/\_[a-z0-9]{6}$/, "") // Remove the random sequence _jhj7yg at the end of the file names
-		.replace(/\_/gi, " "); // Restore the spaces between words
-
-	if (filename.indexOf(" - ") > 0) {
-		// We have a song title
-		const [artist, title] = filename.split(" - ");
-		console.log(`Found a title : ${artist} - ${title}`);
-		return {
-			artist,
-			title
-		};
-	} else {
-		return { title: filename };
 	}
 };
 
@@ -357,7 +294,6 @@ export const uploadData = async (destPath, textData) => {
 
 export const deleteResource = async (public_id) => {
 	try {
-		console.log("Cloudinary delete resource", public_id);
 		// If we don't know the resource type, try them all..
 		const deletions = await Promise.allSettled([
 			cloudinary.api.delete_resources([public_id], {
@@ -437,6 +373,7 @@ const CloudinaryClient = {
 	getFlatContent,
 	getResource,
 	getZipDownloadUrl,
+	signRequest,
 	uploadData,
 	uploadToPath
 };

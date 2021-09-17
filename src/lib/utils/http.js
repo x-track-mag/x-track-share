@@ -41,3 +41,19 @@ export const proxyRequest = async (target, req, resp) => {
 		proxy.web(req, resp);
 	});
 };
+
+/**
+ * Standardized error response for API calls
+ * @param {Error} err
+ * @param {NextApiRequest} req
+ * @param {NextApiResponse} resp
+ * @param  {...any} more
+ */
+export const serializeError = (err, req, resp, ...more) => {
+	console.error("API CALL", req, err);
+	resp.status(err.code || 400).json({
+		success: false,
+		error: err.message,
+		...more
+	});
+};

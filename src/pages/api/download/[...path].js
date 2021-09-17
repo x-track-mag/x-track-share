@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
-import { proxyRequest } from "../../../lib/utils/http.js";
+import { proxyRequest, serializeError } from "../../../lib/utils/http.js";
 
 /**
  * Take a full resource path and change the extension
@@ -30,13 +30,6 @@ export default async (req, resp) => {
 	console.log(`Download ${public_id}.${format}`, resource);
 
 	return proxyRequest(cloudinaryDownloadUrl, req, resp).catch((err) => {
-		console.error(err);
-		resp.setHeader("Content-Type", "text/plain").status(500).end(err);
+		serializeError(err, req, resp);
 	});
-
-	try {
-		if (!success) {
-			console.error(`Download of ${cloudinaryDownloadUrl} failed`, error);
-		}
-	} catch (err) {}
 };

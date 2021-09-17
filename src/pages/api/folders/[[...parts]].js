@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
+import { serializeError } from "../../../lib/utils/http.js";
 
 /**
  * GET the flat content of a shared folder
@@ -20,8 +21,6 @@ export default async (req, resp) => {
 
 			case "DELETE":
 				msg = await CloudinaryClient.deleteFolder(path);
-
-			default:
 				break;
 		}
 		resp.json({
@@ -30,13 +29,10 @@ export default async (req, resp) => {
 			...msg
 		});
 	} catch (err) {
-		console.error("API CALLED FAILED", err);
-		resp.status(err.code || 500).json({
-			success: false,
+		serializeError(err, req, resp, {
 			path,
 			subfolders: [],
-			playlist: [],
-			error: err.message
+			playlist: []
 		});
 	}
 };

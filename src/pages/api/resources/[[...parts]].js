@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
+import { serializeError } from "../../../lib/utils/http.js";
 
 /**
  * GET a resource by its public_id
@@ -30,10 +31,6 @@ export default async (req, resp) => {
 			...msg
 		});
 	} catch (err) {
-		resp.status(err.code || 500).json({
-			success: false,
-			resource: public_id,
-			error: err.message
-		});
+		serializeError(err, req, resp);
 	}
 };

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import APIClient from "../../../lib/services/APIClient.js";
 import CloudinaryClient from "../../../lib/services/CloudinaryClient.js";
 import withCORS from "../../../lib/services/withCORS.js";
+import { serializeError } from "../../../lib/utils/http.js";
 
 /**
  * Generate a download URL for a zipped archive
@@ -25,12 +26,7 @@ const downloadAll = async (req, resp) => {
 			downloadUrl: CloudinaryClient.getZipDownloadUrl(public_ids, format)
 		});
 	} catch (err) {
-		console.error(JSON.stringify(err, null, "\t"));
-		return resp.status(err.code || 500).json({
-			success: false,
-			error: err.message,
-			...err.body
-		});
+		serializeError(err, req, resp);
 	}
 };
 

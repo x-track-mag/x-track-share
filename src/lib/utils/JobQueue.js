@@ -1,6 +1,14 @@
 import EventEmitter from "./EventEmitter";
 
 /**
+ * @typedef Job
+ * @property {Object} payload The original payload
+ * @property {Boolean} success
+ * @property {Any} [result] The returned value in case of success
+ * @property {String} [error] The cause of rejection
+ */
+
+/**
  * @typedef JobQueue
  * @property {Function<String, cb>} on Register event callbacks
  * @property {Function} clear Clear the job queues and unregister all event handlers
@@ -49,7 +57,8 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 
 			worker(current.payload, current.batchIndex, current.retries)
 				.then((result) => {
-					current.success = result;
+					current.success = true;
+					current.result = result;
 					emit("success", current);
 					active.delete(current);
 					consume();
@@ -100,7 +109,7 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 		}));
 		return new Promise((resolve) => {
 			const completed = () => {
-				resolve(batch);
+				resolve(batch); // return the whole array of wrapped jobs with their current result and success
 				jobEvents.off("completed", completed); // UN-REGISTER OUR EVENT HANDLER
 			};
 			jobEvents.on("complete", completed);

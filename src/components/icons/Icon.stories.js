@@ -1,6 +1,7 @@
 // Icon.stories.js
 import Icon, {
 	Bin,
+	FacebookLogo,
 	GithubLogo,
 	GoogleLogo,
 	LinkIcon,
@@ -33,6 +34,7 @@ export default {
 					"Plus",
 					"Upload",
 					"GithubLogo",
+					"FacebookLogo",
 					"GoogleLogo",
 					"MicrosoftLogo",
 					"TwitterLogo"
@@ -48,6 +50,7 @@ export default {
 export const DisplayTriangleIcon = ({ ...args }) => <Triangle {...args} />;
 export const DisplayGithubLogoIcon = ({ ...args }) => <GithubLogo {...args} />;
 export const DisplayGoogleLogoIcon = ({ ...args }) => <GoogleLogo {...args} />;
+export const DisplayFacebookLogoIcon = ({ ...args }) => <FacebookLogo {...args} />;
 export const DisplayMicrosoftLogoIcon = ({ ...args }) => <MicrosoftLogo {...args} />;
 export const DisplayTwitterLogoIcon = ({ ...args }) => <TwitterLogo {...args} />;
 export const DisplayBinIcon = ({ ...args }) => <Bin {...args} />;

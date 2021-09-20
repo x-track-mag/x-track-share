@@ -1,4 +1,5 @@
 export { default as Bin } from "./SvgBin.js";
+export { default as FacebookLogo } from "./SvgFacebookLogo.js";
 export { default as GithubLogo } from "./SvgGithubLogo.js";
 export { default as GoogleLogo } from "./SvgGoogleLogo.js";
 export { default as LinkIcon } from "./SvgLink.js";
@@ -13,6 +14,8 @@ const Icon = ({ name, ...props }) => {
 	switch (name) {
 		case "Bin":
 			return <Bin {...props} />;
+		case "FacebookLogo":
+			return <GithubLogo {...props} />;
 		case "GithubLogo":
 			return <GithubLogo {...props} />;
 		case "GoogleLogo":

@@ -1,13 +1,14 @@
 // Icon.stories.js
 import Icon, {
-	UploadIcon,
-	PlusIcon,
 	Bin,
-	LinkIcon,
-	Triangle,
 	GithubLogo,
 	GoogleLogo,
-	MicrosoftLogo
+	LinkIcon,
+	MicrosoftLogo,
+	PlusIcon,
+	Triangle,
+	TwitterLogo,
+	UploadIcon
 } from "./index";
 
 // This default export determines where your story goes in the story list
@@ -33,7 +34,8 @@ export default {
 					"Upload",
 					"GithubLogo",
 					"GoogleLogo",
-					"MicrosoftLogo"
+					"MicrosoftLogo",
+					"TwitterLogo"
 				]
 			}
 		},
@@ -47,6 +49,7 @@ export const DisplayTriangleIcon = ({ ...args }) => <Triangle {...args} />;
 export const DisplayGithubLogoIcon = ({ ...args }) => <GithubLogo {...args} />;
 export const DisplayGoogleLogoIcon = ({ ...args }) => <GoogleLogo {...args} />;
 export const DisplayMicrosoftLogoIcon = ({ ...args }) => <MicrosoftLogo {...args} />;
+export const DisplayTwitterLogoIcon = ({ ...args }) => <TwitterLogo {...args} />;
 export const DisplayBinIcon = ({ ...args }) => <Bin {...args} />;
 export const DisplayLinkIcon = ({ ...args }) => <LinkIcon {...args} />;
 export const DisplayUploadIcon = ({ ...args }) => <UploadIcon {...args} />;

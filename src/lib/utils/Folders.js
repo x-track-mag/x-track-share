@@ -13,7 +13,7 @@ export const EMPTY_RAILWAY = {
  * Giving a slash '/' separated path,
  * extract the leaf and all the preceding parent paths
  * eg.
- *   extractPaths("my/way/to/home") =>
+ *   makeBreadcrumbs("my/way/to/home") =>
  *   {
  *     leaf: "home",
  *     parents: [

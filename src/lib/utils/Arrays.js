@@ -43,6 +43,24 @@ const _ARRAY_EXTENSIONS = {
 		}
 		return arr;
 	},
+	partition: function (fn) {
+		return this.reduce((acc, val) => {
+			const p = fn(val);
+			let pos = p;
+			if (p === true) {
+				pos = 0;
+			} else if (p === false) {
+				pos = 1;
+			}
+			// Insert the val at this position/key
+			if (acc[pos] === undefined) {
+				// First insertion at this poisition
+				acc[pos] = []; // Init an empty array
+			}
+			acc[pos].push(val);
+			return acc;
+		}, []);
+	},
 	/**
 	 * Re-order this array following the order given by the list and the key
 	 *

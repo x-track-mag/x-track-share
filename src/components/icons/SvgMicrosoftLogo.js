@@ -10,13 +10,12 @@ import Icon from "@chakra-ui/icon";
  * Render the Microsoft Logo
  * @param {SvgMicrosoftLogoProps} props
  */
-const SvgMicrosoftLogo = ({ bgColor, size = "24px", ...props }) => (
-	<Icon height={size} width={size} viewBox="0 0 48 48" {...props}>
-		{bgColor && <path fill={bgColor} d="M0 0h48v48H0z" />}
-		<path fill="#F25022" d="M10 10h13.263v13.263H10z" />
-		<path fill="#00A4EF" d="M10 24.737h13.263V38H10z" />
-		<path fill="#7FBA00" d="M24.737 10H38v13.263H24.737z" />
-		<path fill="#FFB900" d="M24.737 24.737H38V38H24.737z" />
+const SvgMicrosoftLogo = ({ size = "24px", ...props }) => (
+	<Icon height={size} width={size} viewBox="0 0 128 128" {...props}>
+		<path d="M4,4v58h58v-58Z" fill="#F25022" />
+		<path d="M66,4v58h58v-58Z" fill="#7FBA00" />
+		<path d="M4,66v58h58v-58Z" fill="#00A4EF" />
+		<path d="M66,66v58h58v-58Z" fill="#FFB900" />
 	</Icon>
 );
 

@@ -1,9 +1,9 @@
-export { default as FacebookLogo } from "./SvgFacebookLogo.js";
-export { default as GithubLogo } from "./SvgGithubLogo.js";
-export { default as GoogleLogo } from "./SvgGoogleLogo.js";
-export { default as LinkedInLogo } from "./SvgLinkedInLogo.js";
-export { default as MicrosoftLogo } from "./SvgMicrosoftLogo.js";
-export { default as TwitterLogo } from "./SvgTwitterLogo.js";
+import FacebookLogo from "./SvgFacebookLogo.js";
+import GithubLogo from "./SvgGithubLogo.js";
+import GoogleLogo from "./SvgGoogleLogo.js";
+import LinkedInLogo from "./SvgLinkedInLogo.js";
+import MicrosoftLogo from "./SvgMicrosoftLogo.js";
+import TwitterLogo from "./SvgTwitterLogo.js";
 
 /**
  *

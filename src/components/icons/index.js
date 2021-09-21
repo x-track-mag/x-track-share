@@ -3,6 +3,7 @@ export { default as FacebookLogo } from "./SvgFacebookLogo.js";
 export { default as GithubLogo } from "./SvgGithubLogo.js";
 export { default as GoogleLogo } from "./SvgGoogleLogo.js";
 export { default as LinkIcon } from "./SvgLink.js";
+export { default as LinkedInLogo } from "./SvgLinkedInLogo.js";
 export { default as XtrackLogo } from "./SvgLogo.js";
 export { default as MicrosoftLogo } from "./SvgMicrosoftLogo.js";
 export { default as PlusIcon } from "./SvgPlus.js";
@@ -20,6 +21,8 @@ const Icon = ({ name, ...props }) => {
 			return <GithubLogo {...props} />;
 		case "GoogleLogo":
 			return <GoogleLogo {...props} />;
+		case "LinkedInLogo":
+			return <LinkedInLogo {...props} />;
 		case "MicrosoftLogo":
 			return <MicrosoftLogo {...props} />;
 		case "TwitterLogo":

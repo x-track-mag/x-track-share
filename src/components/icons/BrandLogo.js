@@ -1,6 +1,7 @@
 export { default as FacebookLogo } from "./SvgFacebookLogo.js";
 export { default as GithubLogo } from "./SvgGithubLogo.js";
 export { default as GoogleLogo } from "./SvgGoogleLogo.js";
+export { default as LinkedInLogo } from "./SvgLinkedInLogo.js";
 export { default as MicrosoftLogo } from "./SvgMicrosoftLogo.js";
 export { default as TwitterLogo } from "./SvgTwitterLogo.js";
 
@@ -16,6 +17,8 @@ const BrandLogo = ({ name, ...props }) => {
 			return <GoogleLogo {...props} />;
 		case "github":
 			return <GithubLogo {...props} />;
+		case "linkedin":
+			return <LinkedInLogo {...props} />;
 		case "microsoft":
 			return <MicrosoftLogo {...props} />;
 		case "twitter":

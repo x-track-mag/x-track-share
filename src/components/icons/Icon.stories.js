@@ -4,6 +4,7 @@ import Icon, {
 	FacebookLogo,
 	GithubLogo,
 	GoogleLogo,
+	LinkedInLogo,
 	LinkIcon,
 	MicrosoftLogo,
 	PlusIcon,
@@ -18,9 +19,7 @@ export default {
 	component: Icon,
 	args: {
 		name: "Bin",
-		size: 256,
-		color: "#18b761",
-		bgColor: null
+		size: 256
 	},
 	argTypes: {
 		name: {
@@ -35,6 +34,7 @@ export default {
 					"Upload",
 					"GithubLogo",
 					"FacebookLogo",
+					"LinkedInLogo",
 					"GoogleLogo",
 					"MicrosoftLogo",
 					"TwitterLogo"
@@ -52,6 +52,7 @@ export const DisplayGithubLogoIcon = ({ ...args }) => <GithubLogo {...args} />;
 export const DisplayGoogleLogoIcon = ({ ...args }) => <GoogleLogo {...args} />;
 export const DisplayFacebookLogoIcon = ({ ...args }) => <FacebookLogo {...args} />;
 export const DisplayMicrosoftLogoIcon = ({ ...args }) => <MicrosoftLogo {...args} />;
+export const DisplayLinkedInLogoIcon = ({ ...args }) => <LinkedInLogo {...args} />;
 export const DisplayTwitterLogoIcon = ({ ...args }) => <TwitterLogo {...args} />;
 export const DisplayBinIcon = ({ ...args }) => <Bin {...args} />;
 export const DisplayLinkIcon = ({ ...args }) => <LinkIcon {...args} />;

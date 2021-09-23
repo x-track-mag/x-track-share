@@ -1,5 +1,4 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import FirebaseAuthProvider from "../components/auth/FirebaseAuthProvider.js";
 import { DialogContextProvider } from "../components/base/Dialog.js";
 import EventBusProvider from "../components/EventBusProvider.js";
 import PageLayout from "../components/layout/PageLayout.js";
@@ -16,17 +15,15 @@ function MyApp({ Component, pageProps }) {
 	exitOnRejections();
 
 	return (
-		<FirebaseAuthProvider>
-			<ChakraProvider resetCSS theme={theme}>
-				<PageLayout>
-					<EventBusProvider>
-						<DialogContextProvider>
-							<Component {...pageProps} />
-						</DialogContextProvider>
-					</EventBusProvider>
-				</PageLayout>
-			</ChakraProvider>
-		</FirebaseAuthProvider>
+		<ChakraProvider resetCSS theme={theme}>
+			<PageLayout>
+				<EventBusProvider>
+					<DialogContextProvider>
+						<Component {...pageProps} />
+					</DialogContextProvider>
+				</EventBusProvider>
+			</PageLayout>
+		</ChakraProvider>
 	);
 }
 

@@ -3,26 +3,42 @@ import {
 	getAuth,
 	onAuthStateChanged,
 	setPersistence,
-	signInWithPopup
+	signInWithPopup,
+	signOut as authSignOut
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
-import firebaseApp from "../../lib/firebase/app";
+import initFirebase from "../../lib/firebase/app";
 
-const FirebaseAuthContext = createContext({
-	app: firebaseApp,
-	user: null,
-	loading: false,
-	error: null,
-	signIn: async (provider) => {},
-	signOut: async () => {}
-});
+initFirebase();
+
+/**
+ * @typedef AuthenticatedUser
+ * @type {Object}
+ * @property {String} email
+ * @property {String} username
+ * @property {String} avatar URL of an image
+ */
+
+/**
+ * @typedef FirebaseAuthContext
+ * @type {Object}
+ * @property {AuthenticatedUser} user
+ * @property {Boolean} loading
+ * @property {String} [error]
+ * @property {Function} signIn
+ * @property {Function} signOut
+ * @property {Function} clear
+ */
+
+/**
+ * @type FirebaseAuthContext
+ */
+const FirebaseAuthContext = createContext();
 
 const formatUser = (user) => ({
-	uid: user.uid,
 	email: user.email,
-	name: user.displayName,
-	avatar: user.photoURL,
-	token: null
+	username: user.displayName,
+	avatar: user.photoURL
 });
 
 /**
@@ -38,8 +54,8 @@ function createAuthContext() {
 	setPersistence(auth, browserSessionPersistence);
 
 	const handleAuthChange = async (authState = null) => {
+		console.log("handleAuthChange()", authState);
 		if (!authState) {
-			setLoading(true);
 			return;
 		}
 		const formattedAuth = formatUser(authState);
@@ -53,21 +69,24 @@ function createAuthContext() {
 	 * @param {*} provider
 	 */
 	const signedIn = async ({ user }, provider) => {
+		clear();
 		if (!user) {
-			clear();
-			setError("No User");
+			setError("No user was returned from the authentication process");
+		} else {
+			setUser(formatUser(user));
+			console.log("Successfully logged", user);
 		}
-		setUser(formatUser(user));
-		setLoading(false);
 	};
 
 	const clear = () => {
+		setError(null);
 		setUser(null);
 		setLoading(false);
 	};
 
 	const signIn = async (provider) => {
 		const auth = getAuth();
+		console.log("signIn", auth);
 		setLoading(true);
 		return signInWithPopup(auth, provider)
 			.then(signedIn)
@@ -79,15 +98,11 @@ function createAuthContext() {
 	};
 
 	const signOut = async () => {
+		clear();
 		const auth = getAuth();
-		signOut(auth)
-			.then(() => {
-				clear();
-			})
-			.catch((err) => {
-				clear();
-				setError(err.message);
-			});
+		authSignOut(auth).catch((err) => {
+			setError(err.message);
+		});
 	};
 
 	useEffect(() => {
@@ -97,9 +112,10 @@ function createAuthContext() {
 	}, []);
 
 	return {
-		auth: user,
+		user,
 		loading,
 		error,
+		clear,
 		signIn,
 		signOut
 	};
@@ -116,6 +132,10 @@ const FirebaseAuthProvider = ({ children }) => {
 
 export default FirebaseAuthProvider;
 
+/**
+ *
+ * @returns {FirebaseAuthContext}
+ */
 export const useAuth = () => {
 	const authContext = useContext(FirebaseAuthContext);
 

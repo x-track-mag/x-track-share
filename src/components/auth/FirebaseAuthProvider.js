@@ -22,12 +22,12 @@ initFirebase();
 /**
  * @typedef FirebaseAuthContext
  * @type {Object}
- * @property {AuthenticatedUser} user
- * @property {Boolean} loading
- * @property {String} [error]
- * @property {Function} signIn
- * @property {Function} signOut
- * @property {Function} clear
+ * @property {AuthenticatedUser} user Currently logged User (or NULL)
+ * @property {Boolean}  loading TRUE when waiting for the authentication request response
+ * @property {String}   error Error message (or NULL)
+ * @property {Function} signIn Sign in using one of the pre-configured authentication providers
+ * @property {Function} signOut Log out
+ * @property {Function} clear Clear the error state as well as the currently logged use
  */
 
 /**
@@ -35,6 +35,11 @@ initFirebase();
  */
 const FirebaseAuthContext = createContext();
 
+/**
+ * Keep only the relevant fields
+ * @param {Object} user
+ * @returns {AuthenticatedUser}
+ */
 const formatUser = (user) => ({
 	email: user.email,
 	username: user.displayName,

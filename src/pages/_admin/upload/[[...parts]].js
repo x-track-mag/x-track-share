@@ -1,5 +1,9 @@
 import { Box, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import {
+	withAuthContext,
+	withAuthentication
+} from "../../../components/auth/withAuth.js";
 import Breadcrumbs from "../../../components/Breadcrumbs.js";
 import CloudinaryFileUpload from "../../../components/upload/CloudinaryFileUpload.js";
 
@@ -42,5 +46,4 @@ const UploadPage = ({ folderPath }) => {
 	);
 };
 
-// export default withAuth(UploadPage);
-export default UploadPage;
+export default withAuthContext(withAuthentication(UploadPage));

@@ -9,7 +9,7 @@ export const withAuthContext = (Component) => (props) => (
 	</FirebaseAuthProvider>
 );
 
-export const withAuthencation = (Component) => (props) => {
+export const withAuthentication = (Component) => (props) => {
 	const { user, loading, error, clear } = useAuth(); // Retrieve FirebaseAuthProvider context
 
 	if (error) {
@@ -41,7 +41,7 @@ export const withAuthencation = (Component) => (props) => {
 	}
 
 	if (!user) {
-		return <LoginForm />;
+		return <LoginForm choices={["microsoft"]} />;
 	}
 
 	// Yep

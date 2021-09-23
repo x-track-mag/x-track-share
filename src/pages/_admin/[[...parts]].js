@@ -1,5 +1,6 @@
 import { Box, Center, Grid, Stack } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
+import { withAuthContext, withAuthentication } from "../../components/auth/withAuth.js";
 import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
@@ -132,4 +133,4 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 	);
 };
 
-export default AdminPage;
+export default withAuthContext(withAuthentication(AdminPage));

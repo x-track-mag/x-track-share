@@ -1,10 +1,31 @@
-import { GoogleAuthProvider, OAuthProvider } from "firebase/auth";
+import {
+	FacebookAuthProvider,
+	GithubAuthProvider,
+	GoogleAuthProvider,
+	OAuthProvider
+} from "firebase/auth";
 
-const getGoogleProvider = () => {
+export const getGoogleProvider = () => {
 	return new GoogleAuthProvider();
 };
 
-const getMicrosoftProvider = (params = {}) => {
+export const getGithubProvider = (params) => {
+	const provider = new GithubAuthProvider();
+	if (params) {
+		provider.setCustomParameters(params);
+	}
+	return provider;
+};
+
+export const getFacebookProvider = (params) => {
+	const provider = new FacebookAuthProvider();
+	if (params) {
+		provider.setCustomParameters(params);
+	}
+	return provider;
+};
+
+export const getMicrosoftProvider = (params = {}) => {
 	const provider = new OAuthProvider("microsoft.com");
 	const { tenant } = params;
 
@@ -22,12 +43,14 @@ const getMicrosoftProvider = (params = {}) => {
 };
 
 const ProviderFactory = {
-	getGoogleProvider,
-	getMicrosoftProvider,
 	getProvider: (name, params) => {
 		switch (name) {
+			case "facebook":
+				return getFacebookProvider(params);
 			case "google":
 				return getGoogleProvider(params);
+			case "github":
+				return getGithubProvider(params);
 			case "microsoft":
 				return getMicrosoftProvider(params);
 

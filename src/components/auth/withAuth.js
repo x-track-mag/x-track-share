@@ -1,9 +1,16 @@
-import { Button, Center, Spinner, Stack } from "@chakra-ui/react";
-import { useAuth } from "./FirebaseAuthProvider.js";
+import { Center, Spinner, Stack } from "@chakra-ui/react";
+import Button from "../forms/inputs/Button.js";
+import FirebaseAuthProvider, { useAuth } from "./FirebaseAuthProvider.js";
 import LoginForm from "./LoginForm.js";
 
-const withAuth = (Component) => (props) => {
-	const { user, loading, error, clear } = useAuth();
+export const withAuthContext = (Component) => (props) => (
+	<FirebaseAuthProvider>
+		<Component {...props} />
+	</FirebaseAuthProvider>
+);
+
+export const withAuthencation = (Component) => (props) => {
+	const { user, loading, error, clear } = useAuth(); // Retrieve FirebaseAuthProvider context
 
 	if (error) {
 		return (
@@ -11,12 +18,7 @@ const withAuth = (Component) => (props) => {
 				<Stack color="yellow">
 					<h3>LOGIN ERROR</h3>
 					<code color="red">{error}</code>
-					<Button
-						variant="solid"
-						borderRadius={0}
-						bgColor="#333"
-						onClick={clear}
-					>
+					<Button primary={false} onClick={clear}>
 						OK
 					</Button>
 				</Stack>
@@ -45,5 +47,3 @@ const withAuth = (Component) => (props) => {
 	// Yep
 	return <Component user={user} {...props} />;
 };
-
-export default withAuth;

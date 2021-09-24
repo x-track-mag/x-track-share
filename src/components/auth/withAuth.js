@@ -1,16 +1,29 @@
 import { Center, Spinner, Stack } from "@chakra-ui/react";
+import { Component } from "react";
 import Button from "../forms/inputs/Button.js";
 import FirebaseAuthProvider, { useAuth } from "./FirebaseAuthProvider.js";
 import LoginForm from "./LoginForm.js";
 
+/**
+ * HOC : Provides the FirebaseAuthContext to wrapped <Component>
+ * Allows to use the useAuth() Hook inside Component
+ * @param {Component} Component
+ * @return {Component}
+ */
 export const withAuthContext = (Component) => (props) => (
 	<FirebaseAuthProvider>
 		<Component {...props} />
 	</FirebaseAuthProvider>
 );
 
+/**
+ * HOC : restrict access to <Component> to authenticated users only
+ * Displays a LoginForm when the user is not authenticated
+ * @param {Component} Component
+ * @return {Component}
+ */
 export const withAuthentication = (Component) => (props) => {
-	const { user, loading, error, clear } = useAuth(); // Retrieve FirebaseAuthProvider context
+	const { user, loading, error, clear } = useAuth(); // Retrieved from FirebaseAuthProvider context
 
 	if (error) {
 		return (

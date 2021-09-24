@@ -62,7 +62,6 @@ const sendFile = (uploadPath, updateProgress) => async (file, i, retries) => {
 			}
 		})
 		.then((result) => {
-			console.log(`Upload of file ${i}`, result);
 			updateProgress({ progress: 100, error: false }, i);
 		})
 		.catch((err) => {
@@ -104,7 +103,6 @@ const CloudinaryFileUpload = ({
 
 	// Call this to re-display the list of uploaded files
 	const updateProgress = (files) => (progressInfo, i) => {
-		console.log("updateProgress", progressInfo, i);
 		const f = files[i];
 		Object.assign(f, progressInfo);
 
@@ -142,15 +140,22 @@ const CloudinaryFileUpload = ({
 			worker: sendFile(uploadPath, updateProgress(filesProgression)),
 			concurrency: 8
 		});
-		const result = await jobQueue.runBatch(acceptedFiles);
+		const results = await jobQueue.runBatch(acceptedFiles);
+
+		const [uploaded = [], failed = []] = results.partition((job) => job.success);
+		console.log(
+			`${uploaded.length} files were successfully uploaded. ${
+				failed.length
+			} files were rejected. 
+Total process completed in ${(Date.now() - start) / 1000}secs`,
+			results
+		);
+
+		if (failed.length > 0) {
+			confirm(`${failed.length} échecs`);
+		}
 		setPending(0);
 		jobQueue.clear(); // Why not ?
-		console.log(
-			`${filesProgression.length} files upload process complete in ${
-				(Date.now() - start) / 1000
-			}secs`,
-			result
-		);
 	}, []);
 
 	// @see

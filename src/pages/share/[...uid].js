@@ -45,7 +45,15 @@ const SharedFolderPage = () => {
 
 	if (!folder) return null;
 
-	const { path, subfolders, audios, videos, settings, download_audio_links } = folder;
+	const {
+		path,
+		subfolders,
+		audios,
+		videos,
+		settings,
+		download_audios_archive,
+		download_videos_archive
+	} = folder;
 
 	useEffect(() => {
 		console.log(`Exploring ${current}`, folder, settings);
@@ -80,7 +88,7 @@ const SharedFolderPage = () => {
 					{settings.download_zip && (
 						<SelectDownloadArchiveFormat
 							playlist_name={current.replace("/", "-")}
-							download_archive_links={download_audio_links}
+							download_archive_links={download_audios_archive}
 						>
 							Download zip
 						</SelectDownloadArchiveFormat>
@@ -89,13 +97,23 @@ const SharedFolderPage = () => {
 			)}
 
 			{videos.length && (
-				<VideoPlaylistPlayer
-					type="video"
-					playerId="video-player"
-					playlist={videos}
-					settings={settings}
-					timestamp={timestamp}
-				/>
+				<Box position="relative">
+					<VideoPlaylistPlayer
+						type="video"
+						playerId="video-player"
+						playlist={videos}
+						settings={settings}
+						timestamp={timestamp}
+					/>
+					{settings.download_zip && (
+						<SelectDownloadArchiveFormat
+							playlist_name={current.replace("/", "-")}
+							download_archive_links={download_videos_archive}
+						>
+							Download zip
+						</SelectDownloadArchiveFormat>
+					)}
+				</Box>
 			)}
 		</Stack>
 	);

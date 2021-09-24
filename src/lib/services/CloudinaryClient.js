@@ -212,7 +212,7 @@ export const getDeepContent = async (root) => {
 					folder.download_videos_archive = AVAILABLE_VIDEO_FORMATS.reduce(
 						(links, format) => {
 							links[format] = getZipDownloadUrl(
-								audios.map((audio) => audio.public_id),
+								videos.map((video) => video.public_id),
 								format
 							);
 							return links;

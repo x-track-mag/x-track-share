@@ -31,7 +31,7 @@ const AudioPlaylistPlayer = ({ playerId, playlist = [], settings = {} }) => {
 		columnsToDisplay.push("download_form");
 	}
 	if (download_links) {
-		columnsToDisplay.push("download_links");
+		columnsToDisplay.push("download_audio");
 	}
 	columnsToDisplay.push("duration");
 

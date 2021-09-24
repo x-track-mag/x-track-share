@@ -3,7 +3,15 @@ import { Select } from "@chakra-ui/select";
 import { useState } from "react";
 
 // @see https://cloudinary.com/documentation/audio_transformations#supported_audio_formats
-const _MUSIC_FORMAT_OPTIONS = ["wav", "mp3", "m4a", "ogg"];
+export const AVAILABLE_AUDIO_FORMATS = ["wav", "mp3", "m4a", "ogg"];
+// @see https://cloudinary.com/documentation/video_manipulation_and_delivery#supported_video_formats
+export const AVAILABLE_VIDEO_FORMATS = ["mp4", "webm"];
+
+/**
+ * @typedef SelectDownloadFormat
+ * @param {File} mediaFile
+ * @property {Array<String>} availableFormats Available formats for download (lowercase)
+ */
 
 /**
  * Generate a link+selectbox to directly download a file in the required format
@@ -11,21 +19,22 @@ const _MUSIC_FORMAT_OPTIONS = ["wav", "mp3", "m4a", "ogg"];
  * @param {SelectDownloadFormat} props
  */
 const SelectDownloadFileFormat = ({
-	file,
-	formatsOptions = _MUSIC_FORMAT_OPTIONS,
+	mediaFile,
+	availableFormats = AVAILABLE_AUDIO_FORMATS,
 	children,
 	...props
 }) => {
-	const [format, setFormat] = useState(formatsOptions[0]);
+	const [format, setFormat] = useState(availableFormats[0]);
 
 	// Create the download URL and proposed filename
 	let downloadUrl, downloadAs;
 
-	if (file) {
-		downloadUrl = "/download/" + file.url.split("upload/")[1].replace(/\.\w+$/i, "");
-		downloadAs = file.artist
-			? `${file.artist} - ${file.title}.${format}`
-			: file.filename.replace(/\.\w+$/i, format);
+	if (mediaFile) {
+		downloadUrl =
+			"/download/" + mediaFile.url.split("upload/")[1].replace(/\.\w+$/i, "");
+		downloadAs = mediaFile.artist
+			? `${mediaFile.artist} - ${mediaFile.title}.${format}`
+			: mediaFile.filename.replace(/\.\w+$/i, "." + format);
 	} else {
 		return null;
 	}
@@ -37,7 +46,7 @@ const SelectDownloadFileFormat = ({
 			</Link>
 			&nbsp;
 			<Select width="5rem" size="sm" display="inline-block" {...props}>
-				{formatsOptions.map((format) => (
+				{availableFormats.map((format) => (
 					<option key={format} onClick={() => setFormat(format)}>
 						{format.toUpperCase()}
 					</option>

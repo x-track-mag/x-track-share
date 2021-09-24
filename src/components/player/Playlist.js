@@ -6,7 +6,9 @@ import { useSharedFolderContext } from "../SharedFolderContext.js";
 import { usePlayerState } from "./PlayerStateProvider.js";
 import styles from "./Playlist.module.scss";
 import PlayPauseIcon from "./PlayPauseIcon.js";
-import SelectDownloadFileFormat from "./SelectDownloadFileFormat.js";
+import SelectDownloadFileFormat, {
+	AVAILABLE_VIDEO_FORMATS
+} from "./SelectDownloadFileFormat.js";
 
 const formatDuration = (ms) =>
 	`${Math.floor(ms / 60)}:${(Math.round(ms % 60) + 100).toString().substr(1)}`;
@@ -53,9 +55,21 @@ const PlaylistHeaders = {
 		maxWidth: "100px",
 		align: "center"
 	},
-	download_links: {
+	download_audio: {
 		Header: "Télécharger",
-		accessor: (file) => <SelectDownloadFileFormat file={file} />,
+		accessor: (file) => <SelectDownloadFileFormat mediaFile={file} />,
+		disableSortBy: true,
+		maxWidth: "10rem",
+		isNumeric: true
+	},
+	download_video: {
+		Header: "Télécharger",
+		accessor: (file) => (
+			<SelectDownloadFileFormat
+				mediaFile={file}
+				availableFormats={AVAILABLE_VIDEO_FORMATS}
+			/>
+		),
 		disableSortBy: true,
 		maxWidth: "10rem",
 		isNumeric: true
@@ -92,6 +106,7 @@ const makeColumns = (ids) =>
 
 /**
  * An entry inside the playlist, representing an audio or video asset to play
+ * @constructor
  * @param {PlaylistEntryProps} props
  */
 function PlaylistEntry(props, player, selectedTracks, eb) {

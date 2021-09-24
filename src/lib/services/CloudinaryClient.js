@@ -6,8 +6,12 @@
  */
 import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
+import {
+	AVAILABLE_AUDIO_FORMATS,
+	AVAILABLE_VIDEO_FORMATS
+} from "../../components/player/SelectDownloadFileFormat.js";
 import ApiError from "../ApiError.js";
-import SharedFolder, { DOWNLOAD_AUDIO_FORMATS } from "../cloudinary/SharedFolder.js";
+import SharedFolder from "../cloudinary/SharedFolder.js";
 import { extractTrackInfos, getResourceInfos } from "../utils/Cloudinary.js";
 import { merge } from "../utils/deepMerge.js";
 import { loadEnv } from "../utils/Env.js";
@@ -192,7 +196,20 @@ export const getDeepContent = async (root) => {
 			if (settings.download_zip) {
 				// We have to prepare the download links for all the public_ids
 				if (audios.length > 0) {
-					folder.download_audio_links = DOWNLOAD_AUDIO_FORMATS.reduce(
+					folder.download_audios_archive = AVAILABLE_AUDIO_FORMATS.reduce(
+						(links, format) => {
+							links[format] = getZipDownloadUrl(
+								audios.map((audio) => audio.public_id),
+								format
+							);
+							return links;
+						},
+						{}
+					);
+				}
+				// We have to prepare the download links for all the public_ids
+				if (videos.length > 0) {
+					folder.download_videos_archive = AVAILABLE_VIDEO_FORMATS.reduce(
 						(links, format) => {
 							links[format] = getZipDownloadUrl(
 								audios.map((audio) => audio.public_id),

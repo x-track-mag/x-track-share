@@ -58,7 +58,7 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 			worker(current.payload, current.batchIndex, current.retries)
 				.then((result) => {
 					current.success = true;
-					current.result = result;
+					if (result) current.result = result;
 					emit("success", current);
 					active.delete(current);
 					consume();
@@ -87,7 +87,6 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	// Pushing new jobs can be done even when the queue is running
 	const push = (jobs) => {
 		pending.push(...jobs);
-		console.log(`Added ${jobs.length} to the queue`, pending);
 		consume();
 	};
 

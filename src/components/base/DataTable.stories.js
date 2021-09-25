@@ -1,7 +1,7 @@
-import { DataTable } from "./DataTable";
-import theme from "../../theme.js";
-import { addDecorator } from "@storybook/react";
 import { Center, ChakraProvider } from "@chakra-ui/react";
+import { addDecorator } from "@storybook/react";
+import theme from "../../theme.js";
+import { DataTable } from "./DataTable";
 
 addDecorator((StoryFn) => (
 	<ChakraProvider resetCSS theme={theme}>
@@ -30,8 +30,8 @@ const data = [
 ];
 
 export default {
-	component: DataTable,
-	title: "Data Table"
+	title: "Data Table",
+	component: DataTable
 };
 
 export const SortableDataTable = () => <DataTable data={data} columns={columns} />;

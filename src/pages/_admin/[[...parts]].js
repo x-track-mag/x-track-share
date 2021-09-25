@@ -74,17 +74,19 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 		const confirmDeletion = await confirm({
 			title: "SUPPRESSION DE PARTAGE",
 			message: `Supprimer le dossier de partage '${folderPath}' ?`,
-			yes: "Oui",
-			no: "Non"
+			choices: ["Oui", "Non"]
 		});
 		if (confirmDeletion) {
 			// Remove the folder from the virtual folder list without reloading the page
 			setVFolders(vFolders.filter(({ path }) => path !== folderPath));
 			const { success } = await APIClient.del(`/api/folders/${folderPath}`);
 			if (!success) {
-				alert(
-					"La suppression totale du dossier n'a pu être effective. Il faut le supprimer totalement dans Cloudinary"
-				);
+				confirm({
+					title: "ECHEC DE SUPPRESSION",
+					message:
+						"La suppression totale du dossier n'a pu être effective. Il faut le supprimer totalement dans Cloudinary",
+					choices: ["OK"]
+				});
 			}
 		}
 	};

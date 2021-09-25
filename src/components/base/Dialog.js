@@ -4,11 +4,10 @@ import {
 	AlertDialogContent,
 	AlertDialogFooter,
 	AlertDialogHeader,
-	AlertDialogOverlay,
-	Button
+	AlertDialogOverlay
 } from "@chakra-ui/react";
-import React from "react";
-import { createContext, useContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
+import Button from "../forms/inputs/Button";
 
 const DialogContext = createContext();
 
@@ -20,12 +19,22 @@ export const useDialogContext = () => {
 	return useContext(DialogContext);
 };
 
-// Let's provide some default dialog property values
+// Let's provide some usual confirmation choices
+export const OK = ["Ok"];
+export const OK_CANCEL = ["Ok", "Cancel"];
+export const YES_NO = ["Yes", "No"];
+
+/**
+ * @type DialogProps
+ * Let's provide some default dialog property values
+ */
+
 const DEFAULT_DIALOG_STATE = {
 	title: "Confirmation",
 	message: "Are you sure ?",
-	yes: "Yes",
-	no: "No",
+	choices: YES_NO,
+	primary: 0, // Which choice should be the primary one ?
+	focusOn: 0, // Focus on the 1st choice (index 0)
 	show: false
 };
 
@@ -69,7 +78,7 @@ export const DialogContextProvider = ({ children }) => {
  * @param {React.Component} Component
  * @returns HOC
  */
-export const withDialogContextProvider = (Component) => (props) => (
+export const withDialogContext = (Component) => (props) => (
 	<DialogContextProvider>
 		<Component {...props} />
 	</DialogContextProvider>
@@ -80,12 +89,21 @@ export const withDialogContextProvider = (Component) => (props) => (
  * @param {DialogProps} props
  */
 export const Dialog = () => {
-	const { show, title, message, yes, no, callback, close } = useDialogContext();
+	const {
+		show,
+		title,
+		message,
+		choices,
+		primary,
+		focusOn,
+		callback,
+		close
+	} = useDialogContext();
 	const refToFocusOn = useRef();
 
-	const answer = (choice) => () => {
+	const answer = (choice, idx) => () => {
 		close();
-		callback && callback(choice);
+		callback && callback(choice, idx);
 	};
 
 	return (
@@ -96,7 +114,7 @@ export const Dialog = () => {
 		>
 			<AlertDialogOverlay>
 				<AlertDialogContent
-					bgColor="gray.700"
+					bgColor="gray.600"
 					borderRadius={0}
 					borderStyle="double"
 					borderColor="blue"
@@ -106,7 +124,7 @@ export const Dialog = () => {
 						fontSize="lg"
 						fontWeight="bold"
 						textTransform="uppercase"
-						bgColor="blackAlpha.500"
+						bgColor="blackAlpha.800"
 						p={2}
 					>
 						{title}
@@ -115,27 +133,28 @@ export const Dialog = () => {
 					<AlertDialogBody>{message}</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button
-							borderRadius={0}
-							bgColor="gray.500"
-							ref={refToFocusOn}
-							onClick={answer(false)}
-							padding="0 2rem"
-							textTransform="uppercase"
-						>
-							{no}
-						</Button>
-						<Button
-							borderRadius={0}
-							bgColor="blue"
-							color="yellow"
-							onClick={answer(true)}
-							ml={3}
-							padding="0 2rem"
-							textTransform="uppercase"
-						>
-							{yes}
-						</Button>
+						{choices.map((label, idx) => {
+							const props = {};
+							if (idx === focusOn) {
+								props.ref = { refToFocusOn };
+							}
+							props.primary = idx === primary;
+
+							return (
+								<Button
+									{...props}
+									ml={4}
+									key={`confirm-choice-${idx}`}
+									textTransform="uppercase"
+									onClick={answer(
+										idx < 2 ? [true, false][idx] : idx,
+										label
+									)}
+								>
+									{label}
+								</Button>
+							);
+						})}
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialogOverlay>

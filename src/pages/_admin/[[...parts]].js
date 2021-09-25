@@ -74,7 +74,8 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 		const confirmDeletion = await confirm({
 			title: "SUPPRESSION DE PARTAGE",
 			message: `Supprimer le dossier de partage '${folderPath}' ?`,
-			choices: ["Oui", "Non"]
+			choices: ["Oui", "Non"],
+			focusOn: 1
 		});
 		if (confirmDeletion) {
 			// Remove the folder from the virtual folder list without reloading the page

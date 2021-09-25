@@ -46,17 +46,21 @@ const MiniPlaylist = ({ tracks = [], updatePlaylist }) => {
 	const deleteTrack = ({ title, public_id }) => async (evt) => {
 		const confirmDeletion = await confirm({
 			title: "TRACK SUPPRESSION",
-			message: `Supprimer '${title}' du partage ?`
+			message: `Supprimer '${title}' du partage ?`,
+			choices: ["Oui", "Non"],
+			focusOn: 1 // Don't select the destructive option
 		});
 		if (confirmDeletion) {
 			// Remove the resource
 			updatePlaylist(tracks.filter((track) => track.public_id !== public_id));
 			const { success } = await APIClient.del(`/api/resources/${public_id}`);
 			if (!success) {
-				alert(
-					`La suppression du fichier partagé '${title}' n'a pu être effective. 
-Il faut le supprimer totalement dans Cloudinary`
-				);
+				confirm({
+					title: "ECHEC",
+					message: `La suppression du fichier partagé '${title}' n'a pu être effective. 
+                    Il faut le supprimer totalement dans Cloudinary`,
+					choices: ["OK"]
+				});
 			}
 		}
 	};

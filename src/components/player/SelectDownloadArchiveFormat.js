@@ -13,8 +13,8 @@ const SelectDownloadArchiveFormat = ({
 	children,
 	...props
 }) => {
-	const formatsOptions = Object.keys(download_archive_links) || [];
-	const [format, setFormat] = useState(formatsOptions[0] || "wav");
+	const availableFormats = Object.keys(download_archive_links) || [];
+	const [format, setFormat] = useState(availableFormats[0] || "wav");
 	if (!download_archive_links) return null;
 
 	return (
@@ -28,7 +28,7 @@ const SelectDownloadArchiveFormat = ({
 			</a>
 			&nbsp;
 			<Select width="5rem" size="sm" display="inline-block" {...props}>
-				{formatsOptions.map((format) => (
+				{availableFormats.map((format) => (
 					<option key={format} onClick={() => setFormat(format)}>
 						{format.toUpperCase()}
 					</option>

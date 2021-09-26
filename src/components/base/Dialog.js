@@ -25,10 +25,19 @@ export const OK_CANCEL = ["Ok", "Cancel"];
 export const YES_NO = ["Yes", "No"];
 
 /**
+ * @typedef DialogProps
+ * @property {String} title Modal title
+ * @property {String} message Modal message
+ * @property {Array<String>} choices
+ * @property {Number} [primary=0] Index of the primary (accented) choice (0-based)
+ * @property {Number} [focusOn=0] Index of the button to focus on (0-based)
+ * @property {Boolean} [show=false]
+ */
+
+/**
  * @type DialogProps
  * Let's provide some default dialog property values
  */
-
 const DEFAULT_DIALOG_STATE = {
 	title: "Confirmation",
 	message: "Are you sure ?",
@@ -42,7 +51,7 @@ const DEFAULT_DIALOG_STATE = {
  * Wrap some copmponents inside the DialogContext
  */
 export const DialogContextProvider = ({ children }) => {
-	const [dialogState, changeDialogState] = useState(DEFAULT_DIALOG_STATE);
+	const [dialogState, changeDialogState] = useState({ ...DEFAULT_DIALOG_STATE });
 
 	// Now, enhance the state with some methods to alter it
 	dialogState.open = (props) => {
@@ -59,6 +68,11 @@ export const DialogContextProvider = ({ children }) => {
 			callback: null
 		});
 	};
+	/**
+	 *
+	 * @param {DialogProps} props
+	 * @return {Number|Boolean}
+	 */
 	dialogState.confirm = async (props) => {
 		return new Promise((callback) => {
 			dialogState.open({ ...props, callback });
@@ -76,7 +90,7 @@ export const DialogContextProvider = ({ children }) => {
 /**
  * HOC : Wrap a component with the Dialog Context Provider
  * @param {React.Component} Component
- * @returns HOC
+ * @return {React.Component}
  */
 export const withDialogContext = (Component) => (props) => (
 	<DialogContextProvider>
@@ -115,6 +129,7 @@ export const Dialog = () => {
 			<AlertDialogOverlay>
 				<AlertDialogContent
 					bgColor="gray.600"
+					color="inherit"
 					borderRadius={0}
 					borderStyle="double"
 					borderColor="blue"
@@ -136,7 +151,7 @@ export const Dialog = () => {
 						{choices.map((label, idx) => {
 							const props = {};
 							if (idx === focusOn) {
-								props.ref = { refToFocusOn };
+								props.ref = refToFocusOn;
 							}
 							props.primary = idx === primary;
 

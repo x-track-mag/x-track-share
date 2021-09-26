@@ -35,7 +35,7 @@ const TrackEntry = ({ index, title, artist, onDeleteAction }) => (
 /**
  * Render a simple, editable list of tracks (sort, delete)
  * @param {MiniPlaylistProps} props
- * @returns
+ * @return
  */
 const MiniPlaylist = ({ tracks = [], updatePlaylist }) => {
 	const { confirm } = useDialogContext();

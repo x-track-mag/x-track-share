@@ -61,7 +61,7 @@ export const StringExtensions = {
 	/**
 	 * Convert a string to a URL-safe representation (all lowercase, a-z, 0-9, -)
 	 * @param {String} str
-	 * @returns A URL-safe version of the string
+	 * @return A URL-safe version of the string
 	 */
 	slugify: function () {
 		return this.toLowerCase()
@@ -96,7 +96,7 @@ export const StringExtensions = {
 	},
 	/**
 	 * Extract the words from this string
-	 * @returns {Array<String>}
+	 * @return {Array<String>}
 	 */
 	words: function () {
 		return this.match(/[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g);

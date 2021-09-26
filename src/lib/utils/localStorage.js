@@ -2,7 +2,7 @@
  *
  * @param {String} uid
  * @param {Number} expirationDelay
- * @returns
+ * @return
  */
 export const retrieveFromCache = (uid, expirationDelay = 10 * 60 * 1000) => {
 	if (typeof window === "undefined") return;

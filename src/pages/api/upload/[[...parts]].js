@@ -8,7 +8,7 @@ extendStrings();
 /**
  * Convert all parts of the path in lowercase and URL-safe characters
  * @param {String} relativePath
- * @returns {String}
+ * @return {String}
  */
 const normalizePath = (relativePath) => {
 	const parts = relativePath.split("/");

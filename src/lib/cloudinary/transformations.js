@@ -1,6 +1,6 @@
 import { ImageTransformation } from "@cloudinary/base";
-import { limitFill } from "@cloudinary/base/actions/resize";
 import { format, quality } from "@cloudinary/base/actions/delivery";
+import { limitFill } from "@cloudinary/base/actions/resize";
 import { auto as autoFormat } from "@cloudinary/base/values/format";
 import { auto as autoQuality } from "@cloudinary/base/values/quality";
 
@@ -13,7 +13,7 @@ import { auto as autoQuality } from "@cloudinary/base/values/quality";
 /**
  * Deliver an image that will fit inside the desired width and with the specified ratio
  * @param ImageWithRatioProps
- * @returns {ImageTransformation}
+ * @return {ImageTransformation}
  */
 export const imageWithRatio = ({ width, ratio = 4 / 3 }) =>
 	new ImageTransformation()

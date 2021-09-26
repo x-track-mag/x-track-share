@@ -14,7 +14,7 @@ export const getSearchParams = (req) =>
  * @param {String} target
  * @param {IncomingMessage} req
  * @param {ServerResponse} resp
- * @returns {Object}
+ * @return {Object}
  */
 export const proxyRequest = async (target, req, resp) => {
 	const proxy = new Proxy({

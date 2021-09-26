@@ -17,7 +17,7 @@ import FileUploadProgress from "./FileUploadProgress";
 /**
  * Upload a single file
  * @param {String} uploadUrl
- * @returns {Function}
+ * @return {Function}
  */
 const sendFile = (uploadPath, updateProgress) => async (file, i, retries) => {
 	// const folderPath = uploadPath + file.path.substr(1, file.path.lastIndexOf("/"));

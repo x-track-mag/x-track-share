@@ -66,7 +66,7 @@ const _ARRAY_EXTENSIONS = {
 	 *
 	 * @param {Array<String>} list
 	 * @param {String} key
-	 * @returns {Array}
+	 * @return {Array}
 	 */
 	reorderFrom: function (list, key) {
 		const arr = this;

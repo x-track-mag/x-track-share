@@ -17,7 +17,7 @@ import FileUploadProgress from "./FileUploadProgress";
 /**
  * Upload a single file
  * @param {String} uploadUrl
- * @returns {Function}
+ * @return {Function}
  */
 const sendFile = (uploadUrl, updateProgress) => async (file, i, retries) => {
 	let formData = new FormData();

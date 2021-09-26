@@ -38,7 +38,7 @@ const FirebaseAuthContext = createContext();
 /**
  * Keep only the relevant fields
  * @param {Object} user
- * @returns {AuthenticatedUser}
+ * @return {AuthenticatedUser}
  */
 const formatUser = (user) => ({
 	email: user.email,
@@ -48,7 +48,7 @@ const formatUser = (user) => ({
 
 /**
  *
- * @returns {FirebaseAuthContext}
+ * @return {FirebaseAuthContext}
  */
 function createAuthContext() {
 	const [user, setUser] = useState(null);
@@ -139,7 +139,7 @@ export default FirebaseAuthProvider;
 
 /**
  *
- * @returns {FirebaseAuthContext}
+ * @return {FirebaseAuthContext}
  */
 export const useAuth = () => {
 	const authContext = useContext(FirebaseAuthContext);

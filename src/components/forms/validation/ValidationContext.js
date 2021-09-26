@@ -1,4 +1,4 @@
-import { setProperty, getProperty } from "../../../lib/utils/NestedObjects.js";
+import { getProperty, setProperty } from "../../../lib/utils/NestedObjects.js";
 import { isUndefined, isUndefinedOrEmpty } from "./utils.js";
 
 const _EMPTY_ERRORS = {};
@@ -37,7 +37,7 @@ export class ValidationError extends TypeError {
  * Build the field registration function
  * @param {Object} fields Map of the fields indexed by their property path (eg : "user.name")
  * @param {Object} data
- * @returns {FieldRegistrationFunction}
+ * @return {FieldRegistrationFunction}
  */
 const registerField = (fields, data) => (
 	name,

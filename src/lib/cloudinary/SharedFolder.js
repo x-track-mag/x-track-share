@@ -118,7 +118,7 @@ SharedFolder.prototype = {
 	},
 
 	/**
-	 * @returns {String} the path to the parent folder
+	 * @return {String} the path to the parent folder
 	 */
 	getParentFolder: function () {
 		const path = this.path.split("/");

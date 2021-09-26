@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from "react";
+import { createContext, useContext, useState } from "react";
 import ValidationContext, { createValidationContext } from "./ValidationContext.js";
 
 const FormValidationContext = createContext();
@@ -58,7 +58,7 @@ export const useFormValidationContext = () => {
  * @param {JSXElementConstructor} FormComponent
  * @param {ValidationContextOptions} options like `initialValues`
  * @param {Props} initialProps Pass these to the wrapped component (he can receive more)
- * @returns FormComponent
+ * @return FormComponent
  */
 export const withFormValidationContext = (FormComponent, options = {}, initialProps) => ({
 	...props

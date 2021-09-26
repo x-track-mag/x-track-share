@@ -1,7 +1,7 @@
-import router from "next/router";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import NextLink from "next/link";
 import clsx from "clsx";
+import NextLink from "next/link";
+import router from "next/router";
 
 const noOutline = {
 	outline: "none",
@@ -60,7 +60,7 @@ export const Link = ({ href = "#", children, ...props }) => (
  * Choose between a Virtual link providing your own navigate mthod
  * or the advanced Next.js Link
  * @param {Function} navigate
- * @returns Link<href,children>
+ * @return Link<href,children>
  */
 export const VLink = (navigate) => ({ children, href }) =>
 	navigate ? (

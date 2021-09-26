@@ -31,7 +31,7 @@ export const getResourceType = (ext) => {
 /**
  * Extract $artist - $title from a track filename
  * @param {String} filename
- * @returns {Object}
+ * @return {Object}
  */
 export const extractTrackInfos = (filename) => {
 	// Cloudinary alter filenames to replace spaces and add a silly unique signature at the end
@@ -60,7 +60,7 @@ export const extractTrackInfos = (filename) => {
 /**
  * Take a file path from the local file system and create a friendly public_id (Cloudinary URL)
  * @param {String} filePath
- * @returns {String}
+ * @return {String}
  */
 export const createPublicId = (filePath) => {
 	const dirParts = filePath.split("/").filter((dir) => Boolean(dir));
@@ -75,7 +75,7 @@ export const createPublicId = (filePath) => {
 };
 
 /**
- * @returns {ResourceDef}
+ * @return {ResourceDef}
  */
 export const getResourceInfos = ({
 	public_id,

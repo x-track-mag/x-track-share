@@ -40,7 +40,7 @@ export const getResource = async (resource_id) => {
  * Browser request needs to be signed
  * @see
  * @param {Object} params
- * @returns Object {signature, api_key}
+ * @return Object {signature, api_key}
  */
 export const signRequest = (params) => {
 	return cloudinary.utils.sign_request(params);
@@ -49,7 +49,7 @@ export const signRequest = (params) => {
 /**
  * Some resource like settings.json and playlist.m3u have text content that we must parse
  * @param {*} rsc
- * @returns {Promise<String>}
+ * @return {Promise<String>}
  */
 export const getRawResourceContent = async (rsc) => {
 	if (rsc.filename === "settings.json") {
@@ -236,7 +236,7 @@ export const getDeepContent = async (root) => {
  * containing the selected assets
  * @param {Array<String>} public_ids
  * @param {String} format to convert each asset
- * @returns {String}
+ * @return {String}
  */
 export const getZipDownloadUrl = (public_ids, format = "wav", download_as) => {
 	try {
@@ -265,7 +265,7 @@ export const getZipDownloadUrl = (public_ids, format = "wav", download_as) => {
  * Upload a single local file to a folder in Cloudinary
  * @param {String} destPath
  * @param {String} localPath Path to the local file where the file can be readen
- * @returns
+ * @return
  */
 export const uploadToPath = async (destPath, localPath) => {
 	return cloudinary.uploader

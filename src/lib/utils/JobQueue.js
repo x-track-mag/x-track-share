@@ -25,7 +25,7 @@ import EventEmitter from "./EventEmitter";
 /**
  * JobQueue instanciation
  * @typedef {QueueProps} props
- * @returns {JobQueue}
+ * @return {JobQueue}
  */
 function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	let pending = [];
@@ -93,7 +93,7 @@ function JobQueue({ worker, concurrency = 8, retries = 3 }) {
 	/**
 	 *
 	 * @param  {Array<Any>} jobs
-	 * @returns {Promise}
+	 * @return {Promise}
 	 */
 	const runBatch = (jobs) => {
 		if (!Array.isArray(jobs)) {

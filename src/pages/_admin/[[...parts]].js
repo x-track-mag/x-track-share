@@ -17,7 +17,7 @@ ArrayExtensions();
 /**
  * Retrieves the subfolders and playlist linked to this shared folder
  * @param {Object} param0
- * @returns { props } to fill the page component
+ * @return { props } to fill the page component
  */
 export const getServerSideProps = async ({ params }) => {
 	const parts = params.parts || [""];
@@ -48,7 +48,6 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 	const [sharedSettings, setSharedSettings] = useState(settings);
 	const [vFolders, setVFolders] = useState(); // Use a virtual list of folders to allow for fast suppression
 	const [orderedTracks, setOrderedTracks] = useState();
-
 	const { confirm } = useDialogContext();
 
 	useEffect(() => {
@@ -84,8 +83,8 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 			if (!success) {
 				confirm({
 					title: "ECHEC DE SUPPRESSION",
-					message:
-						"La suppression totale du dossier n'a pu être effective. Il faut le supprimer totalement dans Cloudinary",
+					message: `La suppression totale du dossier n'a pu être effective. 
+Il faut le supprimer totalement dans Cloudinary`,
 					choices: ["OK"]
 				});
 			}

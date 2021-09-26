@@ -85,7 +85,7 @@ const PlaylistHeaders = {
 /**
  * Take the relevant columns from the Headers definitions
  * @param {Array<String>} ids
- * @returns {Array<Column>} Columns definitions suitable for useTable()
+ * @return {Array<Column>} Columns definitions suitable for useTable()
  */
 const makeColumns = (ids) =>
 	ids.map((id) => {

@@ -1,6 +1,6 @@
 /**
  * Check if current script is running in browser or not
- * @returns {boolean}
+ * @return {boolean}
  */
 export const isBrowser = () =>
 	typeof window !== "undefined" && typeof document !== "undefined";
@@ -39,7 +39,7 @@ export const localScroll = (hash) => {
  * Simple numeric hash of a string, used for non-secure usage only
  * @param str
  * @param namespace
- * @returns {string}
+ * @return {string}
  */
 export const generateStringHash = (str, namespace) => {
 	const nmspace = namespace || "";
@@ -62,7 +62,7 @@ export const generateStringHash = (str, namespace) => {
  * Load javascript file by path
  * @param path
  * @param attributes
- * @returns {Promise}
+ * @return {Promise}
  */
 export const loadScript = (path, attributes = {}) => {
 	const pathHash = generateStringHash(path, "JS").toString();

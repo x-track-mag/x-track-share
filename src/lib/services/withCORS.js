@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import Cors from "cors";
+import { NextApiRequest, NextApiResponse } from "next";
 
 // Default CORS options
 const _DEFAULT_OPTIONS = {
@@ -15,7 +15,7 @@ const _DEFAULT_OPTIONS = {
  * @param {Function} middleware Express compatible middleware
  * @param {NextApiRequest} req
  * @param {NextApiResponse} resp
- * @returns {Function}
+ * @return {Function}
  */
 export const runMiddleware = (middleware, req, resp) => {
 	return new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ export const runMiddleware = (middleware, req, resp) => {
  * @see https://github.com/expressjs/cors#configuration-options
  * @param {Function} handler API request handler
  * @param {Object} corsOptions
- * @returns {Function} API request handler with CORS check
+ * @return {Function} API request handler with CORS check
  */
 const withCORS = (handler, corsOptions = _DEFAULT_OPTIONS) => async (req, resp) => {
 	// Run the middleware

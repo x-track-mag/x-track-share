@@ -1,9 +1,8 @@
 import Head from "next/head";
-import { Box } from "@chakra-ui/layout";
-import { withVScrollPosition } from "../base/VScrollPositionProvider.js";
-
-import PageHeader from "./PageHeader.js";
 import Main from "../base/Main.js";
+import { withScreenSize } from "../base/ScreenSizeProvider.js";
+import { withVScrollPosition } from "../base/VScrollPositionProvider.js";
+import PageHeader from "./PageHeader.js";
 
 const PageLayout = ({ children }) => (
 	<>
@@ -23,4 +22,4 @@ const PageLayout = ({ children }) => (
 	</>
 );
 
-export default withVScrollPosition(PageLayout);
+export default withScreenSize(withVScrollPosition(PageLayout));

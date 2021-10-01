@@ -25,6 +25,7 @@ export const colors = {
 export const global = {
     html: {
         fontSize: {
+            xs: "16px",
             sm: "18px",
             md: "20px",
             lg: "22px",
@@ -32,7 +33,7 @@ export const global = {
         }
     },
     body: {
-        minWidth: "480px",
+        minWidth: "280px",
         overflowX: "hidden",
         color: "brand.yellow",
         backgroundColor: "black",

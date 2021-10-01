@@ -66,7 +66,7 @@ const SharedFolderPage = () => {
             {subfolders.length && (
                 <Grid
                     className="sub-folders"
-                    templateColumns={{ xs: "1fr 1fr", sm: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(6, 1fr)" }}
+                    templateColumns={{ xs: "1fr 1fr", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(6, 1fr)" }}
                     gap={5}
                     p={5}
                 >

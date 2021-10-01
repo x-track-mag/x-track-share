@@ -19,7 +19,7 @@ const formatDuration = (ms) =>
 const PlaylistHeaders = {
 	play: {
 		Header: "",
-		maxWidth: 10,
+		maxWidth: 2,
 		accessor: (row) => (
 			<PlayPauseIcon
 				className="allow-select"
@@ -32,12 +32,12 @@ const PlaylistHeaders = {
 	artist: {
 		Header: "Artiste",
 		accessor: "artist",
-		minWidth: "25%"
+		minWidth: "25ch"
 	},
 	title: {
 		Header: "Titre",
 		accessor: "title",
-		minWidth: 50
+		minWidth: "25ch"
 	},
 	download_form: {
 		Header: "Ajouter à ma sélection",
@@ -59,7 +59,7 @@ const PlaylistHeaders = {
 		Header: "Télécharger",
 		accessor: (file) => <SelectDownloadFileFormat mediaFile={file} />,
 		disableSortBy: true,
-		maxWidth: "10rem",
+		minWidth: "32ch",
 		isNumeric: true
 	},
 	download_video: {
@@ -77,7 +77,7 @@ const PlaylistHeaders = {
 	duration: {
 		Header: "Durée",
 		accessor: (row) => formatDuration(row.duration),
-		maxWidth: "15rem",
+		maxWidth: "10rem",
 		isNumeric: true
 	}
 };

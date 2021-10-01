@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useScreenSize } from "../base/ScreenSizeProvider.js";
 import PlayerStateProvider from "./PlayerStateProvider.js";
 import Playlist from "./Playlist.js";
 
@@ -15,12 +16,9 @@ const VideoPlayer = dynamic(() => import("./VideoPlayer.js"), { ssr: false });
  *
  * @param {VideoPlaylistPlayerProps} props
  */
-const VideoPlaylistPlayer = ({
-	type = "video",
-	playerId,
-	playlist = [],
-	settings = {}
-}) => {
+const VideoPlaylistPlayer = ({ type = "video", playerId, playlist = [], settings = {} }) => {
+	const { screenWidth } = useScreenSize();
+
 	// `download_form` allows to add the tracks to a playlist and download them later
 	// `download_links` allows to immediately download each tracks via a direct link
 	const { download_form = false, download_links = false } = settings;
@@ -33,15 +31,15 @@ const VideoPlaylistPlayer = ({
 	if (download_links) {
 		columnsToDisplay.push("download_video");
 	}
-	columnsToDisplay.push("duration");
+	if (screenWidth > 640) {
+		// We cannot afford these columns on tiny screens
+		columnsToDisplay.push("duration");
+	}
+
 	return (
 		<PlayerStateProvider>
 			<VideoPlayer id={playerId} playlist={playlist} withPlaylistEvents={true} />
-			<Playlist
-				playerId={playerId}
-				playlist={playlist}
-				columns={columnsToDisplay}
-			/>
+			<Playlist playerId={playerId} playlist={playlist} columns={columnsToDisplay} />
 		</PlayerStateProvider>
 	);
 };

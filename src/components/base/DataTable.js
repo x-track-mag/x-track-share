@@ -1,8 +1,8 @@
-import { Table, Tbody, Th, Thead, Tr, Td } from "@chakra-ui/table";
-import { useTable, useSortBy, useRowState, Column } from "react-table";
-import { ColumnHeader } from "./Typography.js";
-import SvgTriangle from "../icons/SvgTriangle.js";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import clsx from "clsx";
+import { Column, useRowState, useSortBy, useTable } from "react-table";
+import SvgTriangle from "../icons/SvgTriangle.js";
+import { ColumnHeader } from "./Typography.js";
 
 /**
  * @typedef Column
@@ -40,7 +40,7 @@ export const DataTable = ({ columns, data, styles = {}, ...props }) => {
 								{...column.getHeaderProps(column.getSortByToggleProps())}
 								isNumeric={column.isNumeric}
 								minW={column.minWidth}
-								maxWidth={column.maxWidth}
+								maxW={column.maxWidth}
 								position="relative"
 								lineHeight="1"
 							>

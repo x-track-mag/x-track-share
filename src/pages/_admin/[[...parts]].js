@@ -115,22 +115,22 @@ Il faut le supprimer totalement dans Cloudinary`,
 						/>
 					))}
 			</Grid>
-			{orderedTracks && orderedTracks.length > 0 && (
-				<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
+			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
+				{orderedTracks && orderedTracks.length > 0 && (
 					<MiniPlaylist
 						folderPath={path}
 						tracks={orderedTracks}
 						updatePlaylist={updatePlaylist}
 					/>
-					<Center>
-						<SharedSettings
-							folderPath={path}
-							settings={settings}
-							updateSettings={updateSettings}
-						/>
-					</Center>
-				</Grid>
-			)}
+				)}
+				<Center>
+					<SharedSettings
+						folderPath={path}
+						settings={settings}
+						updateSettings={updateSettings}
+					/>
+				</Center>
+			</Grid>
 		</Stack>
 	);
 };

@@ -124,7 +124,7 @@ const SharedFolderPage = () => {
 			)}
 
 			{settings.download_zip && (
-				<Box position="relarive" mt={5}>
+				<Box position="relative" mt={5}>
 					<a
 						href={download_folder_archive}
 						target="_blank"

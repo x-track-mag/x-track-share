@@ -192,7 +192,7 @@ export const getDeepContent = async (root) => {
 		// Now we need to prepare the download_archive links
 		Object.keys(folders).map((folderPath) => {
 			const folder = folders[folderPath];
-			const folderRoot = folder.split("/").pop();
+			const folderName = folderPath.split("/").pop();
 			const { audios, videos, settings } = folder;
 			if (settings.download_zip) {
 				// We have to prepare the download links for all the public_ids
@@ -202,7 +202,7 @@ export const getDeepContent = async (root) => {
 							links[format] = getZipDownloadUrl(
 								audios.map((audio) => audio.public_id),
 								format,
-								folderRoot + "-audios.zip"
+								folderName + "-audios.zip"
 							);
 							return links;
 						},
@@ -216,7 +216,7 @@ export const getDeepContent = async (root) => {
 							links[format] = getZipDownloadUrl(
 								videos.map((video) => video.public_id),
 								format,
-								folderRoot + "-videos.zip"
+								folderName + "-videos.zip"
 							);
 							return links;
 						},
@@ -227,7 +227,7 @@ export const getDeepContent = async (root) => {
 				folder.download_folder_archive = getZipDownloadUrl(
 					"share/" + folderPath,
 					null,
-					folderRoot + ".zip"
+					folderName + ".zip"
 				);
 			}
 		});

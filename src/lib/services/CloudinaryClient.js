@@ -220,6 +220,8 @@ export const getDeepContent = async (root) => {
 						{}
 					);
 				}
+				// This URL allows to download all the folder ans subfolders content
+				folder.download_folder_archive = getZipDownloadUrl("share/" + folderPath);
 			}
 		});
 
@@ -234,26 +236,42 @@ export const getDeepContent = async (root) => {
 /**
  * Return a calculated link to download a zip archive
  * containing the selected assets
- * @param {Array<String>} public_ids
+ * @param {Array<String>|String} public_ids_or_folder_path
  * @param {String} format to convert each asset
  * @return {String}
  */
-export const getZipDownloadUrl = (public_ids, format = "wav", download_as) => {
+export const getZipDownloadUrl = (
+	public_ids_or_folder_path,
+	format = "wav",
+	download_as
+) => {
 	try {
-		// Add the request format to the end of the public_id
-		// public_ids = public_ids.map((id) => `${id}.${format}`).join(",");
-		const downloadUrl = cloudinary.utils.download_zip_url({
-			public_ids,
-			resource_type: "video",
-			use_original_filename: true,
-			target_public_id:
-				download_as ||
-				`x-track-share-${new Date()
-					.toISOString()
-					.substr(0, 19)
-					.replace(/[^0-9]/g, "-")}`,
-			transformations: `f_${format}`
-		});
+		let downloadUrl;
+		if (Array.isArray(public_ids_or_folder_path)) {
+			downloadUrl = cloudinary.utils.download_zip_url({
+				public_ids: public_ids_or_folder_path,
+				resource_type: "video",
+				use_original_filename: true,
+				target_public_id:
+					download_as ||
+					`x-track-share-${new Date()
+						.toISOString()
+						.substr(0, 19)
+						.replace(/[^0-9]/g, "-")}`,
+				transformations: `f_${format}`
+			});
+		} else {
+			downloadUrl = cloudinary.utils.download_folder(public_ids_or_folder_path, {
+				resource_type: "video",
+				use_original_filename: true,
+				target_public_id:
+					download_as ||
+					`x-track-share-${new Date()
+						.toISOString()
+						.substr(0, 19)
+						.replace(/[^0-9]/g, "-")}`
+			});
+		}
 		return downloadUrl;
 	} catch (err) {
 		console.error(err);

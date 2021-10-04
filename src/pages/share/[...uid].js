@@ -53,7 +53,8 @@ const SharedFolderPage = () => {
 		videos,
 		settings,
 		download_audios_archive,
-		download_videos_archive
+		download_videos_archive,
+		download_folder_archive
 	} = folder;
 
 	useEffect(() => {
@@ -119,6 +120,18 @@ const SharedFolderPage = () => {
 							Download zip
 						</SelectDownloadArchiveFormat>
 					)}
+				</Box>
+			)}
+
+			{settings.download_zip && (
+				<Box position="relarive" mt={5}>
+					<a
+						href={download_folder_archive}
+						target="_blank"
+						download={`${path}.zip`}
+					>
+						Download All
+					</a>
 				</Box>
 			)}
 		</Stack>

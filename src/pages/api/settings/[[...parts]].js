@@ -20,13 +20,26 @@ export default async (req, resp) => {
 
 			case "POST":
 				// Parse the settings passed inside the JSON body
-				const { settings } = req.body;
+				const { settings, recursive = false } = req.body;
 				console.log(`Updating settings for ${sharedFolderPath}`, settings);
 
-				const uploadSuccess = await CloudinaryClient.uploadData(
-					sharedFolderPath + "/settings.json",
-					JSON.stringify({ settings })
-				);
+				const updateFolderSettings = async (folder) =>
+					CloudinaryClient.uploadData(
+						folder + "/settings.json",
+						JSON.stringify({ settings })
+					);
+
+				let uploadSuccess = await updateFolderSettings(sharedFolderPath);
+
+				if (recursive) {
+					// Now we should apply these settings to all sub-folders !
+					const subfolders = await CloudinaryClient.getSubFolders(
+						sharedFolderPath
+					);
+					const updated = await Promise.allSettled(
+						subfolders.map(updateFolderSettings)
+					);
+				}
 
 				return resp.json({
 					success: true,

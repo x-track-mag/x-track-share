@@ -4,11 +4,13 @@ import { withAuthContext, withAuthentication } from "../../components/auth/withA
 import { useDialogContext } from "../../components/base/Dialog.js";
 import Folder from "../../components/base/Folder.js";
 import Breadcrumbs from "../../components/Breadcrumbs.js";
+import Button from "../../components/forms/inputs/Button.js";
 import SvgBin from "../../components/icons/SvgBin.js";
 import SvgLink from "../../components/icons/SvgLink.js";
 import SvgPlus from "../../components/icons/SvgPlus";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import SharedSettings from "../../components/SharedSettings.js";
+import { SHARED_SETTINGS_DEFAULTS } from "../../lib/cloudinary/SharedFolder.js";
 import APIClient from "../../lib/services/APIClient.js";
 import ArrayExtensions from "../../lib/utils/Arrays.js";
 
@@ -60,6 +62,20 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 	const updateSettings = (newSettings) => {
 		setSharedSettings({ ...newSettings });
 		APIClient.post("/api/settings/" + path, { settings: newSettings });
+	};
+	const shareSettings = async () => {
+		const confirmApply = await confirm({
+			title: "APPLIQUER LES PARAMETRES DE PARTAGE",
+			message: `Voulez-vous appliquer les paramètres courants à tous les sous-dossiers ?`,
+			choices: ["Oui", "Non"],
+			focusOn: 1
+		});
+		if (confirmApply) {
+			APIClient.post("/api/settings/" + path, {
+				settings: shareSettings,
+				recursive: true
+			});
+		}
 	};
 	const updatePlaylist = (updatedTracks) => {
 		updateSettings({
@@ -123,13 +139,25 @@ Il faut le supprimer totalement dans Cloudinary`,
 						updatePlaylist={updatePlaylist}
 					/>
 				)}
-				<Center>
-					<SharedSettings
-						folderPath={path}
-						settings={settings}
-						updateSettings={updateSettings}
-					/>
-				</Center>
+				{path && (
+					<Stack>
+						<Center>
+							<SharedSettings
+								folderPath={path}
+								settings={settings}
+								updateSettings={updateSettings}
+							/>
+						</Center>
+
+						{subfolders.length > 0 && (
+							<Center>
+								<Button onClick={shareSettings}>
+									Appliquer au sous-dossiers
+								</Button>
+							</Center>
+						)}
+					</Stack>
+				)}
 			</Grid>
 		</Stack>
 	);

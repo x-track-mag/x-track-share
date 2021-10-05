@@ -8,6 +8,7 @@ import Button from "../../components/forms/inputs/Button.js";
 import SvgBin from "../../components/icons/SvgBin.js";
 import SvgLink from "../../components/icons/SvgLink.js";
 import SvgPlus from "../../components/icons/SvgPlus";
+import SvgTasks from "../../components/icons/SvgTasks.js";
 import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import SharedSettings from "../../components/SharedSettings.js";
 import { SHARED_SETTINGS_DEFAULTS } from "../../lib/cloudinary/SharedFolder.js";
@@ -152,7 +153,8 @@ Il faut le supprimer totalement dans Cloudinary`,
 						{subfolders.length > 0 && (
 							<Center>
 								<Button onClick={shareSettings}>
-									Appliquer au sous-dossiers
+									<SvgTasks size="22px" mr={2} />
+									Appliquer aux sous-dossiers
 								</Button>
 							</Center>
 						)}

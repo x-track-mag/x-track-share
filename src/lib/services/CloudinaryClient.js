@@ -69,6 +69,33 @@ export const getRawResourceContent = async (rsc) => {
 };
 
 /**
+ * Return the complete list of subfolders (recursive)
+ * @param {String} folderPath
+ * @returns {Array<String>}
+ */
+export const getSubFolders = async (folderPath) => {
+	try {
+		const subfolders = await cloudinary.api
+			.sub_folders(folderPath)
+			.then(({ folders }) => folders.map((folder) => folder.path));
+
+		// Now continue recursively
+		await Promise.allSettled(
+			[...subfolders].map(async (folder) => {
+				const subsubfolders = await getSubFolders(folder);
+				subfolders.push(...subsubfolders);
+				return true;
+			})
+		);
+
+		return subfolders;
+	} catch (err) {
+		console.error(err);
+		return [];
+	}
+};
+
+/**
  * Return the immediate content of a folder
  * @param {String} root
  */
@@ -414,6 +441,7 @@ const CloudinaryClient = {
 	getDeepContent,
 	getFlatContent,
 	getResource,
+	getSubFolders,
 	getZipDownloadUrl,
 	signRequest,
 	uploadData,

@@ -115,8 +115,13 @@ Il faut le supprimer totalement dans Cloudinary`,
 			</Box>
 
 			<Grid
-				templateColumns={{ sm: "repeat(2, 1fr)", lg: "repeat(6, 1fr)" }}
 				className="sub-folders"
+				templateColumns={{
+					xs: "1fr 1fr",
+					sm: "repeat(3, 1fr)",
+					lg: "repeat(4, 1fr)",
+					xl: "repeat(6, 1fr)"
+				}}
 				gap={5}
 				p={5}
 			>

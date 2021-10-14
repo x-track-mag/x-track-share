@@ -13,9 +13,6 @@ import MiniPlaylist from "../../components/player/MiniPlaylist.js";
 import SharedSettings from "../../components/SharedSettings.js";
 import { SHARED_SETTINGS_DEFAULTS } from "../../lib/cloudinary/SharedFolder.js";
 import APIClient from "../../lib/services/APIClient.js";
-import ArrayExtensions from "../../lib/utils/Arrays.js";
-
-ArrayExtensions();
 
 /**
  * Retrieves the subfolders and playlist linked to this shared folder
@@ -44,6 +41,23 @@ const deleteIcon = (action) => (props) => (
 );
 
 /**
+ * Reorder the tracks according to the playlist
+ * playlist is a list of file names
+ * @return {Array<file>}
+ */
+const orderTracks = (tracks = [], playlist = []) => {
+	if (tracks.length !== playlist.length) {
+		// We have a mismatch ! We can't apply the playlist order
+		return tracks.sort((a, b) => (a.filename > b.filename ? 1 : -1));
+	}
+	const orderedTracks = [];
+	playlist.forEach((fileName) => {
+		orderedTracks.push(tracks.find((f) => f.filename === fileName));
+	});
+	return orderedTracks;
+};
+
+/**
  * Display the admin view of a shared folder
  */
 const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAULTS }) => {
@@ -56,7 +70,7 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 	useEffect(() => {
 		setVFolders(subfolders);
 		// Still don't know why i need to do that in a hook to force the tracks to be re-rendered on each pages..
-		const orderedTracks = tracks.reorderFrom(settings.playlist, "filename");
+		const orderedTracks = orderTracks(tracks, settings.playlist);
 		setOrderedTracks(orderedTracks);
 	}, [path]);
 
@@ -83,6 +97,7 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 			...sharedSettings,
 			playlist: updatedTracks.map((track) => track.filename)
 		});
+		setOrderedTracks([...updatedTracks]);
 	};
 
 	const deleteFolder = (folderPath) => async (evt) => {

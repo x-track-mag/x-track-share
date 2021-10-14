@@ -21,6 +21,15 @@ export default async (req, resp) => {
 			case "POST":
 				// Parse the settings passed inside the JSON body
 				const { settings, recursive = false } = req.body;
+
+				if (!settings) {
+					// That's wrong really
+					return resp.json({
+						success: false,
+						error: "Bad Parameters. You must provide a settings object."
+					});
+				}
+
 				console.log(`Updating settings for ${sharedFolderPath}`, settings);
 
 				const updateFolderSettings = async (folder) =>

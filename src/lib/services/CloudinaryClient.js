@@ -120,8 +120,8 @@ export const getFlatContent = async (folderPath) => {
 					folder.tracks.push(getResourceInfos(file));
 				} else if (rscType === "raw") {
 					const { settings } = await getRawResourceContent(file);
-					if (file.filename === "settings.json") {
-						console.log("Merging settings.json ");
+					if (settings && file.filename === "settings.json") {
+						console.log("Merging settings.json ", settings);
 						merge(folder, { settings });
 					} else if (!folder.settings) {
 						console.log("Merging playlist.m3u");

@@ -73,7 +73,7 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 		});
 		if (confirmApply) {
 			APIClient.post("/api/settings/" + path, {
-				settings: shareSettings,
+				settings: sharedSettings,
 				recursive: true
 			});
 		}

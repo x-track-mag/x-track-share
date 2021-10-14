@@ -19,11 +19,9 @@ import FileUploadProgress from "./FileUploadProgress";
  * @param {String} uploadUrl
  * @return {Function}
  */
-const sendFile = (uploadPath, updateProgress) => async (file, i, retries) => {
-	// const folderPath = uploadPath + file.path.substr(1, file.path.lastIndexOf("/"));
-	const public_id = createPublicId(uploadPath + file.path);
+const sendFile = (uploadPath = "", updateProgress) => async (file, i, retries) => {
+	const public_id = createPublicId((uploadPath + "/" + file.path).replace("//", "/"));
 
-	// const timestamp = Math.round(new Date().getTime() / 1000);
 	const upload_preset = "x-track-share";
 
 	const resource_type = getResourceType(file.path);
@@ -34,18 +32,6 @@ const sendFile = (uploadPath, updateProgress) => async (file, i, retries) => {
 	formData.append("file", file);
 	formData.append("upload_preset", upload_preset);
 	formData.append("public_id", public_id);
-	// formData.append("timestamp", timestamp);
-
-	// const {signature, uploadUrl} = await APIClient.post("/api/cloudinary/upload-url", {
-	// 	file: file.path,
-	// 	public_id,
-	// 	timestamp
-	// });
-	// // Append parameters to the form data. The parameters that are signed using
-	// // the signing function (signuploadform) need to match these.
-	// // formData.append("api_key", credentials.apikey);
-	// // formData.append("timestamp", credentials.timestamp);
-	// formData.append("signature", signature);
 
 	updateProgress({ progress: 40 - 10 * retries }, i); // We will use the undefined state before the upload actually begins
 

@@ -41,37 +41,16 @@ const deleteIcon = (action) => (props) => (
 );
 
 /**
- * Reorder the tracks according to the playlist
- * playlist is a list of file names
- * @return {Array<file>}
- */
-const orderTracks = (tracks = [], playlist = []) => {
-	if (tracks.length !== playlist.length) {
-		// We have a mismatch ! We can't apply the playlist order
-		return tracks.sort((a, b) => (a.filename > b.filename ? 1 : -1));
-	}
-	const orderedTracks = [];
-	playlist.forEach((fileName) => {
-		orderedTracks.push(tracks.find((f) => f.filename === fileName));
-	});
-	return orderedTracks;
-};
-
-/**
  * Display the admin view of a shared folder
  */
 const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAULTS }) => {
 	const uploadPath = `/_admin/upload/${path}`;
+	const { confirm } = useDialogContext();
 	const [sharedSettings, setSharedSettings] = useState(settings);
 	const [vFolders, setVFolders] = useState(); // Use a virtual list of folders to allow for fast suppression
-	const [orderedTracks, setOrderedTracks] = useState();
-	const { confirm } = useDialogContext();
 
 	useEffect(() => {
 		setVFolders(subfolders);
-		// Still don't know why i need to do that in a hook to force the tracks to be re-rendered on each pages..
-		const orderedTracks = orderTracks(tracks, settings.playlist);
-		setOrderedTracks(orderedTracks);
 	}, [path]);
 
 	const updateSettings = (newSettings) => {
@@ -97,7 +76,6 @@ const AdminPage = ({ path, subfolders, tracks, settings = SHARED_SETTINGS_DEFAUL
 			...sharedSettings,
 			playlist: updatedTracks.map((track) => track.filename)
 		});
-		setOrderedTracks([...updatedTracks]);
 	};
 
 	const deleteFolder = (folderPath) => async (evt) => {
@@ -153,13 +131,13 @@ Il faut le supprimer totalement dans Cloudinary`,
 					))}
 			</Grid>
 			<Grid templateColumns={{ sm: "1fr", lg: "60% 40%" }} color="white">
-				{orderedTracks && orderedTracks.length > 0 && (
-					<MiniPlaylist
-						folderPath={path}
-						tracks={orderedTracks}
-						updatePlaylist={updatePlaylist}
-					/>
-				)}
+				<MiniPlaylist
+					folderPath={path}
+					tracks={tracks}
+					playlist={settings.playlist}
+					updatePlaylist={updatePlaylist}
+				/>
+
 				{path && (
 					<Stack>
 						<Center>

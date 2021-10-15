@@ -1,10 +1,27 @@
 import { Box, Grid, GridItem, Stack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 import APIClient from "../../lib/services/APIClient";
 import { useDialogContext } from "../base/Dialog";
 import { useEventBus } from "../EventBusProvider";
 import SvgBin from "../icons/SvgBin";
+
+/**
+ * Reorder the tracks according to the playlist
+ * playlist is a list of file names
+ * @return {Array<file>}
+ */
+const orderTracks = (tracks = [], playlist = []) => {
+	if (tracks.length !== playlist.length) {
+		// We have a mismatch ! We can't apply the playlist order
+		return tracks.sort((a, b) => (a.filename > b.filename ? 1 : -1));
+	}
+	const orderedTracks = [];
+	playlist.forEach((fileName) => {
+		orderedTracks.push(tracks.find((f) => f.filename === fileName));
+	});
+	return orderedTracks;
+};
 
 const compareTracklists = (l1, l2) =>
 	JSON.stringify(l1.map((t) => t.filename)) ===
@@ -37,10 +54,16 @@ const TrackEntry = ({ index, title, artist, onDeleteAction }) => (
  * @param {MiniPlaylistProps} props
  * @return
  */
-const MiniPlaylist = ({ tracks = [], updatePlaylist }) => {
+const MiniPlaylist = ({ folderPath, tracks = [], playlist = [], updatePlaylist }) => {
 	const { confirm } = useDialogContext();
 	const eb = useEventBus();
-	const [orderedTracks, setOrderedTracks] = useState(tracks);
+	const [orderedTracks, setOrderedTracks] = useState();
+
+	useEffect(() => {
+		setOrderedTracks(orderTracks(tracks, playlist));
+	}, [folderPath]);
+
+	if (!orderedTracks || orderedTracks.length === 0) return null;
 
 	// Define the actions associated with each button
 	const deleteTrack = ({ title, public_id }) => async (evt) => {
@@ -52,13 +75,17 @@ const MiniPlaylist = ({ tracks = [], updatePlaylist }) => {
 		});
 		if (confirmDeletion) {
 			// Remove the resource
-			updatePlaylist(tracks.filter((track) => track.public_id !== public_id));
+			const newTrackList = orderedTracks.filter(
+				(track) => track.public_id !== public_id
+			);
+			setOrderedTracks(newTrackList);
+			updatePlaylist(newTrackList);
 			const { success } = await APIClient.del(`/api/resources/${public_id}`);
 			if (!success) {
 				confirm({
 					title: "ECHEC",
 					message: `La suppression du fichier partagé '${title}' n'a pu être effective. 
-                    Il faut le supprimer totalement dans Cloudinary`,
+Il faut le supprimer totalement dans Cloudinary`,
 					choices: ["OK"]
 				});
 			}

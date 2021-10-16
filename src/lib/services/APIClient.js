@@ -35,7 +35,7 @@ export const buildURL = (apiEndpoint, params) => {
 			finalUrl.searchParams.append(paramName, params[paramName])
 		);
 	}
-	console.log(`buildUrl() : ${finalUrl.toString()}`);
+
 	return finalUrl;
 };
 

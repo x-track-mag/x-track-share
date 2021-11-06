@@ -24,6 +24,7 @@ const PageHeader = ({ title = "", navigation = [], height = "3rem", ...props }) 
 
 	return (
 		<Box
+			as="header"
 			id="page-header"
 			position="fixed"
 			height={height}

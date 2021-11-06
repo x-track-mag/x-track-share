@@ -41,3 +41,5 @@ yarn-error.log*
 
 # vercel
 .vercel
+src/components/auth/authProvider.js
+src/pages/login/index.js

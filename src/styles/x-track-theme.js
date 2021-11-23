@@ -16,7 +16,7 @@ export const breakpoints = {
 export const colors = {
 	brand: {
 		black: "#000",
-		blue: "#00F",
+		blue: "#0066ff",
 		yellow: "#FF0",
 		white: "#FFF"
 	}

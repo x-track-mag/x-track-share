@@ -43,7 +43,7 @@ const PlaylistHeaders = {
 		Header: "Ajouter à ma sélection",
 		accessor: (row) => (
 			<Checkbox
-				color="blue"
+				color="brand.blue"
 				size="lg"
 				defaultChecked={row.selected}
 				onClick={(evt) => evt.stopPropagation()}

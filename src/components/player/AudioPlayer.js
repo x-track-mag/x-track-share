@@ -1,8 +1,8 @@
 import { Box } from "@chakra-ui/layout";
 import { useEffect } from "react";
+import WaveSurfer from "wavesurfer.js";
 import { useEventBus } from "../EventBusProvider";
 import { usePlayerState } from "./PlayerStateProvider";
-import WaveSurfer from "wavesurfer.js";
 
 /**
  * Instantiate a custom CloudinaryPlayer
@@ -14,7 +14,7 @@ const createPlayer = (id, playlist, selectedIndex, merge) => {
 		const player = (window.player = WaveSurfer.create({
 			container: `#${id}`,
 			backgroundColor: "black",
-			waveColor: "blue",
+			waveColor: "brand.blue",
 			progressColor: "yellow",
 			normalize: true,
 			hideScrollbar: true,

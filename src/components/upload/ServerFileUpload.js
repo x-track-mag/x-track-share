@@ -51,7 +51,7 @@ const FileUploadReport = ({ files }) => {
 					key={`file-${i}`}
 					fileName={fileName}
 					progress={progress}
-					color="blue"
+					color="brand.blue"
 					error={error}
 				/>
 			))}

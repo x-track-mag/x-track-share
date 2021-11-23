@@ -1,8 +1,8 @@
 import { Input } from "@chakra-ui/input";
 import { Box } from "@chakra-ui/layout";
 import APIForm from "./APIForm.js";
-import Text from "./inputs/Text.js";
 import Email from "./inputs/Email.js";
+import Text from "./inputs/Text.js";
 
 export const SendMailReport = () => (
 	<Box w="20rem" h="100%">
@@ -23,7 +23,7 @@ export const SendMailReport = () => (
 				_focus={{
 					borderColor: "yellow"
 				}}
-				bgColor="blue"
+				bgColor="brand.blue"
 				color="yellow"
 			/>
 		</APIForm>

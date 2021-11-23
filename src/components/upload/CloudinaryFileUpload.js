@@ -170,7 +170,7 @@ Total process completed in ${(Date.now() - start) / 1000}secs`,
 					<Center>
 						<UploadIcon
 							color="yellow"
-							bgColor="blue"
+							bgColor="brand.blue"
 							size={{ sm: "64px", md: "128px" }}
 						/>
 					</Center>

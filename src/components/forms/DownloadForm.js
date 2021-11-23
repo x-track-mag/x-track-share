@@ -55,7 +55,7 @@ const DownloadForm = ({ selectedTracks, ...props }) => {
 						name="public_ids"
 						defaultValue={selectedTracks.audios.map((t) => t.public_id)}
 					/>
-					<Submit bgColor="blue" color="yellow">
+					<Submit bgColor="brand.blue" color="yellow">
 						Générer...
 					</Submit>
 				</APIForm>

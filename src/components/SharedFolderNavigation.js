@@ -7,8 +7,11 @@ import { useSharedFolderContext } from "./SharedFolderContext.js";
 
 const SharedFolderNavigation = ({ path, settings = {} }) => {
 	const { navigate, timestamp, selectedTracks } = useSharedFolderContext();
+
+	// My Selection
 	const showSelectedTracks =
-		selectedTracks.audios.length + selectedTracks.audios.length > 0;
+		settings.download_form &&
+		selectedTracks.audios.length + selectedTracks.videos.length > 0;
 
 	// These variables will control the drawer to show the Download form
 	const [showDownloadForm, setDrawerVisibility] = useState(false);

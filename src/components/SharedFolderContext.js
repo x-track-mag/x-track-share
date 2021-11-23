@@ -62,8 +62,15 @@ export const withSharedFolderContext = (Component) => ({ folders, path, props })
 	 */
 	const navigate = (path) => (evt) => {
 		evt.preventDefault();
-		console.log(`NAVIGATE TO ${path}`);
-		router.push(path, undefined, { shallow: true }); // shallow TRUE will not call getServerSideProps
+
+		const sharedPath = path.replace("/share/", "");
+		if (folders[sharedPath]) {
+			console.log(`NAVIGATE TO ${sharedPath}`, Object.keys(folders));
+			router.push(path, undefined, { shallow: true }); // shallow TRUE will not call getServerSideProps
+		} else {
+			console.log(`${sharedPath} is not loaded`);
+			router.push(path);
+		}
 	};
 
 	/**

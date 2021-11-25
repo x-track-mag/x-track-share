@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useEventBus } from "./EventBusProvider";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import SharedFolder from "../lib/cloudinary/SharedFolder";
-import React from "react";
+import { useEventBus } from "./EventBusProvider";
 
 /**
  * @typedef SharedOptions
@@ -47,6 +46,8 @@ export const withSharedFolderContext = (Component) => ({ folders, path, props })
 	const eb = useEventBus();
 
 	const refresh = () => setTimestamp(Date.now());
+	const isSelectedTracks = (currentPath) =>
+		currentPath === `${sharedRoot}/selected-tracks`;
 	const addToSelectedTracks = (track) => {
 		selectedTracks.addResource(track);
 		refresh();
@@ -103,6 +104,7 @@ export const withSharedFolderContext = (Component) => ({ folders, path, props })
 				folders,
 				current,
 				selectedTracks,
+				isSelectedTracks,
 				navigate,
 				timestamp,
 				refresh

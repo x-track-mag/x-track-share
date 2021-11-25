@@ -36,13 +36,14 @@ const SharedFolderPage = () => {
 	const {
 		folders,
 		current,
+		isSelectedTracks,
 		selectedTracks,
 		timestamp,
 		navigate
 	} = useSharedFolderContext();
 
 	// Load the current folder or display the selected tracks
-	const folder = folders[current] || selectedTracks;
+	const folder = isSelectedTracks(current) ? selectedTracks : folders[current];
 
 	if (!folder) return null;
 

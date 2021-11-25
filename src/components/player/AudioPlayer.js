@@ -14,7 +14,7 @@ const createPlayer = (id, playlist, selectedIndex, merge) => {
 		const player = (window.player = WaveSurfer.create({
 			container: `#${id}`,
 			backgroundColor: "black",
-			waveColor: "brand.blue",
+			waveColor: "blue",
 			progressColor: "yellow",
 			normalize: true,
 			hideScrollbar: true,

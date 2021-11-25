@@ -1,5 +1,5 @@
 import { Box, Heading } from "@chakra-ui/layout";
-import { Drawer, DrawerOverlay, DrawerContent } from "@chakra-ui/modal";
+import { Drawer, DrawerContent, DrawerOverlay } from "@chakra-ui/modal";
 import React, { useState } from "react";
 import Breadcrumbs from "./Breadcrumbs.js";
 import DownloadForm from "./forms/DownloadForm.js";
@@ -16,7 +16,7 @@ const SharedFolderNavigation = ({ path, settings = {} }) => {
 	// These variables will control the drawer to show the Download form
 	const [showDownloadForm, setDrawerVisibility] = useState(false);
 	const toggleDownloadForm = (visible) => (evt) => {
-		evt.preventDefault();
+		evt && evt.preventDefault(); // Not always called with the original event
 		setDrawerVisibility(visible);
 		return false;
 	};
